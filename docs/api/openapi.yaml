@@ -1,0 +1,1220 @@
+openapi: 3.0.3
+info:
+  title: LeanMate API
+  version: 0.1.0
+  description: LeanMate V1.1 MVP 接口契约，覆盖认证、用户档案、首页统计、饮食记录、体重记录、AI 日报和连续打卡。
+servers:
+  - url: https://api.leanmate.app
+    description: Production
+  - url: https://dev-api.leanmate.app
+    description: Development
+  - url: http://localhost:8080
+    description: Local
+security:
+  - bearerAuth: []
+tags:
+  - name: Auth
+    description: 登录、刷新令牌、退出登录
+  - name: Me
+    description: 当前用户
+  - name: Profile
+    description: 用户档案和目标
+  - name: Home
+    description: 首页今日状态
+  - name: Diet
+    description: 饮食识别和饮食记录
+  - name: Weight
+    description: 体重记录
+  - name: Report
+    description: AI 日报
+  - name: Retention
+    description: 连续打卡
+paths:
+  /v1/auth/oauth-login:
+    post:
+      tags: [Auth]
+      summary: 第三方登录
+      description: V1.1 iOS 首发可先使用 Apple 登录，但接口模型保留 provider 扩展能力。
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OAuthLoginRequest"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiAuthTokenResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /v1/auth/refresh:
+    post:
+      tags: [Auth]
+      summary: 刷新访问令牌
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshTokenRequest"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiAuthTokenResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /v1/auth/logout:
+    post:
+      tags: [Auth]
+      summary: 退出登录
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LogoutRequest"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiEmptyResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /v1/me:
+    get:
+      tags: [Me]
+      summary: 获取当前用户
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiCurrentUserResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /v1/profile:
+    get:
+      tags: [Profile]
+      summary: 获取当前用户档案
+      responses:
+        "200":
+          description: 成功。未完成档案时 data.profile 可为空。
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiUserProfileResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    put:
+      tags: [Profile]
+      summary: 创建或更新当前用户档案
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SaveUserProfileRequest"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiUserProfileResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /v1/home/today:
+    get:
+      tags: [Home]
+      summary: 获取首页今日状态
+      parameters:
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+          description: 业务日期，不传默认用户当前业务日。
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiTodayHomeResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /v1/diet/recognitions/photo:
+    post:
+      tags: [Diet]
+      summary: 创建拍照饮食识别任务
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [image, mealType]
+              properties:
+                image:
+                  type: string
+                  format: binary
+                mealType:
+                  $ref: "#/components/schemas/MealType"
+                mealDate:
+                  type: string
+                  format: date
+                note:
+                  type: string
+                  maxLength: 500
+                  nullable: true
+      responses:
+        "200":
+          description: 成功。任务可能仍在 running，客户端需要支持查询任务。
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRecognitionTaskResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/AiServiceError"
+  /v1/diet/recognitions/text:
+    post:
+      tags: [Diet]
+      summary: 创建文本饮食解析任务
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TextRecognitionRequest"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRecognitionTaskResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/AiServiceError"
+  /v1/diet/recognitions/{taskId}:
+    get:
+      tags: [Diet]
+      summary: 查询饮食识别任务
+      parameters:
+        - $ref: "#/components/parameters/TaskId"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRecognitionTaskResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /v1/diet/entries:
+    get:
+      tags: [Diet]
+      summary: 查询饮食记录
+      parameters:
+        - in: query
+          name: date
+          required: true
+          schema:
+            type: string
+            format: date
+          description: 业务日期。
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiFoodEntryListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      tags: [Diet]
+      summary: 保存饮食记录
+      description: 手动记录可直接保存；AI 草稿需用户确认后保存为正式记录。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SaveFoodEntryRequest"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiFoodEntrySaveResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /v1/diet/entries/{entryId}:
+    put:
+      tags: [Diet]
+      summary: 编辑饮食记录
+      parameters:
+        - $ref: "#/components/parameters/EntryId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SaveFoodEntryRequest"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiFoodEntrySaveResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [Diet]
+      summary: 删除饮食记录
+      description: V1.1 使用软删除，并刷新当日统计快照。
+      parameters:
+        - $ref: "#/components/parameters/EntryId"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiEmptyResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /v1/weights:
+    get:
+      tags: [Weight]
+      summary: 查询体重记录
+      parameters:
+        - in: query
+          name: startDate
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: endDate
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiWeightEntryListResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      tags: [Weight]
+      summary: 保存体重记录
+      description: V1.1 同一天同一用户只保留一条记录，重复提交则覆盖。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SaveWeightEntryRequest"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiWeightEntrySaveResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /v1/reports/daily:
+    get:
+      tags: [Report]
+      summary: 获取 AI 日报
+      parameters:
+        - in: query
+          name: date
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: 成功。未生成时报表 data 可为空或 status 为 pending，按实现选择并保持一致。
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiDailyReportResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      tags: [Report]
+      summary: 手动触发 AI 日报生成或重试
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateDailyReportRequest"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiDailyReportResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/AiServiceError"
+  /v1/reports/daily/{reportId}/view:
+    post:
+      tags: [Report]
+      summary: 标记 AI 日报已查看
+      parameters:
+        - $ref: "#/components/parameters/ReportId"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiDailyReportResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /v1/retention/streak:
+    get:
+      tags: [Retention]
+      summary: 获取连续打卡状态
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiStreakResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    EntryId:
+      in: path
+      name: entryId
+      required: true
+      schema:
+        type: string
+        format: uuid
+    TaskId:
+      in: path
+      name: taskId
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ReportId:
+      in: path
+      name: reportId
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    BadRequest:
+      description: 参数错误
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiErrorResponse"
+          example:
+            code: 40001
+            message: 参数错误
+            data: null
+    Unauthorized:
+      description: 未登录或 token 无效
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiErrorResponse"
+          example:
+            code: 40101
+            message: 未登录或登录已过期
+            data: null
+    Forbidden:
+      description: 无权限访问资源
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiErrorResponse"
+          example:
+            code: 40301
+            message: 无权限访问该资源
+            data: null
+    NotFound:
+      description: 资源不存在
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiErrorResponse"
+          example:
+            code: 40401
+            message: 资源不存在
+            data: null
+    Conflict:
+      description: 状态冲突
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiErrorResponse"
+          example:
+            code: 40901
+            message: 当前状态不允许执行该操作
+            data: null
+    InternalServerError:
+      description: 服务端错误
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiErrorResponse"
+          example:
+            code: 50001
+            message: 服务端错误
+            data: null
+    AiServiceError:
+      description: AI 服务调用失败
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiErrorResponse"
+          example:
+            code: 50010
+            message: AI 服务暂时不可用
+            data: null
+  schemas:
+    ApiErrorResponse:
+      type: object
+      required: [code, message, data]
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          nullable: true
+    ApiEmptyResponse:
+      type: object
+      required: [code, message, data]
+      properties:
+        code:
+          type: integer
+          example: 0
+        message:
+          type: string
+          example: success
+        data:
+          nullable: true
+    ApiAuthTokenResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: "#/components/schemas/AuthToken"
+    ApiCurrentUserResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: "#/components/schemas/CurrentUser"
+    ApiUserProfileResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: "#/components/schemas/ProfilePayload"
+    ApiTodayHomeResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: "#/components/schemas/TodayHome"
+    ApiRecognitionTaskResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: "#/components/schemas/RecognitionTask"
+    ApiFoodEntryListResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/FoodEntry"
+    ApiFoodEntrySaveResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: "#/components/schemas/FoodEntrySaveResult"
+    ApiWeightEntryListResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/WeightEntry"
+    ApiWeightEntrySaveResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: "#/components/schemas/WeightEntrySaveResult"
+    ApiDailyReportResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              nullable: true
+              allOf:
+                - $ref: "#/components/schemas/DailyReport"
+    ApiStreakResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: "#/components/schemas/Streak"
+    ApiResponse:
+      type: object
+      required: [code, message, data]
+      properties:
+        code:
+          type: integer
+          example: 0
+        message:
+          type: string
+          example: success
+        data:
+          nullable: true
+    OAuthLoginRequest:
+      type: object
+      required: [provider, identityToken]
+      properties:
+        provider:
+          type: string
+          enum: [apple, google]
+        identityToken:
+          type: string
+        authorizationCode:
+          type: string
+          nullable: true
+        deviceId:
+          type: string
+          nullable: true
+    RefreshTokenRequest:
+      type: object
+      required: [refreshToken]
+      properties:
+        refreshToken:
+          type: string
+    LogoutRequest:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          nullable: true
+    AuthToken:
+      type: object
+      required: [accessToken, refreshToken, tokenType, expiresIn, user, profileCompleted]
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        tokenType:
+          type: string
+          example: Bearer
+        expiresIn:
+          type: integer
+          description: accessToken 剩余有效秒数。
+        user:
+          $ref: "#/components/schemas/CurrentUser"
+        profileCompleted:
+          type: boolean
+    CurrentUser:
+      type: object
+      required: [id, status, profileCompleted, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        nickname:
+          type: string
+          nullable: true
+        avatarUrl:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [active, disabled, deleted]
+        profileCompleted:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+    SaveUserProfileRequest:
+      type: object
+      required: [gender, age, heightCm, currentWeightKg, targetWeightKg, activityLevel, timezone]
+      properties:
+        gender:
+          type: string
+          enum: [male, female, unknown]
+        age:
+          type: integer
+          minimum: 1
+          maximum: 120
+        heightCm:
+          type: number
+          minimum: 50
+          maximum: 250
+        currentWeightKg:
+          type: number
+          minimum: 20
+          maximum: 300
+        targetWeightKg:
+          type: number
+          minimum: 20
+          maximum: 300
+        activityLevel:
+          type: string
+          enum: [sedentary, light, moderate, active, very_active]
+        timezone:
+          type: string
+          example: Asia/Shanghai
+        targetDate:
+          type: string
+          format: date
+          nullable: true
+    ProfilePayload:
+      type: object
+      required: [profileCompleted]
+      properties:
+        profileCompleted:
+          type: boolean
+        profile:
+          nullable: true
+          allOf:
+            - $ref: "#/components/schemas/UserProfile"
+    UserProfile:
+      allOf:
+        - $ref: "#/components/schemas/SaveUserProfileRequest"
+        - type: object
+          required: [bmi, bmrKcal, dailyCalorieTargetKcal]
+          properties:
+            bmi:
+              type: number
+            bmrKcal:
+              type: integer
+            dailyCalorieTargetKcal:
+              type: integer
+    TodayHome:
+      type: object
+      required:
+        - date
+        - profileCompleted
+        - calorieTargetKcal
+        - caloriesInKcal
+        - remainingCaloriesKcal
+        - streakDays
+        - foodEntries
+      properties:
+        date:
+          type: string
+          format: date
+        profileCompleted:
+          type: boolean
+        calorieTargetKcal:
+          type: integer
+        caloriesInKcal:
+          type: integer
+        remainingCaloriesKcal:
+          type: integer
+        proteinG:
+          type: number
+        fatG:
+          type: number
+        carbsG:
+          type: number
+        currentWeightKg:
+          type: number
+          nullable: true
+        streakDays:
+          type: integer
+        reportSummary:
+          type: string
+          nullable: true
+        foodEntries:
+          type: array
+          items:
+            $ref: "#/components/schemas/FoodEntrySummary"
+    TextRecognitionRequest:
+      type: object
+      required: [text, mealType]
+      properties:
+        text:
+          type: string
+          minLength: 1
+          maxLength: 1000
+        mealType:
+          $ref: "#/components/schemas/MealType"
+        mealDate:
+          type: string
+          format: date
+    RecognitionTask:
+      type: object
+      required: [id, sourceType, status, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        sourceType:
+          type: string
+          enum: [photo, text]
+        mealDate:
+          type: string
+          format: date
+          nullable: true
+        mealType:
+          nullable: true
+          allOf:
+            - $ref: "#/components/schemas/MealType"
+        status:
+          type: string
+          enum: [pending, running, succeeded, failed]
+        draftEntry:
+          nullable: true
+          allOf:
+            - $ref: "#/components/schemas/FoodEntryDraft"
+        errorCode:
+          type: string
+          nullable: true
+        errorMessage:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        finishedAt:
+          type: string
+          format: date-time
+          nullable: true
+    SaveFoodEntryRequest:
+      type: object
+      required: [mealDate, mealType, sourceType, items]
+      properties:
+        recognitionTaskId:
+          type: string
+          format: uuid
+          nullable: true
+        mealDate:
+          type: string
+          format: date
+        mealType:
+          $ref: "#/components/schemas/MealType"
+        sourceType:
+          type: string
+          enum: [photo, text, manual]
+        rawText:
+          type: string
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        items:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/SaveFoodItemRequest"
+    SaveFoodItemRequest:
+      type: object
+      required: [name]
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+          minLength: 1
+          maxLength: 128
+        quantityText:
+          type: string
+          maxLength: 128
+          nullable: true
+        weightG:
+          type: number
+          nullable: true
+        caloriesKcal:
+          type: integer
+          nullable: true
+        proteinG:
+          type: number
+          nullable: true
+        fatG:
+          type: number
+          nullable: true
+        carbsG:
+          type: number
+          nullable: true
+        confidence:
+          type: number
+          nullable: true
+        userEdited:
+          type: boolean
+          default: false
+    FoodEntryDraft:
+      type: object
+      required: [mealDate, mealType, sourceType, items]
+      properties:
+        mealDate:
+          type: string
+          format: date
+        mealType:
+          $ref: "#/components/schemas/MealType"
+        sourceType:
+          type: string
+          enum: [photo, text]
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/FoodItem"
+    FoodEntry:
+      type: object
+      required:
+        - id
+        - mealDate
+        - mealType
+        - sourceType
+        - status
+        - totalCaloriesKcal
+        - totalProteinG
+        - totalFatG
+        - totalCarbsG
+        - items
+      properties:
+        id:
+          type: string
+          format: uuid
+        recognitionTaskId:
+          type: string
+          format: uuid
+          nullable: true
+        mealDate:
+          type: string
+          format: date
+        mealType:
+          $ref: "#/components/schemas/MealType"
+        sourceType:
+          type: string
+          enum: [photo, text, manual]
+        rawText:
+          type: string
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [draft, confirmed, deleted]
+        totalCaloriesKcal:
+          type: integer
+        totalProteinG:
+          type: number
+        totalFatG:
+          type: number
+        totalCarbsG:
+          type: number
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/FoodItem"
+        createdAt:
+          type: string
+          format: date-time
+    FoodEntrySummary:
+      type: object
+      required: [id, mealType, totalCaloriesKcal, itemNames]
+      properties:
+        id:
+          type: string
+          format: uuid
+        mealType:
+          $ref: "#/components/schemas/MealType"
+        totalCaloriesKcal:
+          type: integer
+        itemNames:
+          type: array
+          items:
+            type: string
+    FoodEntrySaveResult:
+      type: object
+      required: [entry, today]
+      properties:
+        entry:
+          $ref: "#/components/schemas/FoodEntry"
+        today:
+          $ref: "#/components/schemas/DailyNutritionSnapshot"
+    FoodItem:
+      type: object
+      required: [id, name, userEdited]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        quantityText:
+          type: string
+          nullable: true
+        weightG:
+          type: number
+          nullable: true
+        caloriesKcal:
+          type: integer
+          nullable: true
+        proteinG:
+          type: number
+          nullable: true
+        fatG:
+          type: number
+          nullable: true
+        carbsG:
+          type: number
+          nullable: true
+        confidence:
+          type: number
+          nullable: true
+        userEdited:
+          type: boolean
+    SaveWeightEntryRequest:
+      type: object
+      required: [recordDate, weightKg]
+      properties:
+        recordDate:
+          type: string
+          format: date
+        weightKg:
+          type: number
+          minimum: 20
+          maximum: 300
+        note:
+          type: string
+          maxLength: 500
+          nullable: true
+    WeightEntry:
+      allOf:
+        - $ref: "#/components/schemas/SaveWeightEntryRequest"
+        - type: object
+          required: [id, createdAt]
+          properties:
+            id:
+              type: string
+              format: uuid
+            createdAt:
+              type: string
+              format: date-time
+    WeightEntrySaveResult:
+      type: object
+      required: [entry, today]
+      properties:
+        entry:
+          $ref: "#/components/schemas/WeightEntry"
+        today:
+          $ref: "#/components/schemas/DailyNutritionSnapshot"
+    DailyNutritionSnapshot:
+      type: object
+      required:
+        - date
+        - calorieTargetKcal
+        - caloriesKcal
+        - remainingCaloriesKcal
+        - proteinG
+        - fatG
+        - carbsG
+        - foodEntryCount
+      properties:
+        date:
+          type: string
+          format: date
+        calorieTargetKcal:
+          type: integer
+        caloriesKcal:
+          type: integer
+        remainingCaloriesKcal:
+          type: integer
+        proteinG:
+          type: number
+        fatG:
+          type: number
+        carbsG:
+          type: number
+        foodEntryCount:
+          type: integer
+        weightKg:
+          type: number
+          nullable: true
+    GenerateDailyReportRequest:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+    DailyReport:
+      type: object
+      required: [id, reportDate, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        reportDate:
+          type: string
+          format: date
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+          nullable: true
+        summary:
+          type: string
+          nullable: true
+        problem:
+          type: string
+          nullable: true
+        suggestion:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [pending, generated, viewed, failed]
+        generatedAt:
+          type: string
+          format: date-time
+          nullable: true
+        viewedAt:
+          type: string
+          format: date-time
+          nullable: true
+    Streak:
+      type: object
+      required: [currentDays, longestDays, milestones]
+      properties:
+        currentDays:
+          type: integer
+        longestDays:
+          type: integer
+        lastActiveDate:
+          type: string
+          format: date
+          nullable: true
+        milestones:
+          type: array
+          items:
+            $ref: "#/components/schemas/StreakMilestone"
+    StreakMilestone:
+      type: object
+      required: [days, achieved]
+      properties:
+        days:
+          type: integer
+          enum: [3, 7, 30, 100]
+        achieved:
+          type: boolean
+        achievedAt:
+          type: string
+          format: date-time
+          nullable: true
+    MealType:
+      type: string
+      enum: [breakfast, lunch, dinner, snack]

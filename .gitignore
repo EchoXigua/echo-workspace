@@ -1,0 +1,42 @@
+# macOS
+.DS_Store
+
+# Environment files
+.env
+.env.*
+!.env.*.example
+!server/.env.*.example
+
+# Logs
+*.log
+logs/
+
+# Java / Spring Boot
+target/
+build/
+.gradle/
+.m2/
+out/
+
+# Node / Web
+node_modules/
+dist/
+coverage/
+
+# iOS
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
+# Android
+*.apk
+*.aab
+local.properties
+
+# IDE
+.idea/
+.vscode/
+
+# Temporary files
+tmp/
+temp/

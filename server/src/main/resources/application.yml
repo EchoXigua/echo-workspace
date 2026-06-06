@@ -1,0 +1,64 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: leanmate-server
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/leanmate}
+    username: ${DB_USERNAME:leanmate}
+    password: ${DB_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+  jpa:
+    open-in-view: false
+    show-sql: ${LOG_SQL:false}
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  servlet:
+    multipart:
+      max-file-size: ${MAX_UPLOAD_IMAGE_SIZE_MB:8}MB
+      max-request-size: ${MAX_UPLOAD_IMAGE_SIZE_MB:8}MB
+
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+
+leanmate:
+  env: ${APP_ENV:local}
+  public-base-url: ${APP_PUBLIC_BASE_URL:http://localhost:8080}
+  jwt:
+    issuer: ${JWT_ISSUER:leanmate}
+    secret: ${JWT_SECRET:change-me-use-a-strong-secret}
+    access-token-ttl-seconds: ${JWT_ACCESS_TOKEN_TTL_SECONDS:3600}
+    refresh-token-ttl-days: ${JWT_REFRESH_TOKEN_TTL_DAYS:30}
+  apple:
+    client-id: ${APPLE_CLIENT_ID:}
+    team-id: ${APPLE_TEAM_ID:}
+    key-id: ${APPLE_KEY_ID:}
+    private-key: ${APPLE_PRIVATE_KEY:}
+  storage:
+    provider: ${STORAGE_PROVIDER:s3}
+    endpoint: ${STORAGE_ENDPOINT:}
+    bucket: ${STORAGE_BUCKET:}
+    access-key: ${STORAGE_ACCESS_KEY:}
+    secret-key: ${STORAGE_SECRET_KEY:}
+    public-base-url: ${STORAGE_PUBLIC_BASE_URL:}
+  ai:
+    provider: ${AI_PROVIDER:openai}
+    api-key: ${AI_API_KEY:}
+    base-url: ${AI_BASE_URL:https://api.openai.com/v1}
+    diet-photo-model: ${AI_DIET_PHOTO_MODEL:change-me}
+    diet-text-model: ${AI_DIET_TEXT_MODEL:change-me}
+    daily-report-model: ${AI_DAILY_REPORT_MODEL:change-me}
+    request-timeout-seconds: ${AI_REQUEST_TIMEOUT_SECONDS:30}
+    daily-report-retry-limit: ${AI_DAILY_REPORT_RETRY_LIMIT:1}
+  limits:
+    max-upload-image-size-mb: ${MAX_UPLOAD_IMAGE_SIZE_MB:8}
+    daily-ai-recognition-limit: ${DAILY_AI_RECOGNITION_LIMIT:30}
+    daily-report-generate-limit: ${DAILY_REPORT_GENERATE_LIMIT:3}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "LeanMate PRD 工作流"
+  short_description: "将瘦搭 PRD 转成方案、架构和接口文档"
+  default_prompt: "使用 $leanmate-prd-workflow 处理这份 LeanMate PRD，更新项目文档、后端技术方案和 OpenAPI。"

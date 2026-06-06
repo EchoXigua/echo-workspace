@@ -1,0 +1,23 @@
+---
+description: LeanMate project-wide AI rules
+alwaysApply: true
+---
+
+# LeanMate Project Rules
+
+Read and follow @AGENTS.md first. It is the single source of truth for AI collaboration rules.
+
+Also consult these documents when relevant:
+
+- Product requirements: @docs/product/prd-v1.1.md
+- Product roadmap: @docs/product/roadmap.md
+- Architecture overview: @docs/architecture/overview.md
+- Backend architecture: @docs/architecture/backend.md
+- API contract: @docs/api/openapi.yaml
+
+For work under a specific app directory, also read the local rules:
+
+- Backend: @server/AGENTS.md
+- iOS: @ios/AGENTS.md
+- Android: @android/AGENTS.md
+- Web: @web/AGENTS.md

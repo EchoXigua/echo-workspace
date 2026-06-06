@@ -1,0 +1,143 @@
+# 饮食记录后端技术方案
+
+## 基本信息
+
+- 版本：V1.1
+- 对应 PRD：8.3 饮食记录
+- 状态：草案
+
+## 业务目标
+
+支持拍照、文本、手动三种饮食记录方式，降低用户记录成本。AI 识别结果必须经过用户确认，确认后的结构化记录才进入今日统计和 AI 日报数据源。
+
+## 后端职责
+
+- 接收饮食图片或文本。
+- 创建 AI 识别/解析任务。
+- 保存 AI 原始输出和结构化候选食物。
+- 保存用户确认后的饮食记录。
+- 支持饮食记录编辑和删除。
+- 触发当日营养统计快照刷新。
+
+## 不做范围
+
+- V1.1 不建设完整食物数据库。
+- V1.1 不做复杂单位换算体系。
+- V1.1 不保证 AI 热量估算完全准确，用户可以编辑。
+
+## 核心流程
+
+```mermaid
+sequenceDiagram
+    participant App
+    participant API
+    participant AI
+    participant DB
+
+    App->>API: 上传图片/提交文本
+    API->>DB: 创建 ai_recognition_tasks
+    API->>AI: 请求识别或解析
+    AI-->>API: 返回候选食物项
+    API->>DB: 保存任务结果
+    API-->>App: 返回草稿记录
+    App->>API: 用户确认或编辑后保存
+    API->>DB: 保存 food_entries/food_items
+    API->>DB: 刷新 daily_nutrition_snapshots
+    API-->>App: 返回记录和今日统计
+```
+
+## 数据模型影响
+
+详细表结构见：
+
+- `../../database-design.md`
+
+核心表：
+
+- `food_entries`
+- `food_items`
+- `ai_recognition_tasks`
+- `daily_nutrition_snapshots`
+
+关键字段：
+
+- `food_entries.source_type`：photo/text/manual
+- `food_entries.status`：draft/confirmed/deleted
+- `food_items.is_user_edited`
+- `ai_recognition_tasks.status`：pending/running/succeeded/failed
+- `ai_recognition_tasks.raw_output`
+
+索引建议：
+
+- `food_entries(user_id, meal_date, status)`
+- `ai_recognition_tasks(user_id, created_at)`
+
+## API 影响
+
+人类可读 API 设计见：
+
+- `api-design.md`
+
+已有草案：
+
+- `POST /v1/diet/recognitions/photo`
+- `POST /v1/diet/recognitions/text`
+- `GET /v1/diet/entries`
+- `POST /v1/diet/entries`
+- `PUT /v1/diet/entries/{entryId}`
+- `DELETE /v1/diet/entries/{entryId}`
+
+需要补充：
+
+- `GET /v1/diet/recognitions/{taskId}` 查询异步识别任务。
+- 保存饮食记录后是否返回刷新后的首页统计，需要在 OpenAPI 明确。
+
+最终接口契约以 `../../../../docs/api/openapi.yaml` 为准。
+
+## 业务规则
+
+- AI 识别结果默认是草稿，不进入统计。
+- 手动录入可以直接保存为 confirmed。
+- confirmed 记录被编辑后必须重新计算总热量和营养。
+- 删除记录使用软删除，避免影响审计和问题排查。
+- 用户只能操作自己的饮食记录。
+
+## 异常和降级
+
+- AI 识别失败时，返回失败状态和可读错误，客户端允许切换手动录入。
+- 图片上传失败时不创建正式饮食记录。
+- AI 返回缺失营养字段时，允许字段为空，但保存前用户确认页要可编辑。
+
+## 权限和数据归属
+
+- 用户只能访问和修改自己的识别任务、饮食记录和食物项。
+- `food_items` 只能通过所属 `food_entries` 聚合更新，不单独暴露跨记录修改接口。
+
+## 异步任务
+
+- 拍照识别和文本解析按异步任务设计，状态保存在 `ai_recognition_tasks`。
+- V1.1 使用数据库任务表，不引入 MQ。
+- 识别失败不阻断手动录入。
+
+## 埋点和指标
+
+- `diet_recognition_started`
+- `diet_recognition_succeeded`
+- `diet_recognition_failed`
+- `diet_entry_confirmed`
+- `diet_entry_edited`
+- `first_diet_entry_completed`
+
+## 测试要点
+
+- 三种 source_type 都能保存。
+- 草稿不进入今日统计。
+- confirmed 后刷新当日统计。
+- 编辑、删除后统计正确回滚或重算。
+- 非本人记录不可访问。
+
+## 待确认问题
+
+- 拍照识别是同步等待结果，还是一律异步任务轮询。
+- 图片是否需要设置保存期限。
+- 食物营养估算采用 AI 直接返回，还是接入第三方食物营养库。
