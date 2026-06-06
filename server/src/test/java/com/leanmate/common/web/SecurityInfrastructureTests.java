@@ -11,6 +11,11 @@ import com.leanmate.common.exception.BusinessException;
 import com.leanmate.common.response.ApiResponse;
 import com.leanmate.common.security.CurrentUserContext;
 import com.leanmate.common.security.JwtTokenService;
+import com.leanmate.user.repository.RefreshTokenRepository;
+import com.leanmate.user.repository.UserAuthIdentityRepository;
+import com.leanmate.user.repository.UserProfileRepository;
+import com.leanmate.user.repository.UserRepository;
+import com.leanmate.user.repository.WeightGoalRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import java.util.UUID;
@@ -22,6 +27,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +42,8 @@ import org.springframework.web.bind.annotation.RestController;
         properties = {
                 "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,"
                         + "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,"
-                        + "org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration",
+                        + "org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration,"
+                        + "org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration",
                 "leanmate.jwt.issuer=leanmate-test",
                 "leanmate.jwt.secret=leanmate-test-jwt-secret-with-enough-length",
                 "leanmate.jwt.access-token-ttl-seconds=3600",
@@ -48,6 +55,21 @@ class SecurityInfrastructureTests {
     private final MockMvc mockMvc;
     private final JwtTokenService jwtTokenService;
 
+    @MockitoBean
+    UserRepository userRepository;
+
+    @MockitoBean
+    UserAuthIdentityRepository userAuthIdentityRepository;
+
+    @MockitoBean
+    RefreshTokenRepository refreshTokenRepository;
+
+    @MockitoBean
+    UserProfileRepository userProfileRepository;
+
+    @MockitoBean
+    WeightGoalRepository weightGoalRepository;
+
     @Autowired
     SecurityInfrastructureTests(MockMvc mockMvc, JwtTokenService jwtTokenService) {
         this.mockMvc = mockMvc;
@@ -58,8 +80,8 @@ class SecurityInfrastructureTests {
     void rejectUnauthenticatedRequest() throws Exception {
         mockMvc.perform(get("/test/secure"))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value(40100))
-                .andExpect(jsonPath("$.message").value("认证失败"));
+                .andExpect(jsonPath("$.code").value(40101))
+                .andExpect(jsonPath("$.message").value("未登录或登录已过期"));
     }
 
     @Test
@@ -68,7 +90,7 @@ class SecurityInfrastructureTests {
                         .header(HttpHeaders.AUTHORIZATION, "Bearer invalid-token"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.code").value(40101))
-                .andExpect(jsonPath("$.message").value("无效或过期的访问令牌"));
+                .andExpect(jsonPath("$.message").value("未登录或登录已过期"));
     }
 
     @Test
@@ -105,7 +127,7 @@ class SecurityInfrastructureTests {
         mockMvc.perform(get("/test/business-error")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(40000))
+                .andExpect(jsonPath("$.code").value(40001))
                 .andExpect(jsonPath("$.message").value("业务错误"));
     }
 

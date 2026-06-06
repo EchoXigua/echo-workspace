@@ -34,7 +34,7 @@ paths:
     post:
       tags: [Auth]
       summary: 第三方登录
-      description: V1.1 iOS 首发可先使用 Apple 登录，但接口模型保留 provider 扩展能力。
+      description: V1.1 首发真实登录只支持 Apple；local/test 可使用受控 mock verifier。google 枚举仅保留后续扩展，当前返回参数错误。
       security: []
       requestBody:
         required: true
@@ -51,6 +51,8 @@ paths:
                 $ref: "#/components/schemas/ApiAuthTokenResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "500":
           $ref: "#/components/responses/InternalServerError"
   /v1/auth/refresh:
@@ -685,6 +687,7 @@ components:
         provider:
           type: string
           enum: [apple, google]
+          description: V1.1 当前只支持 apple；google 保留后续扩展。
         identityToken:
           type: string
         authorizationCode:
