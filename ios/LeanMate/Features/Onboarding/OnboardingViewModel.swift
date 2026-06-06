@@ -3,7 +3,7 @@ import Combine
 
 enum OnboardingDestination: Equatable {
     case profileSetup
-    case homePlaceholder
+    case home
 }
 
 enum OnboardingState: Equatable {
@@ -51,7 +51,7 @@ final class OnboardingViewModel: ObservableObject {
                 AuthTokens(accessToken: token.accessToken, refreshToken: token.refreshToken)
             )
             state = .idle
-            return token.profileCompleted ? .homePlaceholder : .profileSetup
+            return token.profileCompleted ? .home : .profileSetup
         } catch {
             let appError = AppError(error)
             if case .unauthorized = appError {

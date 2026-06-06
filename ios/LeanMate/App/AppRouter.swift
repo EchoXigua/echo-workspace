@@ -4,7 +4,8 @@ enum AppRootState: Equatable {
     case coldStart
     case onboarding
     case profileSetup
-    case homePlaceholder
+    case visitorHome
+    case home
 }
 
 enum AppTab: String, CaseIterable, Identifiable, Hashable {
@@ -58,9 +59,15 @@ final class AppRouter: ObservableObject {
         rootState = .profileSetup
     }
 
-    func showHomePlaceholder() {
+    func showVisitorHome() {
         path = NavigationPath()
         selectedTab = .home
-        rootState = .homePlaceholder
+        rootState = .visitorHome
+    }
+
+    func showHome() {
+        path = NavigationPath()
+        selectedTab = .home
+        rootState = .home
     }
 }

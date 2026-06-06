@@ -5,15 +5,18 @@ struct OnboardingView: View {
 
     let onProfileRequired: () -> Void
     let onCompleted: () -> Void
+    let onVisitorPreview: () -> Void
 
     init(
         viewModel: OnboardingViewModel,
         onProfileRequired: @escaping () -> Void,
-        onCompleted: @escaping () -> Void
+        onCompleted: @escaping () -> Void,
+        onVisitorPreview: @escaping () -> Void = {}
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.onProfileRequired = onProfileRequired
         self.onCompleted = onCompleted
+        self.onVisitorPreview = onVisitorPreview
     }
 
     var body: some View {
@@ -32,14 +35,24 @@ struct OnboardingView: View {
                 }
             }
 
-            LMButton(
-                title: "开始记录",
-                systemImage: "arrow.right",
-                isLoading: viewModel.isLoggingIn
-            ) {
-                Task {
-                    await handleLogin()
+            VStack(spacing: LMSpacing.medium) {
+                LMButton(
+                    title: "开始记录",
+                    systemImage: "arrow.right",
+                    isLoading: viewModel.isLoggingIn
+                ) {
+                    Task {
+                        await handleLogin()
+                    }
                 }
+
+                LMButton(
+                    title: "先看看首页",
+                    systemImage: "eye",
+                    role: .secondary,
+                    height: 48,
+                    action: onVisitorPreview
+                )
             }
         }
         .padding(.top, 78)
@@ -119,7 +132,7 @@ private extension OnboardingView {
         switch destination {
         case .profileSetup:
             onProfileRequired()
-        case .homePlaceholder:
+        case .home:
             onCompleted()
         }
     }

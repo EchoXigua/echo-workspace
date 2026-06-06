@@ -42,12 +42,16 @@
 		000000000000000000001033 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002033 /* OnboardingView.swift */; };
 		000000000000000000001034 /* ProfileSetupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002034 /* ProfileSetupViewModel.swift */; };
 		000000000000000000001035 /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002035 /* ProfileSetupView.swift */; };
-		000000000000000000001036 /* HomePlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002036 /* HomePlaceholderView.swift */; };
+		000000000000000000001037 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002037 /* HomeViewModel.swift */; };
+		000000000000000000001038 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002038 /* HomeView.swift */; };
+		000000000000000000001039 /* HomeEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002039 /* HomeEmptyView.swift */; };
+		000000000000000000001040 /* VisitorHomeBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002040 /* VisitorHomeBanner.swift */; };
 		00000000000000000000A001 /* APICodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B001 /* APICodingTests.swift */; };
 		00000000000000000000A002 /* MockAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B002 /* MockAPIClientTests.swift */; };
 		00000000000000000000A003 /* FileLocalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B003 /* FileLocalStoreTests.swift */; };
 		00000000000000000000A004 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B004 /* XCTest.framework */; };
 		00000000000000000000A005 /* FirstBatchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B007 /* FirstBatchViewModelTests.swift */; };
+		00000000000000000000A006 /* HomeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B008 /* HomeViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,13 +101,17 @@
 		000000000000000000002033 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		000000000000000000002034 /* ProfileSetupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSetupViewModel.swift; sourceTree = "<group>"; };
 		000000000000000000002035 /* ProfileSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSetupView.swift; sourceTree = "<group>"; };
-		000000000000000000002036 /* HomePlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePlaceholderView.swift; sourceTree = "<group>"; };
+		000000000000000000002037 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		000000000000000000002038 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		000000000000000000002039 /* HomeEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeEmptyView.swift; sourceTree = "<group>"; };
+		000000000000000000002040 /* VisitorHomeBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitorHomeBanner.swift; sourceTree = "<group>"; };
 		00000000000000000000B000 /* LeanMateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeanMateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00000000000000000000B001 /* APICodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICodingTests.swift; sourceTree = "<group>"; };
 		00000000000000000000B002 /* MockAPIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAPIClientTests.swift; sourceTree = "<group>"; };
 		00000000000000000000B003 /* FileLocalStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileLocalStoreTests.swift; sourceTree = "<group>"; };
 		00000000000000000000B004 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
 		00000000000000000000B007 /* FirstBatchViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstBatchViewModelTests.swift; sourceTree = "<group>"; };
+		00000000000000000000B008 /* HomeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -297,7 +305,10 @@
 		000000000000000000003017 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				000000000000000000002036 /* HomePlaceholderView.swift */,
+				000000000000000000002037 /* HomeViewModel.swift */,
+				000000000000000000002038 /* HomeView.swift */,
+				000000000000000000002039 /* HomeEmptyView.swift */,
+				000000000000000000002040 /* VisitorHomeBanner.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -322,6 +333,7 @@
 				00000000000000000000B002 /* MockAPIClientTests.swift */,
 				00000000000000000000B003 /* FileLocalStoreTests.swift */,
 				00000000000000000000B007 /* FirstBatchViewModelTests.swift */,
+				00000000000000000000B008 /* HomeViewModelTests.swift */,
 			);
 			path = LeanMateTests;
 			sourceTree = "<group>";
@@ -467,7 +479,10 @@
 				000000000000000000001033 /* OnboardingView.swift in Sources */,
 				000000000000000000001034 /* ProfileSetupViewModel.swift in Sources */,
 				000000000000000000001035 /* ProfileSetupView.swift in Sources */,
-				000000000000000000001036 /* HomePlaceholderView.swift in Sources */,
+				000000000000000000001037 /* HomeViewModel.swift in Sources */,
+				000000000000000000001038 /* HomeView.swift in Sources */,
+				000000000000000000001039 /* HomeEmptyView.swift in Sources */,
+				000000000000000000001040 /* VisitorHomeBanner.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -479,6 +494,7 @@
 				00000000000000000000A002 /* MockAPIClientTests.swift in Sources */,
 				00000000000000000000A003 /* FileLocalStoreTests.swift in Sources */,
 				00000000000000000000A005 /* FirstBatchViewModelTests.swift in Sources */,
+				00000000000000000000A006 /* HomeViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -26,7 +26,7 @@ final class FirstBatchViewModelTests: XCTestCase {
 
         let destination = await viewModel.mockLogin()
 
-        XCTAssertEqual(destination, .homePlaceholder)
+        XCTAssertEqual(destination, .home)
     }
 
     func testProfileValidationFailureDoesNotCallSaveAPI() async throws {

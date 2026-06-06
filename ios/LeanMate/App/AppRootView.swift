@@ -29,7 +29,8 @@ private extension AppRootView {
                     tokenStore: environment.tokenStore
                 ),
                 onProfileRequired: router.showProfileSetup,
-                onCompleted: router.showHomePlaceholder
+                onCompleted: router.showHome,
+                onVisitorPreview: router.showVisitorHome
             )
         case .profileSetup:
             ProfileSetupView(
@@ -37,11 +38,26 @@ private extension AppRootView {
                     apiClient: environment.apiClient,
                     tokenStore: environment.tokenStore
                 ),
-                onCompleted: router.showHomePlaceholder,
+                onCompleted: router.showHome,
                 onAuthExpired: router.showOnboarding
             )
-        case .homePlaceholder:
-            HomePlaceholderView(selectedTab: $router.selectedTab)
+        case .visitorHome:
+            HomeView(
+                viewModel: HomeViewModel.visitor(),
+                selectedTab: $router.selectedTab,
+                onLoginRequired: router.showOnboarding,
+                onProfileRequired: router.showProfileSetup
+            )
+        case .home:
+            HomeView(
+                viewModel: HomeViewModel(
+                    apiClient: environment.apiClient,
+                    tokenStore: environment.tokenStore
+                ),
+                selectedTab: $router.selectedTab,
+                onLoginRequired: router.showOnboarding,
+                onProfileRequired: router.showProfileSetup
+            )
         }
     }
 
@@ -71,7 +87,7 @@ private extension AppRootView {
 
             let user = try await environment.apiClient.currentUser()
             if user.profileCompleted {
-                router.showHomePlaceholder()
+                router.showHome()
             } else {
                 router.showProfileSetup()
             }

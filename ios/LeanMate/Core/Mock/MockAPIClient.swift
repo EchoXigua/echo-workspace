@@ -74,6 +74,22 @@ final class MockAPIClient: APIClient, @unchecked Sendable {
 
     func todayHome(date: Date?) async throws -> TodayHome {
         try await prepare()
+        if case .profileIncomplete = scenario {
+            return TodayHome(
+                date: date ?? MockData.today,
+                profileCompleted: false,
+                calorieTargetKcal: 0,
+                caloriesInKcal: 0,
+                remainingCaloriesKcal: 0,
+                proteinG: nil,
+                fatG: nil,
+                carbsG: nil,
+                currentWeightKg: nil,
+                streakDays: 0,
+                reportSummary: nil,
+                foodEntries: []
+            )
+        }
         if case .empty = scenario {
             return TodayHome(
                 date: date ?? MockData.today,
