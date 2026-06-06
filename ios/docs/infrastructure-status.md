@@ -6,7 +6,7 @@ Last updated: 2026-06-06
 
 iOS 基础设施阶段已完成，可以等待业务开发阶段启动。
 
-本阶段只完成工程、架构边界、网络、Mock、存储和可复用 UI 组件；未实现 Onboarding、Profile、Home、Diet、Weight、Report 等业务页面和业务 ViewModel。
+本阶段只完成工程、架构边界、网络、Mock、存储、可复用 UI 组件、设计稿画面映射和基础单元测试目标；未实现 Onboarding、Profile、Home、Diet、Weight、Report 等业务页面和业务 ViewModel。
 
 ## 已完成
 
@@ -60,6 +60,12 @@ iOS 基础设施阶段已完成，可以等待业务开发阶段启动。
   - `LMTag`
   - `LMMetricTile`
 - 基础设施预览壳：`InfrastructurePreviewView`
+- 设计稿画面映射：`ios/docs/design-screen-map.md`
+- 单元测试 Target：`LeanMateTests`
+- 基础设施单元测试：
+  - `APICodingTests`
+  - `MockAPIClientTests`
+  - `FileLocalStoreTests`
 
 ## 组件是否属于基础设施
 
@@ -96,7 +102,19 @@ V1.1 设计稿中反复出现的按钮、卡片、底部导航、搜索框、She
 xcodebuild -project ios/LeanMate.xcodeproj -scheme LeanMate -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath /private/tmp/LeanMateDerivedData CODE_SIGNING_ALLOWED=NO build
 ```
 
+已通过 build-for-testing：
+
+```bash
+xcodebuild -project ios/LeanMate.xcodeproj -scheme LeanMate -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath /private/tmp/LeanMateTestDerivedData CODE_SIGNING_ALLOWED=NO build-for-testing
+```
+
 说明：当前沙箱无法连接 CoreSimulatorService，会输出模拟器服务相关噪声，但 generic simulator 构建成功。
+
+当前沙箱无法访问具名 iOS Simulator 执行真实 `test` 动作。业务开发前建议在本机可用模拟器上运行：
+
+```bash
+xcodebuild -project ios/LeanMate.xcodeproj -scheme LeanMate -configuration Debug -destination 'platform=iOS Simulator,name=<available simulator>' -derivedDataPath /private/tmp/LeanMateTestDerivedData CODE_SIGNING_ALLOWED=NO test
+```
 
 ## 业务开发待启动
 

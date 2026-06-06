@@ -9,6 +9,7 @@ LeanMate iOS 客户端。V1.1 先以 iPhone App 为主，最低兼容 iOS 17。
 - iOS 编码规范：[docs/coding-style.md](docs/coding-style.md)
 - API 与 Mock 策略：[docs/api-mock-strategy.md](docs/api-mock-strategy.md)
 - 基础设施状态：[docs/infrastructure-status.md](docs/infrastructure-status.md)
+- 设计稿画面映射：[docs/design-screen-map.md](docs/design-screen-map.md)
 - 设计稿唯一准稿：`design/app/LeanMateV1.0-shikaka.pen`
 - API 契约：`docs/api/openapi.yaml`
 - iOS AI 规范：[AGENTS.md](AGENTS.md)
@@ -17,4 +18,12 @@ LeanMate iOS 客户端。V1.1 先以 iPhone App 为主，最低兼容 iOS 17。
 
 ```bash
 xcodebuild -project ios/LeanMate.xcodeproj -scheme LeanMate -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath /private/tmp/LeanMateDerivedData CODE_SIGNING_ALLOWED=NO build
+```
+
+```bash
+xcodebuild -project ios/LeanMate.xcodeproj -scheme LeanMate -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath /private/tmp/LeanMateTestDerivedData CODE_SIGNING_ALLOWED=NO build-for-testing
+```
+
+```bash
+xcodebuild -project ios/LeanMate.xcodeproj -scheme LeanMate -configuration Debug -destination 'platform=iOS Simulator,name=<available simulator>' -derivedDataPath /private/tmp/LeanMateTestDerivedData CODE_SIGNING_ALLOWED=NO test
 ```
