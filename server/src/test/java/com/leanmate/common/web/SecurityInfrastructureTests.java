@@ -11,6 +11,7 @@ import com.leanmate.common.exception.BusinessException;
 import com.leanmate.common.response.ApiResponse;
 import com.leanmate.common.security.CurrentUserContext;
 import com.leanmate.common.security.JwtTokenService;
+import com.leanmate.diet.repository.AiRecognitionTaskRepository;
 import com.leanmate.diet.repository.FoodEntryRepository;
 import com.leanmate.diet.repository.FoodItemRepository;
 import com.leanmate.stats.repository.DailyAiReportSummaryRepository;
@@ -101,6 +102,9 @@ class SecurityInfrastructureTests {
 
     @MockitoBean
     FoodItemRepository foodItemRepository;
+
+    @MockitoBean
+    AiRecognitionTaskRepository aiRecognitionTaskRepository;
 
     @Autowired
     SecurityInfrastructureTests(MockMvc mockMvc, JwtTokenService jwtTokenService) {

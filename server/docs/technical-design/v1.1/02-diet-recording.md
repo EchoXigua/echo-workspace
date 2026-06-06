@@ -4,7 +4,7 @@
 
 - 版本：V1.1
 - 对应 PRD：8.3 饮食记录
-- 状态：手动记录已实现，AI 识别待实现
+- 状态：手动记录和 AI 识别任务接口已实现
 
 ## 业务目标
 
@@ -12,9 +12,9 @@
 
 ## 后端职责
 
-- 接收饮食图片或文本。〔AI 识别批次〕
-- 创建 AI 识别/解析任务。〔AI 识别批次〕
-- 保存 AI 原始输出和结构化候选食物。〔AI 识别批次〕
+- 接收饮食图片或文本。
+- 创建 AI 识别/解析任务。
+- 保存 AI 原始输出和结构化候选食物。
 - 保存用户确认后的饮食记录。
 - 支持饮食记录编辑和删除。
 - 触发当日营养统计快照刷新。
@@ -89,7 +89,7 @@ sequenceDiagram
 
 已确认：
 
-- `GET /v1/diet/recognitions/{taskId}` 已在 OpenAPI 中定义，具体实现留到 AI 识别批次。
+- `POST /v1/diet/recognitions/photo`、`POST /v1/diet/recognitions/text`、`GET /v1/diet/recognitions/{taskId}` 已实现。
 - 保存饮食记录后返回 `entry` 和刷新后的 `today` 统计快照。
 
 最终接口契约以 `../../../../docs/api/openapi.yaml` 为准。
