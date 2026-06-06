@@ -14,7 +14,7 @@ iOS 架构要支持：
 - Swift。
 - SwiftUI。
 - Swift Concurrency。
-- SwiftData 用于本地草稿和待同步记录。
+- 基础设施阶段当前使用 `FileLocalStore` 保存本地草稿和待同步记录；如后续需要 SwiftData，可替换 `LocalStore` 实现。
 - Keychain 用于 Token。
 - URLSession 封装网络层。
 - Swift Package Manager 管理依赖。
@@ -85,6 +85,7 @@ V1.1 可以轻量使用，不强行引入复杂 Clean Architecture。
 - 保存本地草稿。
 - 保存待同步体重或饮食记录。
 - 不作为跨端数据真相来源。
+- 业务层只依赖 `LocalStore` 协议，不直接依赖具体存储实现。
 
 ## Feature 拆分
 
@@ -171,6 +172,13 @@ V1.1 不做复杂离线同步。
 - AI 识别失败后保留用户输入。
 
 后端仍是主数据源。重新进入页面时优先拉后端数据，再合并本地草稿。
+
+当前实现：
+
+- `FileLocalStore`：真实 App 环境默认使用。
+- `InMemoryLocalStore`：Mock、预览和测试使用。
+
+后续如果切换 SwiftData，应保持 `LocalStore` 协议不变。
 
 ## 依赖注入
 

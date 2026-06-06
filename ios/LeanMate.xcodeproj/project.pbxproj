@@ -1,0 +1,549 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		000000000000000000001001 /* LeanMateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002001 /* LeanMateApp.swift */; };
+		000000000000000000001002 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002002 /* AppEnvironment.swift */; };
+		000000000000000000001003 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002003 /* AppRouter.swift */; };
+		000000000000000000001004 /* AppRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002004 /* AppRootView.swift */; };
+		000000000000000000001005 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002005 /* APIClient.swift */; };
+		000000000000000000001006 /* APICoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002006 /* APICoding.swift */; };
+		000000000000000000001007 /* APIDTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002007 /* APIDTOs.swift */; };
+		000000000000000000001008 /* APIEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002008 /* APIEnvelope.swift */; };
+		000000000000000000001009 /* LiveAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002009 /* LiveAPIClient.swift */; };
+		000000000000000000001010 /* TokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002010 /* TokenStore.swift */; };
+		000000000000000000001011 /* KeychainTokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002011 /* KeychainTokenStore.swift */; };
+		000000000000000000001012 /* LocalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002012 /* LocalStore.swift */; };
+		000000000000000000001013 /* FileLocalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002013 /* FileLocalStore.swift */; };
+		000000000000000000001014 /* MockAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002014 /* MockAPIClient.swift */; };
+		000000000000000000001015 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002015 /* MockData.swift */; };
+		000000000000000000001016 /* LMColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002016 /* LMColors.swift */; };
+		000000000000000000001017 /* LMTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002017 /* LMTypography.swift */; };
+		000000000000000000001018 /* LMSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002018 /* LMSpacing.swift */; };
+		000000000000000000001019 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002019 /* AppError.swift */; };
+		000000000000000000001020 /* Loadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002020 /* Loadable.swift */; };
+		000000000000000000001021 /* LMButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002021 /* LMButton.swift */; };
+		000000000000000000001022 /* LMCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002022 /* LMCard.swift */; };
+		000000000000000000001023 /* LMBottomTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002023 /* LMBottomTabs.swift */; };
+		000000000000000000001024 /* LMNutrientChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002024 /* LMNutrientChip.swift */; };
+		000000000000000000001025 /* LMStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002025 /* LMStateView.swift */; };
+		000000000000000000001026 /* LMSearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002026 /* LMSearchField.swift */; };
+		000000000000000000001027 /* LMSheetHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002027 /* LMSheetHandle.swift */; };
+		000000000000000000001028 /* LMTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002028 /* LMTag.swift */; };
+		000000000000000000001029 /* LMMetricTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002029 /* LMMetricTile.swift */; };
+		000000000000000000001030 /* PreviewEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002030 /* PreviewEnvironment.swift */; };
+		000000000000000000001031 /* InfrastructurePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002031 /* InfrastructurePreviewView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		000000000000000000002000 /* LeanMate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeanMate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		000000000000000000002001 /* LeanMateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanMateApp.swift; sourceTree = "<group>"; };
+		000000000000000000002002 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		000000000000000000002003 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		000000000000000000002004 /* AppRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootView.swift; sourceTree = "<group>"; };
+		000000000000000000002005 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		000000000000000000002006 /* APICoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICoding.swift; sourceTree = "<group>"; };
+		000000000000000000002007 /* APIDTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIDTOs.swift; sourceTree = "<group>"; };
+		000000000000000000002008 /* APIEnvelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIEnvelope.swift; sourceTree = "<group>"; };
+		000000000000000000002009 /* LiveAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveAPIClient.swift; sourceTree = "<group>"; };
+		000000000000000000002010 /* TokenStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStore.swift; sourceTree = "<group>"; };
+		000000000000000000002011 /* KeychainTokenStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainTokenStore.swift; sourceTree = "<group>"; };
+		000000000000000000002012 /* LocalStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStore.swift; sourceTree = "<group>"; };
+		000000000000000000002013 /* FileLocalStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileLocalStore.swift; sourceTree = "<group>"; };
+		000000000000000000002014 /* MockAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAPIClient.swift; sourceTree = "<group>"; };
+		000000000000000000002015 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
+		000000000000000000002016 /* LMColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMColors.swift; sourceTree = "<group>"; };
+		000000000000000000002017 /* LMTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMTypography.swift; sourceTree = "<group>"; };
+		000000000000000000002018 /* LMSpacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMSpacing.swift; sourceTree = "<group>"; };
+		000000000000000000002019 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		000000000000000000002020 /* Loadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loadable.swift; sourceTree = "<group>"; };
+		000000000000000000002021 /* LMButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMButton.swift; sourceTree = "<group>"; };
+		000000000000000000002022 /* LMCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMCard.swift; sourceTree = "<group>"; };
+		000000000000000000002023 /* LMBottomTabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMBottomTabs.swift; sourceTree = "<group>"; };
+		000000000000000000002024 /* LMNutrientChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMNutrientChip.swift; sourceTree = "<group>"; };
+		000000000000000000002025 /* LMStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMStateView.swift; sourceTree = "<group>"; };
+		000000000000000000002026 /* LMSearchField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMSearchField.swift; sourceTree = "<group>"; };
+		000000000000000000002027 /* LMSheetHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMSheetHandle.swift; sourceTree = "<group>"; };
+		000000000000000000002028 /* LMTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMTag.swift; sourceTree = "<group>"; };
+		000000000000000000002029 /* LMMetricTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMMetricTile.swift; sourceTree = "<group>"; };
+		000000000000000000002030 /* PreviewEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewEnvironment.swift; sourceTree = "<group>"; };
+		000000000000000000002031 /* InfrastructurePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfrastructurePreviewView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		000000000000000000004001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		000000000000000000003001 = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000003003 /* LeanMate */,
+				000000000000000000003002 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		000000000000000000003002 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000002000 /* LeanMate.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		000000000000000000003003 /* LeanMate */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000003004 /* App */,
+				000000000000000000003005 /* Core */,
+				000000000000000000003013 /* Components */,
+				000000000000000000003014 /* Features */,
+				000000000000000000003021 /* Resources */,
+				000000000000000000003022 /* PreviewSupport */,
+			);
+			path = LeanMate;
+			sourceTree = "<group>";
+		};
+		000000000000000000003004 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000002001 /* LeanMateApp.swift */,
+				000000000000000000002002 /* AppEnvironment.swift */,
+				000000000000000000002003 /* AppRouter.swift */,
+				000000000000000000002004 /* AppRootView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		000000000000000000003005 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000003006 /* API */,
+				000000000000000000003007 /* Auth */,
+				000000000000000000003008 /* DesignSystem */,
+				000000000000000000003009 /* Mock */,
+				000000000000000000003010 /* Persistence */,
+				000000000000000000003011 /* Security */,
+				000000000000000000003012 /* Utilities */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		000000000000000000003006 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000002005 /* APIClient.swift */,
+				000000000000000000002006 /* APICoding.swift */,
+				000000000000000000002007 /* APIDTOs.swift */,
+				000000000000000000002008 /* APIEnvelope.swift */,
+				000000000000000000002009 /* LiveAPIClient.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		000000000000000000003007 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000002010 /* TokenStore.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		000000000000000000003008 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000002016 /* LMColors.swift */,
+				000000000000000000002017 /* LMTypography.swift */,
+				000000000000000000002018 /* LMSpacing.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		000000000000000000003009 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000002014 /* MockAPIClient.swift */,
+				000000000000000000002015 /* MockData.swift */,
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
+		000000000000000000003010 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000002012 /* LocalStore.swift */,
+				000000000000000000002013 /* FileLocalStore.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		000000000000000000003011 /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000002011 /* KeychainTokenStore.swift */,
+			);
+			path = Security;
+			sourceTree = "<group>";
+		};
+		000000000000000000003012 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000002019 /* AppError.swift */,
+				000000000000000000002020 /* Loadable.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		000000000000000000003013 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000002021 /* LMButton.swift */,
+				000000000000000000002022 /* LMCard.swift */,
+				000000000000000000002023 /* LMBottomTabs.swift */,
+				000000000000000000002024 /* LMNutrientChip.swift */,
+				000000000000000000002025 /* LMStateView.swift */,
+				000000000000000000002026 /* LMSearchField.swift */,
+				000000000000000000002027 /* LMSheetHandle.swift */,
+				000000000000000000002028 /* LMTag.swift */,
+				000000000000000000002029 /* LMMetricTile.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		000000000000000000003014 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000003015 /* Onboarding */,
+				000000000000000000003016 /* Profile */,
+				000000000000000000003017 /* Home */,
+				000000000000000000003018 /* Diet */,
+				000000000000000000003019 /* Weight */,
+				000000000000000000003020 /* Report */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		000000000000000000003015 /* Onboarding */ = {isa = PBXGroup; children = (); path = Onboarding; sourceTree = "<group>"; };
+		000000000000000000003016 /* Profile */ = {isa = PBXGroup; children = (); path = Profile; sourceTree = "<group>"; };
+		000000000000000000003017 /* Home */ = {isa = PBXGroup; children = (); path = Home; sourceTree = "<group>"; };
+		000000000000000000003018 /* Diet */ = {isa = PBXGroup; children = (); path = Diet; sourceTree = "<group>"; };
+		000000000000000000003019 /* Weight */ = {isa = PBXGroup; children = (); path = Weight; sourceTree = "<group>"; };
+		000000000000000000003020 /* Report */ = {isa = PBXGroup; children = (); path = Report; sourceTree = "<group>"; };
+		000000000000000000003021 /* Resources */ = {isa = PBXGroup; children = (); path = Resources; sourceTree = "<group>"; };
+		000000000000000000003022 /* PreviewSupport */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000002030 /* PreviewEnvironment.swift */,
+				000000000000000000002031 /* InfrastructurePreviewView.swift */,
+			);
+			path = PreviewSupport;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		000000000000000000005001 /* LeanMate */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 000000000000000000009002 /* Build configuration list for PBXNativeTarget "LeanMate" */;
+			buildPhases = (
+				000000000000000000006001 /* Sources */,
+				000000000000000000004001 /* Frameworks */,
+				000000000000000000006002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LeanMate;
+			productName = LeanMate;
+			productReference = 000000000000000000002000 /* LeanMate.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		000000000000000000007001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2650;
+				LastUpgradeCheck = 2650;
+				TargetAttributes = {
+					000000000000000000005001 = {
+						CreatedOnToolsVersion = 26.5;
+					};
+				};
+			};
+			buildConfigurationList = 000000000000000000009001 /* Build configuration list for PBXProject "LeanMate" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 000000000000000000003001;
+			productRefGroup = 000000000000000000003002 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				000000000000000000005001 /* LeanMate */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		000000000000000000006002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		000000000000000000006001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				000000000000000000001001 /* LeanMateApp.swift in Sources */,
+				000000000000000000001002 /* AppEnvironment.swift in Sources */,
+				000000000000000000001003 /* AppRouter.swift in Sources */,
+				000000000000000000001004 /* AppRootView.swift in Sources */,
+				000000000000000000001005 /* APIClient.swift in Sources */,
+				000000000000000000001006 /* APICoding.swift in Sources */,
+				000000000000000000001007 /* APIDTOs.swift in Sources */,
+				000000000000000000001008 /* APIEnvelope.swift in Sources */,
+				000000000000000000001009 /* LiveAPIClient.swift in Sources */,
+				000000000000000000001010 /* TokenStore.swift in Sources */,
+				000000000000000000001011 /* KeychainTokenStore.swift in Sources */,
+				000000000000000000001012 /* LocalStore.swift in Sources */,
+				000000000000000000001013 /* FileLocalStore.swift in Sources */,
+				000000000000000000001014 /* MockAPIClient.swift in Sources */,
+				000000000000000000001015 /* MockData.swift in Sources */,
+				000000000000000000001016 /* LMColors.swift in Sources */,
+				000000000000000000001017 /* LMTypography.swift in Sources */,
+				000000000000000000001018 /* LMSpacing.swift in Sources */,
+				000000000000000000001019 /* AppError.swift in Sources */,
+				000000000000000000001020 /* Loadable.swift in Sources */,
+				000000000000000000001021 /* LMButton.swift in Sources */,
+				000000000000000000001022 /* LMCard.swift in Sources */,
+				000000000000000000001023 /* LMBottomTabs.swift in Sources */,
+				000000000000000000001024 /* LMNutrientChip.swift in Sources */,
+				000000000000000000001025 /* LMStateView.swift in Sources */,
+				000000000000000000001026 /* LMSearchField.swift in Sources */,
+				000000000000000000001027 /* LMSheetHandle.swift in Sources */,
+				000000000000000000001028 /* LMTag.swift in Sources */,
+				000000000000000000001029 /* LMMetricTile.swift in Sources */,
+				000000000000000000001030 /* PreviewEnvironment.swift in Sources */,
+				000000000000000000001031 /* InfrastructurePreviewView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		000000000000000000008001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		000000000000000000008002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		000000000000000000008003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = LeanMate;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.leanmate.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		000000000000000000008004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = LeanMate;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.leanmate.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		000000000000000000009001 /* Build configuration list for PBXProject "LeanMate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				000000000000000000008001 /* Debug */,
+				000000000000000000008002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		000000000000000000009002 /* Build configuration list for PBXNativeTarget "LeanMate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				000000000000000000008003 /* Debug */,
+				000000000000000000008004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 000000000000000000007001 /* Project object */;
+}
