@@ -1,10 +1,15 @@
 package com.leanmate;
 
+import com.leanmate.stats.repository.DailyAiReportSummaryRepository;
+import com.leanmate.stats.repository.DailyNutritionSnapshotRepository;
+import com.leanmate.stats.repository.FoodEntrySummaryRepository;
+import com.leanmate.stats.repository.StreakRepository;
 import com.leanmate.user.repository.RefreshTokenRepository;
 import com.leanmate.user.repository.UserAuthIdentityRepository;
 import com.leanmate.user.repository.UserProfileRepository;
 import com.leanmate.user.repository.UserRepository;
 import com.leanmate.user.repository.WeightGoalRepository;
+import com.leanmate.weight.repository.WeightEntryRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -31,6 +36,21 @@ class LeanMateApplicationTests {
 
     @MockitoBean
     WeightGoalRepository weightGoalRepository;
+
+    @MockitoBean
+    WeightEntryRepository weightEntryRepository;
+
+    @MockitoBean
+    DailyNutritionSnapshotRepository dailyNutritionSnapshotRepository;
+
+    @MockitoBean
+    FoodEntrySummaryRepository foodEntrySummaryRepository;
+
+    @MockitoBean
+    DailyAiReportSummaryRepository dailyAiReportSummaryRepository;
+
+    @MockitoBean
+    StreakRepository streakRepository;
 
     @Test
     void contextLoads() {

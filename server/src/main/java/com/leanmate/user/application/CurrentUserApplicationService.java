@@ -35,7 +35,7 @@ public class CurrentUserApplicationService {
         return userResponseMapper.toCurrentUserResponse(user, profileCompleted);
     }
 
-    UserEntity requireActiveUser(UUID userId) {
+    public UserEntity requireActiveUser(UUID userId) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_TOKEN));
         if (!UserStatus.ACTIVE.value().equals(user.getStatus())) {

@@ -331,6 +331,7 @@ paths:
     get:
       tags: [Weight]
       summary: 查询体重记录
+      description: 查询区间最大跨度为 180 天。
       parameters:
         - in: query
           name: startDate
@@ -358,7 +359,7 @@ paths:
     post:
       tags: [Weight]
       summary: 保存体重记录
-      description: V1.1 同一天同一用户只保留一条记录，重复提交则覆盖。
+      description: V1.1 同一天同一用户只保留一条记录，重复提交则覆盖；记录日期不能晚于用户本地今天。
       requestBody:
         required: true
         content:

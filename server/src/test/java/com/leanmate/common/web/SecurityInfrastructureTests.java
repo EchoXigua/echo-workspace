@@ -11,11 +11,16 @@ import com.leanmate.common.exception.BusinessException;
 import com.leanmate.common.response.ApiResponse;
 import com.leanmate.common.security.CurrentUserContext;
 import com.leanmate.common.security.JwtTokenService;
+import com.leanmate.stats.repository.DailyAiReportSummaryRepository;
+import com.leanmate.stats.repository.DailyNutritionSnapshotRepository;
+import com.leanmate.stats.repository.FoodEntrySummaryRepository;
+import com.leanmate.stats.repository.StreakRepository;
 import com.leanmate.user.repository.RefreshTokenRepository;
 import com.leanmate.user.repository.UserAuthIdentityRepository;
 import com.leanmate.user.repository.UserProfileRepository;
 import com.leanmate.user.repository.UserRepository;
 import com.leanmate.user.repository.WeightGoalRepository;
+import com.leanmate.weight.repository.WeightEntryRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import java.util.UUID;
@@ -69,6 +74,21 @@ class SecurityInfrastructureTests {
 
     @MockitoBean
     WeightGoalRepository weightGoalRepository;
+
+    @MockitoBean
+    WeightEntryRepository weightEntryRepository;
+
+    @MockitoBean
+    DailyNutritionSnapshotRepository dailyNutritionSnapshotRepository;
+
+    @MockitoBean
+    FoodEntrySummaryRepository foodEntrySummaryRepository;
+
+    @MockitoBean
+    DailyAiReportSummaryRepository dailyAiReportSummaryRepository;
+
+    @MockitoBean
+    StreakRepository streakRepository;
 
     @Autowired
     SecurityInfrastructureTests(MockMvc mockMvc, JwtTokenService jwtTokenService) {
