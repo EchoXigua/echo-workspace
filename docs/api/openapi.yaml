@@ -243,6 +243,7 @@ paths:
     get:
       tags: [Diet]
       summary: 查询饮食记录
+      description: 返回指定业务日期下未删除的 confirmed 饮食记录。
       parameters:
         - in: query
           name: date
@@ -263,7 +264,7 @@ paths:
     post:
       tags: [Diet]
       summary: 保存饮食记录
-      description: 手动记录可直接保存；AI 草稿需用户确认后保存为正式记录。
+      description: 手动记录可直接保存；AI 草稿需用户确认后保存为正式记录。保存成功后返回记录和刷新后的当日统计快照。
       requestBody:
         required: true
         content:
@@ -285,6 +286,7 @@ paths:
     put:
       tags: [Diet]
       summary: 编辑饮食记录
+      description: 编辑 confirmed 记录后重新计算营养汇总，并刷新对应日期统计快照。
       parameters:
         - $ref: "#/components/parameters/EntryId"
       requestBody:

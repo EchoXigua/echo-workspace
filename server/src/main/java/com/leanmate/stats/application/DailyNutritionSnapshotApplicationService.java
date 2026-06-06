@@ -3,6 +3,8 @@ package com.leanmate.stats.application;
 import com.leanmate.stats.dto.DailyNutritionSnapshotResponse;
 import com.leanmate.stats.repository.DailyNutritionSnapshotEntity;
 import com.leanmate.stats.repository.DailyNutritionSnapshotRepository;
+import com.leanmate.stats.repository.FoodNutritionSummaryRepository;
+import com.leanmate.stats.repository.FoodNutritionSummaryRow;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -15,11 +17,14 @@ public class DailyNutritionSnapshotApplicationService {
     private static final BigDecimal ZERO = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
 
     private final DailyNutritionSnapshotRepository dailyNutritionSnapshotRepository;
+    private final FoodNutritionSummaryRepository foodNutritionSummaryRepository;
 
     public DailyNutritionSnapshotApplicationService(
-            DailyNutritionSnapshotRepository dailyNutritionSnapshotRepository
+            DailyNutritionSnapshotRepository dailyNutritionSnapshotRepository,
+            FoodNutritionSummaryRepository foodNutritionSummaryRepository
     ) {
         this.dailyNutritionSnapshotRepository = dailyNutritionSnapshotRepository;
+        this.foodNutritionSummaryRepository = foodNutritionSummaryRepository;
     }
 
     public DailyNutritionSnapshotResponse updateWeight(
@@ -39,6 +44,21 @@ public class DailyNutritionSnapshotApplicationService {
             int calorieTargetKcal
     ) {
         DailyNutritionSnapshotEntity snapshot = getOrInitialize(userId, date, calorieTargetKcal);
+        return toResponse(saveWithRecalculatedRemaining(snapshot, calorieTargetKcal));
+    }
+
+    public DailyNutritionSnapshotResponse recalculateDietTotals(
+            UUID userId,
+            LocalDate date,
+            int calorieTargetKcal
+    ) {
+        DailyNutritionSnapshotEntity snapshot = getOrInitialize(userId, date, calorieTargetKcal);
+        FoodNutritionSummaryRow summary = foodNutritionSummaryRepository.summarizeConfirmedEntries(userId, date);
+        snapshot.setCaloriesKcal(summary.getCaloriesKcal());
+        snapshot.setProteinG(scaleNutrition(summary.getProteinG()));
+        snapshot.setFatG(scaleNutrition(summary.getFatG()));
+        snapshot.setCarbsG(scaleNutrition(summary.getCarbsG()));
+        snapshot.setFoodEntryCount(Math.toIntExact(summary.getFoodEntryCount()));
         return toResponse(saveWithRecalculatedRemaining(snapshot, calorieTargetKcal));
     }
 
@@ -87,6 +107,13 @@ public class DailyNutritionSnapshotApplicationService {
     private BigDecimal scaleWeight(BigDecimal value) {
         if (value == null) {
             return null;
+        }
+        return value.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private BigDecimal scaleNutrition(BigDecimal value) {
+        if (value == null) {
+            return ZERO;
         }
         return value.setScale(2, RoundingMode.HALF_UP);
     }

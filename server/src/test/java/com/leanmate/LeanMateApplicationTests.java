@@ -1,8 +1,11 @@
 package com.leanmate;
 
+import com.leanmate.diet.repository.FoodEntryRepository;
+import com.leanmate.diet.repository.FoodItemRepository;
 import com.leanmate.stats.repository.DailyAiReportSummaryRepository;
 import com.leanmate.stats.repository.DailyNutritionSnapshotRepository;
 import com.leanmate.stats.repository.FoodEntrySummaryRepository;
+import com.leanmate.stats.repository.FoodNutritionSummaryRepository;
 import com.leanmate.stats.repository.StreakRepository;
 import com.leanmate.user.repository.RefreshTokenRepository;
 import com.leanmate.user.repository.UserAuthIdentityRepository;
@@ -51,6 +54,15 @@ class LeanMateApplicationTests {
 
     @MockitoBean
     StreakRepository streakRepository;
+
+    @MockitoBean
+    FoodNutritionSummaryRepository foodNutritionSummaryRepository;
+
+    @MockitoBean
+    FoodEntryRepository foodEntryRepository;
+
+    @MockitoBean
+    FoodItemRepository foodItemRepository;
 
     @Test
     void contextLoads() {
