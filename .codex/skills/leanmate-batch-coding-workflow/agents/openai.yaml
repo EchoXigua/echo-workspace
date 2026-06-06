@@ -1,0 +1,4 @@
+interface:
+  display_name: "LeanMate 批次编码工作流"
+  short_description: "用主线程调度、子线程分批编码开发并落盘进度"
+  default_prompt: "使用 $leanmate-batch-coding-workflow 规划并启动 LeanMate 新需求的分批编码开发。"
