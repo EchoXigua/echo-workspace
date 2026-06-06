@@ -16,6 +16,7 @@ docs/
 
 - [项目当前状态](project-state.md)
 - [V1.1 PRD](product/prd-v1.1.md)
+- [V1.1 验收标准与业务边界](product/v1.1-acceptance-criteria.md)
 - [产品规划](product/roadmap.md)
 - [总体架构设计](architecture/overview.md)
 - [后端架构设计](architecture/backend.md)
