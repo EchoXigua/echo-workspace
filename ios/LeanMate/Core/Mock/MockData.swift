@@ -16,6 +16,15 @@ enum MockData {
         createdAt: today
     )
 
+    static let profileIncompleteUser = CurrentUser(
+        id: userId,
+        nickname: "LeanMate",
+        avatarUrl: nil,
+        status: .active,
+        profileCompleted: false,
+        createdAt: today
+    )
+
     static let profile = UserProfile(
         gender: .unknown,
         age: 30,

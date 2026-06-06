@@ -6,9 +6,80 @@ struct AppRootView: View {
 
     var body: some View {
         NavigationStack(path: $router.path) {
-            InfrastructurePreviewView(selectedTab: $router.selectedTab)
+            rootContent
                 .navigationBarBackButtonHidden()
         }
         .environment(\.appEnvironment, environment)
+        .task {
+            await bootstrap()
+        }
+    }
+}
+
+private extension AppRootView {
+    @ViewBuilder
+    var rootContent: some View {
+        switch router.rootState {
+        case .coldStart:
+            coldStartView
+        case .onboarding:
+            OnboardingView(
+                viewModel: OnboardingViewModel(
+                    apiClient: environment.apiClient,
+                    tokenStore: environment.tokenStore
+                ),
+                onProfileRequired: router.showProfileSetup,
+                onCompleted: router.showHomePlaceholder
+            )
+        case .profileSetup:
+            ProfileSetupView(
+                viewModel: ProfileSetupViewModel(
+                    apiClient: environment.apiClient,
+                    tokenStore: environment.tokenStore
+                ),
+                onCompleted: router.showHomePlaceholder,
+                onAuthExpired: router.showOnboarding
+            )
+        case .homePlaceholder:
+            HomePlaceholderView(selectedTab: $router.selectedTab)
+        }
+    }
+
+    var coldStartView: some View {
+        VStack {
+            LMStateView(
+                kind: .loading,
+                title: "正在进入 LeanMate",
+                message: "正在确认登录和档案状态。"
+            )
+            .padding(.horizontal, LMSpacing.large)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(LMColors.background.ignoresSafeArea())
+    }
+
+    func bootstrap() async {
+        guard router.rootState == .coldStart else {
+            return
+        }
+
+        do {
+            guard try await environment.tokenStore.loadTokens() != nil else {
+                router.showOnboarding()
+                return
+            }
+
+            let user = try await environment.apiClient.currentUser()
+            if user.profileCompleted {
+                router.showHomePlaceholder()
+            } else {
+                router.showProfileSetup()
+            }
+        } catch {
+            if case AppError.unauthorized = AppError(error) {
+                try? await environment.tokenStore.clearTokens()
+            }
+            router.showOnboarding()
+        }
     }
 }

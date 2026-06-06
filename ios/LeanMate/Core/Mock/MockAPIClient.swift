@@ -20,13 +20,14 @@ final class MockAPIClient: APIClient, @unchecked Sendable {
 
     func oauthLogin(_ request: OAuthLoginRequest) async throws -> AuthToken {
         try await prepare()
+        let profileCompleted = isProfileCompleted
         return AuthToken(
             accessToken: "mock-access-token",
             refreshToken: "mock-refresh-token",
             tokenType: "Bearer",
             expiresIn: 3600,
-            user: MockData.currentUser,
-            profileCompleted: true
+            user: currentUserPayload,
+            profileCompleted: profileCompleted
         )
     }
 
@@ -42,7 +43,7 @@ final class MockAPIClient: APIClient, @unchecked Sendable {
 
     func currentUser() async throws -> CurrentUser {
         try await prepare()
-        return MockData.currentUser
+        return currentUserPayload
     }
 
     func profile() async throws -> ProfilePayload {
@@ -238,6 +239,17 @@ final class MockAPIClient: APIClient, @unchecked Sendable {
 }
 
 private extension MockAPIClient {
+    var isProfileCompleted: Bool {
+        if case .profileIncomplete = scenario {
+            return false
+        }
+        return true
+    }
+
+    var currentUserPayload: CurrentUser {
+        isProfileCompleted ? MockData.currentUser : MockData.profileIncompleteUser
+    }
+
     func prepare() async throws {
         try await Task.sleep(nanoseconds: delayNanoseconds)
         if case .error(let error) = scenario {

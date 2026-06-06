@@ -11,18 +11,22 @@ enum UserStatus: String, Codable, Sendable {
     case deleted
 }
 
-enum Gender: String, Codable, Sendable {
+enum Gender: String, Codable, CaseIterable, Identifiable, Sendable {
     case male
     case female
     case unknown
+
+    var id: String { rawValue }
 }
 
-enum ActivityLevel: String, Codable, Sendable {
+enum ActivityLevel: String, Codable, CaseIterable, Identifiable, Sendable {
     case sedentary
     case light
     case moderate
     case active
     case veryActive = "very_active"
+
+    var id: String { rawValue }
 }
 
 enum MealType: String, Codable, CaseIterable, Identifiable, Sendable {

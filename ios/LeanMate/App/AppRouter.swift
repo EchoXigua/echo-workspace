@@ -1,5 +1,12 @@
 import SwiftUI
 
+enum AppRootState: Equatable {
+    case coldStart
+    case onboarding
+    case profileSetup
+    case homePlaceholder
+}
+
 enum AppTab: String, CaseIterable, Identifiable, Hashable {
     case home
     case record
@@ -37,6 +44,23 @@ enum AppTab: String, CaseIterable, Identifiable, Hashable {
 
 @MainActor
 final class AppRouter: ObservableObject {
+    @Published var rootState: AppRootState = .coldStart
     @Published var selectedTab: AppTab = .home
     @Published var path = NavigationPath()
+
+    func showOnboarding() {
+        path = NavigationPath()
+        rootState = .onboarding
+    }
+
+    func showProfileSetup() {
+        path = NavigationPath()
+        rootState = .profileSetup
+    }
+
+    func showHomePlaceholder() {
+        path = NavigationPath()
+        selectedTab = .home
+        rootState = .homePlaceholder
+    }
 }

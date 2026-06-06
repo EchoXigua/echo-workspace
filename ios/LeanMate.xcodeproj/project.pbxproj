@@ -38,10 +38,16 @@
 		000000000000000000001029 /* LMMetricTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002029 /* LMMetricTile.swift */; };
 		000000000000000000001030 /* PreviewEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002030 /* PreviewEnvironment.swift */; };
 		000000000000000000001031 /* InfrastructurePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002031 /* InfrastructurePreviewView.swift */; };
+		000000000000000000001032 /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002032 /* OnboardingViewModel.swift */; };
+		000000000000000000001033 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002033 /* OnboardingView.swift */; };
+		000000000000000000001034 /* ProfileSetupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002034 /* ProfileSetupViewModel.swift */; };
+		000000000000000000001035 /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002035 /* ProfileSetupView.swift */; };
+		000000000000000000001036 /* HomePlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002036 /* HomePlaceholderView.swift */; };
 		00000000000000000000A001 /* APICodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B001 /* APICodingTests.swift */; };
 		00000000000000000000A002 /* MockAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B002 /* MockAPIClientTests.swift */; };
 		00000000000000000000A003 /* FileLocalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B003 /* FileLocalStoreTests.swift */; };
 		00000000000000000000A004 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B004 /* XCTest.framework */; };
+		00000000000000000000A005 /* FirstBatchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B007 /* FirstBatchViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,11 +93,17 @@
 		000000000000000000002029 /* LMMetricTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMMetricTile.swift; sourceTree = "<group>"; };
 		000000000000000000002030 /* PreviewEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewEnvironment.swift; sourceTree = "<group>"; };
 		000000000000000000002031 /* InfrastructurePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfrastructurePreviewView.swift; sourceTree = "<group>"; };
+		000000000000000000002032 /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
+		000000000000000000002033 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		000000000000000000002034 /* ProfileSetupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSetupViewModel.swift; sourceTree = "<group>"; };
+		000000000000000000002035 /* ProfileSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSetupView.swift; sourceTree = "<group>"; };
+		000000000000000000002036 /* HomePlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePlaceholderView.swift; sourceTree = "<group>"; };
 		00000000000000000000B000 /* LeanMateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeanMateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00000000000000000000B001 /* APICodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICodingTests.swift; sourceTree = "<group>"; };
 		00000000000000000000B002 /* MockAPIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAPIClientTests.swift; sourceTree = "<group>"; };
 		00000000000000000000B003 /* FileLocalStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileLocalStoreTests.swift; sourceTree = "<group>"; };
 		00000000000000000000B004 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
+		00000000000000000000B007 /* FirstBatchViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstBatchViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -264,9 +276,32 @@
 			path = Features;
 			sourceTree = "<group>";
 		};
-		000000000000000000003015 /* Onboarding */ = {isa = PBXGroup; children = (); path = Onboarding; sourceTree = "<group>"; };
-		000000000000000000003016 /* Profile */ = {isa = PBXGroup; children = (); path = Profile; sourceTree = "<group>"; };
-		000000000000000000003017 /* Home */ = {isa = PBXGroup; children = (); path = Home; sourceTree = "<group>"; };
+		000000000000000000003015 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000002032 /* OnboardingViewModel.swift */,
+				000000000000000000002033 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		000000000000000000003016 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000002034 /* ProfileSetupViewModel.swift */,
+				000000000000000000002035 /* ProfileSetupView.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		000000000000000000003017 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000002036 /* HomePlaceholderView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
 		000000000000000000003018 /* Diet */ = {isa = PBXGroup; children = (); path = Diet; sourceTree = "<group>"; };
 		000000000000000000003019 /* Weight */ = {isa = PBXGroup; children = (); path = Weight; sourceTree = "<group>"; };
 		000000000000000000003020 /* Report */ = {isa = PBXGroup; children = (); path = Report; sourceTree = "<group>"; };
@@ -286,6 +321,7 @@
 				00000000000000000000B001 /* APICodingTests.swift */,
 				00000000000000000000B002 /* MockAPIClientTests.swift */,
 				00000000000000000000B003 /* FileLocalStoreTests.swift */,
+				00000000000000000000B007 /* FirstBatchViewModelTests.swift */,
 			);
 			path = LeanMateTests;
 			sourceTree = "<group>";
@@ -427,6 +463,11 @@
 				000000000000000000001029 /* LMMetricTile.swift in Sources */,
 				000000000000000000001030 /* PreviewEnvironment.swift in Sources */,
 				000000000000000000001031 /* InfrastructurePreviewView.swift in Sources */,
+				000000000000000000001032 /* OnboardingViewModel.swift in Sources */,
+				000000000000000000001033 /* OnboardingView.swift in Sources */,
+				000000000000000000001034 /* ProfileSetupViewModel.swift in Sources */,
+				000000000000000000001035 /* ProfileSetupView.swift in Sources */,
+				000000000000000000001036 /* HomePlaceholderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,6 +478,7 @@
 				00000000000000000000A001 /* APICodingTests.swift in Sources */,
 				00000000000000000000A002 /* MockAPIClientTests.swift in Sources */,
 				00000000000000000000A003 /* FileLocalStoreTests.swift in Sources */,
+				00000000000000000000A005 /* FirstBatchViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
