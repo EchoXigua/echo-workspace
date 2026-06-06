@@ -1,0 +1,4 @@
+interface:
+  display_name: "LeanMate Git 提交规范"
+  short_description: "按瘦搭项目规范检查并生成 Git 提交信息"
+  default_prompt: "使用 $leanmate-git-commit 检查当前 staged changes，并生成符合项目规范的中文 Conventional Commits 提交。"
