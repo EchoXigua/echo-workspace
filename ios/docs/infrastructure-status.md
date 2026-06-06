@@ -6,7 +6,7 @@ Last updated: 2026-06-06
 
 iOS 基础设施阶段已完成，可以等待业务开发阶段启动。
 
-本阶段只完成工程、架构边界、网络、Mock、存储、可复用 UI 组件、设计稿画面映射和基础单元测试目标；未实现 Onboarding、Profile、Home、Diet、Weight、Report 等业务页面和业务 ViewModel。
+本阶段只完成工程、架构边界、网络、Mock、存储、可复用 UI 组件、设计稿画面映射、第 1 批业务状态矩阵和基础单元测试目标；未实现 Onboarding、Profile、Home、Diet、Weight、Report 等业务页面和业务 ViewModel。
 
 ## 已完成
 
@@ -61,6 +61,7 @@ iOS 基础设施阶段已完成，可以等待业务开发阶段启动。
   - `LMMetricTile`
 - 基础设施预览壳：`InfrastructurePreviewView`
 - 设计稿画面映射：`ios/docs/design-screen-map.md`
+- 第 1 批业务状态矩阵：`ios/docs/v1.1-state-matrix.md`
 - 单元测试 Target：`LeanMateTests`
 - 基础设施单元测试：
   - `APICodingTests`

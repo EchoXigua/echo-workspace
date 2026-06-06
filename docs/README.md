@@ -37,6 +37,7 @@ docs/
 - [iOS 架构设计](../ios/docs/architecture.md)
 - [iOS 编码规范](../ios/docs/coding-style.md)
 - [iOS API 与 Mock 策略](../ios/docs/api-mock-strategy.md)
+- [V1.1 iOS 状态矩阵](../ios/docs/v1.1-state-matrix.md)
 
 ## 维护原则
 
