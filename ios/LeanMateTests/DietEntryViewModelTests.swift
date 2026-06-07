@@ -79,6 +79,63 @@ final class DietEntryViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.manualItem.name, "今天吃了一份不确定的便当")
     }
 
+    func testPhotoRecognitionSuccessSavesPhotoSource() async {
+        let apiClient = DietAPIClientStub(
+            recognitionTaskResult: .success(DietAPIClientStub.succeededPhotoRecognitionTask)
+        )
+        let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: MockData.today)
+
+        await viewModel.startPhotoRecognition(imageData: Data([1, 2, 3]))
+        let createPhotoCallCount = await apiClient.createPhotoRecognitionCallCount
+
+        XCTAssertEqual(createPhotoCallCount, 1)
+        XCTAssertEqual(viewModel.mode, .confirmation)
+        XCTAssertEqual(viewModel.state, .confirmation)
+
+        let succeeded = await viewModel.saveRecognitionEntry()
+        let request = await apiClient.lastDietRequest
+
+        XCTAssertTrue(succeeded)
+        XCTAssertEqual(request?.sourceType, .photo)
+    }
+
+    func testPhotoRecognitionRunningCanRefresh() async {
+        let apiClient = DietAPIClientStub(
+            recognitionTaskResult: .success(DietAPIClientStub.runningRecognitionTask)
+        )
+        let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: MockData.today)
+
+        await viewModel.startPhotoRecognition(imageData: Data([1, 2, 3]))
+
+        XCTAssertEqual(viewModel.state, .recognitionRunning)
+        XCTAssertTrue(viewModel.canRefreshRecognition)
+    }
+
+    func testPhotoRecognitionFailureCanSwitchToManual() async {
+        let apiClient = DietAPIClientStub(
+            recognitionTaskResult: .success(DietAPIClientStub.failedPhotoRecognitionTask)
+        )
+        let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: MockData.today)
+        viewModel.textInput = "照片里的晚餐"
+
+        await viewModel.startPhotoRecognition(imageData: Data([1, 2, 3]))
+        viewModel.switchFailedRecognitionToManual()
+
+        XCTAssertEqual(viewModel.mode, .manual)
+        XCTAssertEqual(viewModel.manualItem.name, "照片里的晚餐")
+    }
+
+    func testEmptyPhotoDoesNotCallAPI() async {
+        let apiClient = DietAPIClientStub()
+        let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: MockData.today)
+
+        await viewModel.startPhotoRecognition(imageData: Data())
+        let createPhotoCallCount = await apiClient.createPhotoRecognitionCallCount
+
+        XCTAssertEqual(createPhotoCallCount, 0)
+        XCTAssertEqual(viewModel.validationMessage, "先选择一张餐食照片")
+    }
+
     func testRepeatedManualSaveOnlyCallsAPIOnce() async {
         let apiClient = DietAPIClientStub(delayNanoseconds: 50_000_000)
         let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: MockData.today)
@@ -90,6 +147,50 @@ final class DietEntryViewModelTests: XCTestCase {
         let saveCallCount = await apiClient.saveDietEntryCallCount
 
         XCTAssertEqual(saveCallCount, 1)
+    }
+
+    func testRepeatedPhotoRecognitionOnlyCreatesOneTask() async {
+        let apiClient = DietAPIClientStub(delayNanoseconds: 50_000_000)
+        let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: MockData.today)
+
+        let first = Task { await viewModel.startPhotoRecognition(imageData: Data([1, 2, 3])) }
+        let second = Task { await viewModel.startPhotoRecognition(imageData: Data([1, 2, 3])) }
+        _ = await (first.value, second.value)
+        let createPhotoCallCount = await apiClient.createPhotoRecognitionCallCount
+
+        XCTAssertEqual(createPhotoCallCount, 1)
+    }
+
+    func testDeleteSavedEntrySuccessClearsSavedEntry() async {
+        let apiClient = DietAPIClientStub()
+        let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: MockData.today)
+        viewModel.manualItem.name = "鸡蛋"
+
+        _ = await viewModel.saveManualEntry()
+        let deleted = await viewModel.deleteSavedEntry()
+        let deleteCallCount = await apiClient.deleteDietEntryCallCount
+
+        XCTAssertTrue(deleted)
+        XCTAssertEqual(deleteCallCount, 1)
+        XCTAssertNil(viewModel.savedEntry)
+        XCTAssertEqual(viewModel.state, .deleteSucceeded)
+    }
+
+    func testDeleteSavedEntryFailureKeepsSavedEntry() async {
+        let apiClient = DietAPIClientStub(deleteDietResult: .failure(.networkUnavailable))
+        let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: MockData.today)
+        viewModel.manualItem.name = "鸡蛋"
+
+        _ = await viewModel.saveManualEntry()
+        let deleted = await viewModel.deleteSavedEntry()
+
+        XCTAssertFalse(deleted)
+        XCTAssertNotNil(viewModel.savedEntry)
+        if case .deleteFailed(let message) = viewModel.state {
+            XCTAssertEqual(message, "网络不可用，请稍后重试")
+        } else {
+            XCTFail("Expected deleteFailed state")
+        }
     }
 }
 
@@ -125,13 +226,60 @@ private actor DietAPIClientStub: APIClient {
         finishedAt: MockData.today
     )
 
+    static let succeededPhotoRecognitionTask = RecognitionTask(
+        id: MockData.taskId,
+        sourceType: .photo,
+        mealDate: MockData.today,
+        mealType: .dinner,
+        status: .succeeded,
+        draftEntry: FoodEntryDraft(
+            mealDate: MockData.today,
+            mealType: .dinner,
+            sourceType: .photo,
+            items: MockData.foodItems
+        ),
+        errorCode: nil,
+        errorMessage: nil,
+        createdAt: MockData.today,
+        finishedAt: MockData.today
+    )
+
+    static let runningRecognitionTask = RecognitionTask(
+        id: MockData.taskId,
+        sourceType: .photo,
+        mealDate: MockData.today,
+        mealType: .dinner,
+        status: .running,
+        draftEntry: nil,
+        errorCode: nil,
+        errorMessage: nil,
+        createdAt: MockData.today,
+        finishedAt: nil
+    )
+
+    static let failedPhotoRecognitionTask = RecognitionTask(
+        id: MockData.taskId,
+        sourceType: .photo,
+        mealDate: MockData.today,
+        mealType: .dinner,
+        status: .failed,
+        draftEntry: nil,
+        errorCode: "AI_RECOGNITION_FAILED",
+        errorMessage: "识别失败",
+        createdAt: MockData.today,
+        finishedAt: MockData.today
+    )
+
     private let recognitionTaskResult: Result<RecognitionTask, AppError>
     private let saveDietResult: Result<FoodEntrySaveResult, AppError>
+    private let deleteDietResult: Result<Void, AppError>
     private let delayNanoseconds: UInt64
 
     private(set) var createTextRecognitionCallCount = 0
+    private(set) var createPhotoRecognitionCallCount = 0
     private(set) var recognitionTaskCallCount = 0
     private(set) var saveDietEntryCallCount = 0
+    private(set) var deleteDietEntryCallCount = 0
     private(set) var lastDietRequest: SaveFoodEntryRequest?
 
     init(
@@ -139,10 +287,12 @@ private actor DietAPIClientStub: APIClient {
         saveDietResult: Result<FoodEntrySaveResult, AppError> = .success(
             FoodEntrySaveResult(entry: MockData.foodEntry, today: MockData.nutritionSnapshot)
         ),
+        deleteDietResult: Result<Void, AppError> = .success(()),
         delayNanoseconds: UInt64 = 0
     ) {
         self.recognitionTaskResult = recognitionTaskResult
         self.saveDietResult = saveDietResult
+        self.deleteDietResult = deleteDietResult
         self.delayNanoseconds = delayNanoseconds
     }
 
@@ -180,7 +330,11 @@ private actor DietAPIClientStub: APIClient {
         mealDate: Date?,
         note: String?
     ) async throws -> RecognitionTask {
-        throw AppError.unknown
+        createPhotoRecognitionCallCount += 1
+        if delayNanoseconds > 0 {
+            try await Task.sleep(nanoseconds: delayNanoseconds)
+        }
+        return Self.runningRecognitionTask
     }
 
     func createTextRecognition(_ request: TextRecognitionRequest) async throws -> RecognitionTask {
@@ -220,7 +374,15 @@ private actor DietAPIClientStub: APIClient {
         throw AppError.unknown
     }
 
-    func deleteDietEntry(id: UUID) async throws {}
+    func deleteDietEntry(id: UUID) async throws {
+        deleteDietEntryCallCount += 1
+        switch deleteDietResult {
+        case .success:
+            return
+        case .failure(let error):
+            throw error
+        }
+    }
 
     func weightEntries(startDate: Date, endDate: Date) async throws -> [WeightEntry] {
         throw AppError.unknown

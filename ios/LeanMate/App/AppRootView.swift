@@ -127,10 +127,11 @@ private struct MainTabContainerView: View {
                 onLoginRequired: onLoginRequired
             )
         case .report:
-            MainTabPlaceholderView(
+            DailyReportView(
+                viewModel: DailyReportViewModel(apiClient: environment.apiClient),
                 selectedTab: $selectedTab,
-                title: "AI 日报后续接入",
-                message: "第 3 批不实现日报详情。"
+                isVisitor: isVisitor,
+                onLoginRequired: onLoginRequired
             )
         case .profile:
             MainTabPlaceholderView(

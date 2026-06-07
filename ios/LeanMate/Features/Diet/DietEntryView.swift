@@ -1,10 +1,14 @@
 import SwiftUI
+import PhotosUI
 
 struct DietEntryView: View {
     @StateObject private var viewModel: DietEntryViewModel
     @StateObject private var weightViewModel: WeightViewModel
     @Binding private var selectedTab: AppTab
     @State private var showsWeightSheet = false
+    @State private var showsDeleteConfirmation = false
+    @State private var photoPickerItem: PhotosPickerItem?
+    @State private var selectedPhotoData: Data?
 
     let isVisitor: Bool
     let onLoginRequired: () -> Void
@@ -52,6 +56,15 @@ struct DietEntryView: View {
             WeightEntrySheet(viewModel: weightViewModel)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.hidden)
+        }
+        .alert("删除这条饮食记录？", isPresented: $showsDeleteConfirmation) {
+            Button("取消", role: .cancel) {}
+            Button("删除", role: .destructive, action: deleteSavedEntry)
+        } message: {
+            Text("删除后今日热量和营养比例会重新计算。")
+        }
+        .onChange(of: photoPickerItem) { _, newItem in
+            loadSelectedPhoto(newItem)
         }
     }
 }
@@ -114,8 +127,8 @@ private extension DietEntryView {
             textInputSection
         case .manual:
             manualSection
-        case .photoPlaceholder:
-            photoPlaceholderSection
+        case .photo:
+            photoSection
         case .confirmation:
             confirmationSection
         }
@@ -147,16 +160,16 @@ private extension DietEntryView {
         VStack(spacing: 8) {
             methodButton(
                 title: "拍照识别",
-                subtitle: "本批先作为入口占位",
+                subtitle: "选择照片后生成确认清单",
                 systemImage: "camera",
-                isSelected: viewModel.mode == .photoPlaceholder,
-                action: viewModel.selectPhotoPlaceholder
+                isSelected: viewModel.mode == .photo || viewModel.isPhotoConfirmation,
+                action: viewModel.selectPhotoMode
             )
             methodButton(
                 title: "文本识别",
                 subtitle: "输入一句话后生成确认清单",
                 systemImage: "text.bubble",
-                isSelected: viewModel.mode == .text || viewModel.mode == .confirmation,
+                isSelected: viewModel.mode == .text || (viewModel.mode == .confirmation && !viewModel.isPhotoConfirmation),
                 action: viewModel.selectTextMode
             )
             methodButton(
@@ -254,11 +267,39 @@ private extension DietEntryView {
             LMStateView(
                 kind: .empty,
                 title: "记录已保存",
-                message: "首页统计由后端刷新后返回，本页不自行计算。"
+                message: "首页统计由后端刷新后返回，本页不自行计算。",
+                actionTitle: "回到首页",
+                action: { selectedTab = .home }
             )
+            if viewModel.canDeleteSavedEntry {
+                LMButton(
+                    title: "删除本条记录",
+                    systemImage: "trash",
+                    role: .destructive,
+                    height: 48,
+                    isLoading: viewModel.isDeleting,
+                    action: { showsDeleteConfirmation = true }
+                )
+            }
+        case .deleteSucceeded:
+            LMStateView(
+                kind: .empty,
+                title: "记录已删除",
+                message: "服务端会刷新对应业务日期的热量和营养统计。"
+            )
+        case .deleteFailed(let message):
+            LMStateView(kind: .error, title: "删除失败", message: message)
         case .error(let message):
             LMStateView(kind: .error, title: "操作失败", message: message)
-        case .idle, .recognizing, .confirmation, .saving:
+        case .recognizing:
+            LMStateView(
+                kind: .loading,
+                title: "正在识别",
+                message: "识别结果只是估算值，请在确认页检查后保存。"
+            )
+        case .deleting:
+            LMStateView(kind: .loading, title: "正在删除", message: "正在删除这条饮食记录。")
+        case .idle, .confirmation, .saving:
             EmptyView()
         }
     }
@@ -304,18 +345,75 @@ private extension DietEntryView {
         }
     }
 
-    var photoPlaceholderSection: some View {
-        LMStateView(
-            kind: .empty,
-            title: "拍照识别后续接入",
-            message: "本批只保留拍照入口，不进入拍照确认流程。"
-        )
+    var photoSection: some View {
+        LMCard(cornerRadius: 16, padding: 14) {
+            Text("拍照识别")
+                .font(LMTypography.cardTitle)
+                .foregroundStyle(LMColors.textBody)
+
+            ZStack {
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(LMColors.warmMuted)
+                    .frame(height: 220)
+
+                if let selectedPhotoData, let image = UIImage(data: selectedPhotoData) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 220)
+                        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                .stroke(LMColors.primaryBorder, lineWidth: 1)
+                        }
+                } else {
+                    VStack(spacing: 10) {
+                        Image(systemName: "camera.viewfinder")
+                            .font(.system(size: 36, weight: .semibold))
+                            .foregroundStyle(LMColors.primary)
+                        Text("选择一张餐食照片")
+                            .font(LMTypography.bodyStrong)
+                            .foregroundStyle(LMColors.textBody)
+                        Text("权限只在选择照片时触发，确认前不会保存记录。")
+                            .font(LMTypography.caption)
+                            .foregroundStyle(LMColors.textSecondary)
+                    }
+                }
+            }
+            .clipped()
+
+            PhotosPicker(selection: $photoPickerItem, matching: .images) {
+                HStack(spacing: 8) {
+                    Image(systemName: "photo.on.rectangle")
+                    Text(selectedPhotoData == nil ? "选择照片" : "重新选择照片")
+                }
+                .font(LMTypography.bodyStrong)
+                .foregroundStyle(LMColors.textBody)
+                .frame(maxWidth: .infinity)
+                .frame(height: 48)
+                .background(LMColors.warmMuted)
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .stroke(LMColors.inputBorder, lineWidth: 1)
+                }
+            }
+            .disabled(viewModel.isBusy)
+
+            LMButton(
+                title: "开始拍照识别",
+                systemImage: "sparkles",
+                isLoading: viewModel.isRecognizing,
+                action: startPhotoRecognition
+            )
+        }
     }
 
     var confirmationSection: some View {
         VStack(spacing: LMSpacing.regular) {
             LMCard(cornerRadius: 16, padding: 14) {
-                Text("识别结果")
+                Text(viewModel.confirmationTitle)
                     .font(LMTypography.cardTitle)
                     .foregroundStyle(LMColors.textBody)
 
@@ -361,6 +459,12 @@ private extension DietEntryView {
         }
     }
 
+    func startPhotoRecognition() {
+        Task {
+            await viewModel.startPhotoRecognition(imageData: selectedPhotoData ?? Data())
+        }
+    }
+
     func refreshRecognition() {
         Task {
             await viewModel.refreshRecognition()
@@ -376,6 +480,26 @@ private extension DietEntryView {
     func saveRecognition() {
         Task {
             _ = await viewModel.saveRecognitionEntry()
+        }
+    }
+
+    func deleteSavedEntry() {
+        Task {
+            _ = await viewModel.deleteSavedEntry()
+        }
+    }
+
+    func loadSelectedPhoto(_ item: PhotosPickerItem?) {
+        guard let item else {
+            selectedPhotoData = nil
+            return
+        }
+
+        Task {
+            let data = try? await item.loadTransferable(type: Data.self)
+            await MainActor.run {
+                selectedPhotoData = data
+            }
         }
     }
 

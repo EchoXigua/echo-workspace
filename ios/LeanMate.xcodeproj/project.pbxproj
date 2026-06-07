@@ -50,6 +50,8 @@
 		000000000000000000001042 /* DietEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002042 /* DietEntryView.swift */; };
 		000000000000000000001043 /* WeightViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002043 /* WeightViewModel.swift */; };
 		000000000000000000001044 /* WeightEntrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002044 /* WeightEntrySheet.swift */; };
+		000000000000000000001045 /* DailyReportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002045 /* DailyReportViewModel.swift */; };
+		000000000000000000001046 /* DailyReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002046 /* DailyReportView.swift */; };
 		00000000000000000000A001 /* APICodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B001 /* APICodingTests.swift */; };
 		00000000000000000000A002 /* MockAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B002 /* MockAPIClientTests.swift */; };
 		00000000000000000000A003 /* FileLocalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B003 /* FileLocalStoreTests.swift */; };
@@ -58,6 +60,7 @@
 		00000000000000000000A006 /* HomeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B008 /* HomeViewModelTests.swift */; };
 		00000000000000000000A007 /* DietEntryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B009 /* DietEntryViewModelTests.swift */; };
 		00000000000000000000A008 /* WeightViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B010 /* WeightViewModelTests.swift */; };
+		00000000000000000000A009 /* DailyReportViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B011 /* DailyReportViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +118,8 @@
 		000000000000000000002042 /* DietEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DietEntryView.swift; sourceTree = "<group>"; };
 		000000000000000000002043 /* WeightViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightViewModel.swift; sourceTree = "<group>"; };
 		000000000000000000002044 /* WeightEntrySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightEntrySheet.swift; sourceTree = "<group>"; };
+		000000000000000000002045 /* DailyReportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyReportViewModel.swift; sourceTree = "<group>"; };
+		000000000000000000002046 /* DailyReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyReportView.swift; sourceTree = "<group>"; };
 		00000000000000000000B000 /* LeanMateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeanMateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00000000000000000000B001 /* APICodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICodingTests.swift; sourceTree = "<group>"; };
 		00000000000000000000B002 /* MockAPIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAPIClientTests.swift; sourceTree = "<group>"; };
@@ -124,6 +129,7 @@
 		00000000000000000000B008 /* HomeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModelTests.swift; sourceTree = "<group>"; };
 		00000000000000000000B009 /* DietEntryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DietEntryViewModelTests.swift; sourceTree = "<group>"; };
 		00000000000000000000B010 /* WeightViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightViewModelTests.swift; sourceTree = "<group>"; };
+		00000000000000000000B011 /* DailyReportViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyReportViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -343,7 +349,15 @@
 			path = Weight;
 			sourceTree = "<group>";
 		};
-		000000000000000000003020 /* Report */ = {isa = PBXGroup; children = (); path = Report; sourceTree = "<group>"; };
+		000000000000000000003020 /* Report */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000002045 /* DailyReportViewModel.swift */,
+				000000000000000000002046 /* DailyReportView.swift */,
+			);
+			path = Report;
+			sourceTree = "<group>";
+		};
 		000000000000000000003021 /* Resources */ = {isa = PBXGroup; children = (); path = Resources; sourceTree = "<group>"; };
 		000000000000000000003022 /* PreviewSupport */ = {
 			isa = PBXGroup;
@@ -364,6 +378,7 @@
 				00000000000000000000B008 /* HomeViewModelTests.swift */,
 				00000000000000000000B009 /* DietEntryViewModelTests.swift */,
 				00000000000000000000B010 /* WeightViewModelTests.swift */,
+				00000000000000000000B011 /* DailyReportViewModelTests.swift */,
 			);
 			path = LeanMateTests;
 			sourceTree = "<group>";
@@ -517,6 +532,8 @@
 				000000000000000000001042 /* DietEntryView.swift in Sources */,
 				000000000000000000001043 /* WeightViewModel.swift in Sources */,
 				000000000000000000001044 /* WeightEntrySheet.swift in Sources */,
+				000000000000000000001045 /* DailyReportViewModel.swift in Sources */,
+				000000000000000000001046 /* DailyReportView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -531,6 +548,7 @@
 				00000000000000000000A006 /* HomeViewModelTests.swift in Sources */,
 				00000000000000000000A007 /* DietEntryViewModelTests.swift in Sources */,
 				00000000000000000000A008 /* WeightViewModelTests.swift in Sources */,
+				00000000000000000000A009 /* DailyReportViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

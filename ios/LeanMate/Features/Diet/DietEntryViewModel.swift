@@ -5,7 +5,7 @@ final class DietEntryViewModel: ObservableObject {
     enum Mode: Equatable {
         case text
         case manual
-        case photoPlaceholder
+        case photo
         case confirmation
     }
 
@@ -19,6 +19,9 @@ final class DietEntryViewModel: ObservableObject {
         case saving
         case saveSucceeded
         case saveFailed(String)
+        case deleting
+        case deleteSucceeded
+        case deleteFailed(String)
         case error(String)
     }
 
@@ -69,6 +72,7 @@ final class DietEntryViewModel: ObservableObject {
     @Published var manualItem = EditableFoodItem()
     @Published var confirmationItems: [EditableFoodItem] = []
     @Published var validationMessage: String?
+    @Published private(set) var selectedImageName: String?
     @Published private(set) var savedEntry: FoodEntry?
 
     private let apiClient: APIClient
@@ -81,7 +85,7 @@ final class DietEntryViewModel: ObservableObject {
     }
 
     var isBusy: Bool {
-        isRecognizing || isSaving
+        isRecognizing || isSaving || isDeleting
     }
 
     var isRecognizing: Bool {
@@ -92,8 +96,31 @@ final class DietEntryViewModel: ObservableObject {
         state == .saving
     }
 
+    var isDeleting: Bool {
+        state == .deleting
+    }
+
+    var isPhotoConfirmation: Bool {
+        currentDraftSource == .photo && mode == .confirmation
+    }
+
+    var canDeleteSavedEntry: Bool {
+        savedEntry != nil && !isBusy
+    }
+
     var canRefreshRecognition: Bool {
         currentRecognitionTaskId != nil && state == .recognitionRunning
+    }
+
+    var confirmationTitle: String {
+        switch currentDraftSource {
+        case .photo:
+            "拍照识别结果"
+        case .text:
+            "文本识别结果"
+        case .manual:
+            "手动记录"
+        }
     }
 
     var totalCaloriesText: String {
@@ -113,8 +140,8 @@ final class DietEntryViewModel: ObservableObject {
         validationMessage = nil
     }
 
-    func selectPhotoPlaceholder() {
-        mode = .photoPlaceholder
+    func selectPhotoMode() {
+        mode = .photo
         state = .idle
         validationMessage = nil
     }
@@ -131,11 +158,44 @@ final class DietEntryViewModel: ObservableObject {
         }
 
         validationMessage = nil
+        currentDraftSource = .text
         state = .recognizing
 
         do {
             let task = try await apiClient.createTextRecognition(
                 TextRecognitionRequest(text: text, mealType: mealType, mealDate: mealDate)
+            )
+            currentRecognitionTaskId = task.id
+            let latestTask = try await apiClient.recognitionTask(id: task.id)
+            applyRecognitionTask(latestTask)
+        } catch {
+            state = .error(AppError(error).localizedDescription)
+        }
+    }
+
+    func startPhotoRecognition(imageData: Data, fileName: String = "meal-photo.jpg", mimeType: String = "image/jpeg") async {
+        guard !isRecognizing else {
+            return
+        }
+        guard !imageData.isEmpty else {
+            validationMessage = "先选择一张餐食照片"
+            state = .localValidationFailed
+            return
+        }
+
+        validationMessage = nil
+        selectedImageName = fileName
+        currentDraftSource = .photo
+        state = .recognizing
+
+        do {
+            let task = try await apiClient.createPhotoRecognition(
+                imageData: imageData,
+                fileName: fileName,
+                mimeType: mimeType,
+                mealType: mealType,
+                mealDate: mealDate,
+                note: textInput.trimmed.nilIfEmpty
             )
             currentRecognitionTaskId = task.id
             let latestTask = try await apiClient.recognitionTask(id: task.id)
@@ -223,11 +283,39 @@ final class DietEntryViewModel: ObservableObject {
 
         return await save(request)
     }
+
+    func deleteSavedEntry() async -> Bool {
+        guard !isDeleting else {
+            return false
+        }
+        guard let savedEntry else {
+            validationMessage = "没有可删除的饮食记录"
+            state = .localValidationFailed
+            return false
+        }
+
+        validationMessage = nil
+        state = .deleting
+
+        do {
+            try await apiClient.deleteDietEntry(id: savedEntry.id)
+            self.savedEntry = nil
+            state = .deleteSucceeded
+            return true
+        } catch {
+            state = .deleteFailed(AppError(error).localizedDescription)
+            return false
+        }
+    }
 }
 
 private extension DietEntryViewModel {
     func applyRecognitionTask(_ task: RecognitionTask) {
         currentRecognitionTaskId = task.id
+        let taskSource = task.draftEntry?.sourceType ?? task.sourceType
+        if !(currentDraftSource == .photo && taskSource == .text) {
+            currentDraftSource = taskSource
+        }
 
         switch task.status {
         case .pending, .running:
@@ -241,7 +329,6 @@ private extension DietEntryViewModel {
             }
             mealDate = draft.mealDate
             mealType = draft.mealType
-            currentDraftSource = draft.sourceType
             confirmationItems = draft.items.map(EditableFoodItem.init(foodItem:))
             mode = .confirmation
             state = .confirmation
