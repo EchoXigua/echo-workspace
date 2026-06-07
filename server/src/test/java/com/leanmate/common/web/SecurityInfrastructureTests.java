@@ -14,6 +14,7 @@ import com.leanmate.common.security.JwtTokenService;
 import com.leanmate.diet.repository.AiRecognitionTaskRepository;
 import com.leanmate.diet.repository.FoodEntryRepository;
 import com.leanmate.diet.repository.FoodItemRepository;
+import com.leanmate.report.repository.DailyAiReportRepository;
 import com.leanmate.stats.repository.DailyAiReportSummaryRepository;
 import com.leanmate.stats.repository.DailyNutritionSnapshotRepository;
 import com.leanmate.stats.repository.FoodEntrySummaryRepository;
@@ -90,6 +91,9 @@ class SecurityInfrastructureTests {
 
     @MockitoBean
     DailyAiReportSummaryRepository dailyAiReportSummaryRepository;
+
+    @MockitoBean
+    DailyAiReportRepository dailyAiReportRepository;
 
     @MockitoBean
     StreakRepository streakRepository;
