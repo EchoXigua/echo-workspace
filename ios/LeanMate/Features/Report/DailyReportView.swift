@@ -20,30 +20,20 @@ struct DailyReportView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: LMSpacing.regular) {
-                    header
+        LMTabScreen(
+            items: AppTab.allCases.map {
+                LMBottomTabItem(id: $0, title: $0.title, systemImage: $0.systemImage)
+            },
+            selection: $selectedTab
+        ) {
+            header
 
-                    if isVisitor {
-                        visitorContent
-                    } else {
-                        reportContent
-                    }
-                }
-                .padding(.horizontal, LMSpacing.large)
-                .padding(.top, 18)
-                .padding(.bottom, 24)
+            if isVisitor {
+                visitorContent
+            } else {
+                reportContent
             }
-
-            LMBottomTabs(
-                items: AppTab.allCases.map {
-                    LMBottomTabItem(id: $0, title: $0.title, systemImage: $0.systemImage)
-                },
-                selection: $selectedTab
-            )
         }
-        .background(LMColors.background.ignoresSafeArea())
         .task {
             await loadAndMarkViewed()
         }
@@ -185,13 +175,29 @@ private extension DailyReportView {
                 }
             }
 
-            reportBlock(
+            keyFindingsCard
+        }
+    }
+
+    var keyFindingsCard: some View {
+        LMCard(cornerRadius: 16, padding: 14) {
+            HStack(spacing: 8) {
+                Image(systemName: "list.bullet.rectangle")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(LMColors.primary)
+                Text("关键发现")
+                    .font(LMTypography.cardTitle)
+                    .foregroundStyle(LMColors.textBody)
+                Spacer()
+            }
+
+            findingRow(
                 title: "关键问题",
                 systemImage: "exclamationmark.circle",
                 text: viewModel.report?.problem ?? "后端暂未返回问题摘要。"
             )
 
-            reportBlock(
+            findingRow(
                 title: "改进建议",
                 systemImage: "checkmark.seal",
                 text: viewModel.report?.suggestion ?? "后端暂未返回建议内容。"
@@ -199,23 +205,30 @@ private extension DailyReportView {
         }
     }
 
-    func reportBlock(title: String, systemImage: String, text: String) -> some View {
-        LMCard(cornerRadius: 16, padding: 14) {
-            HStack(spacing: 8) {
+    func findingRow(title: String, systemImage: String, text: String) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(LMColors.primarySoft)
+                    .frame(width: 34, height: 34)
+
                 Image(systemName: systemImage)
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(LMColors.primary)
-                Text(title)
-                    .font(LMTypography.cardTitle)
-                    .foregroundStyle(LMColors.textBody)
-                Spacer()
             }
 
-            Text(text)
-                .font(LMTypography.body)
-                .foregroundStyle(LMColors.textBody)
-                .fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title)
+                    .font(LMTypography.bodyStrong)
+                    .foregroundStyle(LMColors.textBody)
+
+                Text(text)
+                    .font(LMTypography.caption)
+                    .foregroundStyle(LMColors.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     func loadAndMarkViewed() async {

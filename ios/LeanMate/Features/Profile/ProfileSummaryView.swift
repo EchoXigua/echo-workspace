@@ -21,24 +21,14 @@ struct ProfileSummaryView: View {
 
     var body: some View {
         ZStack {
-            VStack(spacing: 0) {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: LMSpacing.regular) {
-                        content
-                    }
-                    .padding(.horizontal, LMSpacing.large)
-                    .padding(.top, 18)
-                    .padding(.bottom, 24)
-                }
-
-                LMBottomTabs(
-                    items: AppTab.allCases.map {
-                        LMBottomTabItem(id: $0, title: $0.title, systemImage: $0.systemImage)
-                    },
-                    selection: $selectedTab
-                )
+            LMTabScreen(
+                items: AppTab.allCases.map {
+                    LMBottomTabItem(id: $0, title: $0.title, systemImage: $0.systemImage)
+                },
+                selection: $selectedTab
+            ) {
+                content
             }
-            .background(LMColors.background.ignoresSafeArea())
 
             if let milestone = viewModel.milestoneToPresent {
                 milestoneOverlay(milestone)

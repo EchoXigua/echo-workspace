@@ -12,6 +12,7 @@ final class MockAPIClient: APIClient, @unchecked Sendable {
 
     private let scenario: Scenario
     private let delayNanoseconds: UInt64
+    private var completedProfile: UserProfile?
 
     init(scenario: Scenario = .success, delayNanoseconds: UInt64 = 150_000_000) {
         self.scenario = scenario
@@ -48,10 +49,10 @@ final class MockAPIClient: APIClient, @unchecked Sendable {
 
     func profile() async throws -> ProfilePayload {
         try await prepare()
-        if case .profileIncomplete = scenario {
+        if case .profileIncomplete = scenario, completedProfile == nil {
             return ProfilePayload(profileCompleted: false, profile: nil)
         }
-        return ProfilePayload(profileCompleted: true, profile: MockData.profile)
+        return ProfilePayload(profileCompleted: true, profile: completedProfile ?? MockData.profile)
     }
 
     func saveProfile(_ request: SaveUserProfileRequest) async throws -> ProfilePayload {
@@ -69,12 +70,13 @@ final class MockAPIClient: APIClient, @unchecked Sendable {
             bmrKcal: 1320,
             dailyCalorieTargetKcal: 1800
         )
+        completedProfile = profile
         return ProfilePayload(profileCompleted: true, profile: profile)
     }
 
     func todayHome(date: Date?) async throws -> TodayHome {
         try await prepare()
-        if case .profileIncomplete = scenario {
+        if case .profileIncomplete = scenario, completedProfile == nil {
             return TodayHome(
                 date: date ?? MockData.today,
                 profileCompleted: false,
@@ -259,6 +261,9 @@ final class MockAPIClient: APIClient, @unchecked Sendable {
 
 private extension MockAPIClient {
     var isProfileCompleted: Bool {
+        if completedProfile != nil {
+            return true
+        }
         if case .profileIncomplete = scenario {
             return false
         }
@@ -266,7 +271,10 @@ private extension MockAPIClient {
     }
 
     var currentUserPayload: CurrentUser {
-        isProfileCompleted ? MockData.currentUser : MockData.profileIncompleteUser
+        guard isProfileCompleted else {
+            return MockData.profileIncompleteUser
+        }
+        return MockData.currentUser
     }
 
     func prepare() async throws {

@@ -32,6 +32,32 @@ final class MockAPIClientTests: XCTestCase {
         XCTAssertNil(payload.profile)
     }
 
+    func testProfileIncompleteScenarioBecomesCompletedAfterSave() async throws {
+        let client = MockAPIClient(scenario: .profileIncomplete, delayNanoseconds: 0)
+
+        _ = try await client.saveProfile(
+            SaveUserProfileRequest(
+                gender: .female,
+                age: 30,
+                heightCm: 168,
+                currentWeightKg: 62,
+                targetWeightKg: 56,
+                activityLevel: .light,
+                timezone: "Asia/Shanghai",
+                targetDate: nil
+            )
+        )
+
+        let profile = try await client.profile()
+        let home = try await client.todayHome(date: nil)
+        let user = try await client.currentUser()
+
+        XCTAssertTrue(profile.profileCompleted)
+        XCTAssertNotNil(profile.profile)
+        XCTAssertTrue(home.profileCompleted)
+        XCTAssertTrue(user.profileCompleted)
+    }
+
     func testRecognitionFailureScenarioReturnsFailedTask() async throws {
         let client = MockAPIClient(scenario: .recognitionFailed, delayNanoseconds: 0)
 

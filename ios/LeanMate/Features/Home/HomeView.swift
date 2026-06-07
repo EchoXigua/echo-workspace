@@ -20,24 +20,14 @@ struct HomeView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: LMSpacing.regular) {
-                    content
-                }
-                .padding(.horizontal, LMSpacing.large)
-                .padding(.top, 18)
-                .padding(.bottom, 24)
-            }
-
-            LMBottomTabs(
-                items: AppTab.allCases.map {
-                    LMBottomTabItem(id: $0, title: $0.title, systemImage: $0.systemImage)
-                },
-                selection: $selectedTab
-            )
+        LMTabScreen(
+            items: AppTab.allCases.map {
+                LMBottomTabItem(id: $0, title: $0.title, systemImage: $0.systemImage)
+            },
+            selection: $selectedTab
+        ) {
+            content
         }
-        .background(LMColors.background.ignoresSafeArea())
         .task {
             await viewModel.load()
         }
@@ -294,13 +284,24 @@ private extension HomeView {
 
     var visitorCard: some View {
         LMCard(cornerRadius: 16, padding: 14) {
-            Text("登录后同步记录")
-                .font(.system(size: 18, weight: .semibold))
-                .foregroundStyle(LMColors.textBody)
+            HStack {
+                Text("今日热量待同步")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(LMColors.textBody)
 
-            Text("保存体重趋势、饮食记录和 AI 日报。")
+                Spacer()
+
+                LMTag(title: "游客模式")
+            }
+
+            Text("登录后展示目标、摄入、剩余热量和连续打卡进度。")
                 .font(LMTypography.caption)
                 .foregroundStyle(LMColors.textSecondary)
+
+            HStack(spacing: LMSpacing.small) {
+                previewMetric(title: "目标", value: "--", unit: "kcal")
+                previewMetric(title: "已摄入", value: "--", unit: "kcal")
+            }
 
             LMButton(
                 title: "登录后记录",
@@ -308,6 +309,28 @@ private extension HomeView {
                 action: onLoginRequired
             )
         }
+    }
+
+    func previewMetric(title: String, value: String, unit: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(LMTypography.caption)
+                .foregroundStyle(LMColors.textSecondary)
+
+            HStack(alignment: .firstTextBaseline, spacing: 3) {
+                Text(value)
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundStyle(LMColors.textBody)
+
+                Text(unit)
+                    .font(LMTypography.badge)
+                    .foregroundStyle(LMColors.textSecondary)
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(LMColors.warmSurface)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 
     func retry() {

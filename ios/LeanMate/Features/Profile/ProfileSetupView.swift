@@ -1,7 +1,48 @@
 import SwiftUI
 
+private enum ProfileSetupStep: Int, CaseIterable {
+    case goal
+    case profile
+    case metrics
+
+    var index: Int {
+        rawValue
+    }
+
+    var title: String {
+        switch self {
+        case .goal:
+            "先生成你的减脂目标"
+        case .profile:
+            "再确认基础信息"
+        case .metrics:
+            "最后确认体重目标"
+        }
+    }
+
+    var subtitle: String {
+        switch self {
+        case .goal:
+            "先选择日常活动水平，系统会结合档案计算每日推荐热量。"
+        case .profile:
+            "这些字段只用于 BMI、BMR 和目标热量计算。"
+        case .metrics:
+            "保存后以后端返回的 BMI、BMR 和每日热量目标为准。"
+        }
+    }
+
+    var previous: ProfileSetupStep {
+        ProfileSetupStep(rawValue: max(rawValue - 1, 0)) ?? .goal
+    }
+
+    var next: ProfileSetupStep {
+        ProfileSetupStep(rawValue: min(rawValue + 1, Self.allCases.count - 1)) ?? .metrics
+    }
+}
+
 struct ProfileSetupView: View {
     @StateObject private var viewModel: ProfileSetupViewModel
+    @State private var setupStep: ProfileSetupStep = .goal
 
     let onCompleted: () -> Void
     let onAuthExpired: () -> Void
@@ -19,12 +60,12 @@ struct ProfileSetupView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: LMSpacing.regular) {
-                StepDots()
+                StepDots(activeIndex: setupStep.index)
                 header
                 stateContent
             }
             .padding(.horizontal, LMSpacing.large)
-            .padding(.top, 18)
+            .padding(.top, LMSpacing.small)
             .padding(.bottom, 28)
         }
         .background(LMColors.background.ignoresSafeArea())
@@ -37,12 +78,12 @@ struct ProfileSetupView: View {
 private extension ProfileSetupView {
     var header: some View {
         VStack(alignment: .leading, spacing: LMSpacing.small) {
-            Text("先生成你的减脂目标")
+            Text(setupStep.title)
                 .font(LMTypography.title)
                 .foregroundStyle(LMColors.textPrimary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Text("填写关键档案后，系统会自动计算 BMI、BMR 和每日推荐热量。")
+            Text(setupStep.subtitle)
                 .font(LMTypography.caption)
                 .foregroundStyle(LMColors.textSecondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -75,42 +116,42 @@ private extension ProfileSetupView {
 
     var formContent: some View {
         VStack(alignment: .leading, spacing: LMSpacing.regular) {
-            genderSection
-
-            ProfileInputField(
-                title: "年龄",
-                unit: "岁",
-                text: $viewModel.ageText,
-                error: viewModel.fieldErrors[.age],
-                keyboardType: .numberPad
-            )
-
-            ProfileInputField(
-                title: "身高",
-                unit: "cm",
-                text: $viewModel.heightText,
-                error: viewModel.fieldErrors[.height],
-                keyboardType: .decimalPad
-            )
-
-            ProfileInputField(
-                title: "当前体重",
-                unit: "kg",
-                text: $viewModel.currentWeightText,
-                error: viewModel.fieldErrors[.currentWeight],
-                keyboardType: .decimalPad
-            )
-
-            ProfileInputField(
-                title: "目标体重",
-                unit: "kg",
-                text: $viewModel.targetWeightText,
-                error: viewModel.fieldErrors[.targetWeight],
-                keyboardType: .decimalPad
-            )
-
-            activitySection
-            timezoneSection
+            switch setupStep {
+            case .goal:
+                activitySection
+            case .profile:
+                genderSection
+                ProfileInputField(
+                    title: "年龄",
+                    unit: "岁",
+                    text: $viewModel.ageText,
+                    error: viewModel.fieldErrors[.age],
+                    keyboardType: .numberPad
+                )
+                ProfileInputField(
+                    title: "身高",
+                    unit: "cm",
+                    text: $viewModel.heightText,
+                    error: viewModel.fieldErrors[.height],
+                    keyboardType: .decimalPad
+                )
+            case .metrics:
+                ProfileInputField(
+                    title: "当前体重",
+                    unit: "kg",
+                    text: $viewModel.currentWeightText,
+                    error: viewModel.fieldErrors[.currentWeight],
+                    keyboardType: .decimalPad
+                )
+                ProfileInputField(
+                    title: "目标体重",
+                    unit: "kg",
+                    text: $viewModel.targetWeightText,
+                    error: viewModel.fieldErrors[.targetWeight],
+                    keyboardType: .decimalPad
+                )
+                timezoneSection
+            }
 
             if case .saveFailed(let message) = viewModel.state {
                 LMStateView(
@@ -120,15 +161,7 @@ private extension ProfileSetupView {
                 )
             }
 
-            LMButton(
-                title: "生成目标",
-                systemImage: "checkmark.circle",
-                isLoading: viewModel.isSaving
-            ) {
-                Task {
-                    await viewModel.save()
-                }
-            }
+            stepControls
         }
     }
 
@@ -168,6 +201,47 @@ private extension ProfileSetupView {
                     }
                 }
             }
+        }
+    }
+
+    var stepControls: some View {
+        HStack(spacing: LMSpacing.small) {
+            if setupStep != .goal {
+                LMButton(
+                    title: "上一步",
+                    systemImage: "chevron.left",
+                    role: .secondary,
+                    height: 48
+                ) {
+                    setupStep = setupStep.previous
+                }
+            }
+
+            LMButton(
+                title: setupStep == .metrics ? "生成目标" : "下一步",
+                systemImage: setupStep == .metrics ? "checkmark.circle" : "arrow.right",
+                height: setupStep == .metrics ? 54 : 48,
+                isLoading: viewModel.isSaving
+            ) {
+                if setupStep == .metrics {
+                    Task {
+                        let didSave = await viewModel.save()
+                        if !didSave {
+                            focusFirstInvalidField()
+                        }
+                    }
+                } else {
+                    setupStep = setupStep.next
+                }
+            }
+        }
+    }
+
+    func focusFirstInvalidField() {
+        if viewModel.fieldErrors.keys.contains(where: { $0 == .age || $0 == .height }) {
+            setupStep = .profile
+        } else if !viewModel.fieldErrors.isEmpty {
+            setupStep = .metrics
         }
     }
 
@@ -247,17 +321,15 @@ private extension ProfileSetupView {
 }
 
 private struct StepDots: View {
+    let activeIndex: Int
+
     var body: some View {
         HStack(spacing: 6) {
-            Capsule()
-                .fill(LMColors.primary)
-                .frame(width: 22, height: 7)
-            Circle()
-                .fill(LMColors.inputBorder)
-                .frame(width: 7, height: 7)
-            Circle()
-                .fill(LMColors.inputBorder)
-                .frame(width: 7, height: 7)
+            ForEach(0..<3) { index in
+                Capsule()
+                    .fill(index == activeIndex ? LMColors.primary : LMColors.inputBorder)
+                    .frame(width: index == activeIndex ? 22 : 7, height: 7)
+            }
         }
         .frame(maxWidth: .infinity)
     }

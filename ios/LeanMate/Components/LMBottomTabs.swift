@@ -33,6 +33,39 @@ struct LMBottomTabs<ID: Hashable>: View {
     }
 }
 
+struct LMTabScreen<ID: Hashable, Content: View>: View {
+    let items: [LMBottomTabItem<ID>]
+    @Binding var selection: ID
+    private let content: Content
+
+    init(
+        items: [LMBottomTabItem<ID>],
+        selection: Binding<ID>,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.items = items
+        _selection = selection
+        self.content = content()
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: LMSpacing.regular) {
+                    content
+                }
+                .padding(.horizontal, LMSpacing.large)
+                .padding(.top, LMSpacing.small)
+                .padding(.bottom, LMSpacing.large)
+            }
+            .scrollIndicators(.hidden)
+
+            LMBottomTabs(items: items, selection: $selection)
+        }
+        .background(LMColors.background.ignoresSafeArea())
+    }
+}
+
 private extension LMBottomTabs {
     func tab(_ item: LMBottomTabItem<ID>) -> some View {
         let isSelected = selection == item.id

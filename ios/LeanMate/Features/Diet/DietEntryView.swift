@@ -28,9 +28,16 @@ struct DietEntryView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: LMSpacing.regular) {
+        ZStack {
+            if viewModel.mode == .confirmation && viewModel.isPhotoConfirmation {
+                photoConfirmationScreen
+            } else {
+                LMTabScreen(
+                    items: AppTab.allCases.map {
+                        LMBottomTabItem(id: $0, title: $0.title, systemImage: $0.systemImage)
+                    },
+                    selection: $selectedTab
+                ) {
                     header
 
                     if isVisitor {
@@ -39,29 +46,18 @@ struct DietEntryView: View {
                         entryContent
                     }
                 }
-                .padding(.horizontal, LMSpacing.large)
-                .padding(.top, 18)
-                .padding(.bottom, 24)
             }
 
-            LMBottomTabs(
-                items: AppTab.allCases.map {
-                    LMBottomTabItem(id: $0, title: $0.title, systemImage: $0.systemImage)
-                },
-                selection: $selectedTab
-            )
+            if showsDeleteConfirmation {
+                deleteConfirmationOverlay
+            }
         }
-        .background(LMColors.background.ignoresSafeArea())
         .sheet(isPresented: $showsWeightSheet) {
             WeightEntrySheet(viewModel: weightViewModel)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.hidden)
-        }
-        .alert("删除这条饮食记录？", isPresented: $showsDeleteConfirmation) {
-            Button("取消", role: .cancel) {}
-            Button("删除", role: .destructive, action: deleteSavedEntry)
-        } message: {
-            Text("删除后今日热量和营养比例会重新计算。")
+                .presentationBackground(LMColors.background)
+                .presentationCornerRadius(26)
         }
         .onChange(of: photoPickerItem) { _, newItem in
             loadSelectedPhoto(newItem)
@@ -106,18 +102,242 @@ private extension DietEntryView {
     }
 
     var visitorContent: some View {
-        LMStateView(
-            kind: .empty,
-            title: "登录后再保存记录",
-            message: "游客可以查看入口，但饮食和体重记录需要登录后保存。",
-            actionTitle: "去登录",
-            action: onLoginRequired
-        )
+        VStack(alignment: .leading, spacing: LMSpacing.regular) {
+            LMSearchField(
+                text: .constant(""),
+                placeholder: "输入一句话，如：早餐两个鸡蛋一杯豆浆"
+            )
+            .disabled(true)
+
+            visitorMethodPreview
+
+            LMStateView(
+                kind: .empty,
+                title: "登录后再保存记录",
+                message: "游客可以查看入口，但饮食和体重记录需要登录后保存。",
+                actionTitle: "去登录",
+                action: onLoginRequired
+            )
+        }
+    }
+
+    var visitorMethodPreview: some View {
+        VStack(spacing: 8) {
+            visitorMethodButton(title: "拍照识别", subtitle: "选择照片后生成确认清单", systemImage: "camera")
+            visitorMethodButton(title: "文本识别", subtitle: "输入一句话后生成确认清单", systemImage: "text.bubble")
+            visitorMethodButton(title: "手动记录", subtitle: "直接填写食物名称和营养估算", systemImage: "pencil")
+        }
+    }
+
+    func visitorMethodButton(title: String, subtitle: String, systemImage: String) -> some View {
+        Button(action: onLoginRequired) {
+            HStack(spacing: 12) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .fill(LMColors.primarySoft)
+                        .frame(width: 42, height: 42)
+
+                    Image(systemName: systemImage)
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(LMColors.primary)
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(LMTypography.bodyStrong)
+                        .foregroundStyle(LMColors.textBody)
+                    Text(subtitle)
+                        .font(LMTypography.caption)
+                        .foregroundStyle(LMColors.textSecondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+                }
+
+                Spacer()
+
+                Image(systemName: "lock")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(LMColors.textMuted)
+            }
+            .padding(14)
+            .background(LMColors.card)
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(LMColors.inputBorder, lineWidth: 1)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    var photoConfirmationScreen: some View {
+        VStack(spacing: 0) {
+            photoPreviewHero
+
+            VStack(alignment: .leading, spacing: 16) {
+                LMSheetHandle()
+                    .frame(maxWidth: .infinity, alignment: .center)
+
+                Text("确认识别结果")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(LMColors.textPrimary)
+
+                stateMessage
+
+                ForEach($viewModel.confirmationItems) { item in
+                    CompactFoodItemCard(item: item)
+                }
+
+                HStack {
+                    Text("总计")
+                        .font(LMTypography.bodyStrong)
+                        .foregroundStyle(LMColors.textBody)
+                    Spacer()
+                    Text(viewModel.totalCaloriesText)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(LMColors.primary)
+                }
+                .padding(.horizontal, 14)
+                .frame(height: 50)
+                .background(LMColors.primarySoft)
+                .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 15, style: .continuous)
+                        .stroke(LMColors.primaryBorder, lineWidth: 1)
+                }
+
+                LMButton(
+                    title: "保存识别结果",
+                    systemImage: "checkmark",
+                    isLoading: viewModel.isSaving,
+                    action: saveRecognition
+                )
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 18)
+            .padding(.bottom, 32)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(LMColors.background)
+            .clipShape(UnevenRoundedRectangle(topLeadingRadius: 24, topTrailingRadius: 24))
+        }
+        .background(LMColors.cameraSurface.ignoresSafeArea())
+    }
+
+    var photoPreviewHero: some View {
+        ZStack {
+            LMColors.cameraSurface
+
+            if let selectedPhotoData, let image = UIImage(data: selectedPhotoData) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .clipped()
+                    .overlay {
+                        Color.black.opacity(0.28)
+                    }
+            }
+
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(LMColors.primary, lineWidth: 2)
+                .frame(width: 222, height: 222)
+
+            Text(viewModel.selectedImageName ?? "晚餐照片")
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(.white.opacity(0.75))
+
+            VStack {
+                HStack {
+                    Button(action: viewModel.selectPhotoMode) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "chevron.left")
+                            Text("返回")
+                        }
+                        .font(LMTypography.badge)
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 12)
+                        .frame(height: 36)
+                        .background(Color.black.opacity(0.24))
+                        .clipShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+
+                    Spacer()
+
+                    Text(viewModel.mealType.title)
+                        .font(LMTypography.badge)
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 12)
+                        .frame(height: 36)
+                        .background(Color.black.opacity(0.24))
+                        .clipShape(Capsule())
+                }
+                .padding(.horizontal, 18)
+                .padding(.top, 38)
+
+                Spacer()
+            }
+        }
+        .frame(height: 398)
+    }
+
+    var deleteConfirmationOverlay: some View {
+        ZStack {
+            Color(hex: 0x133322, alpha: 0.34)
+                .ignoresSafeArea()
+
+            VStack(alignment: .leading, spacing: 14) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .fill(LMColors.dangerSoft)
+                        .frame(width: 42, height: 42)
+
+                    Image(systemName: "trash")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(LMColors.danger)
+                }
+
+                Text("删除这条饮食记录？")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(LMColors.textPrimary)
+
+                Text("删除后今日热量和营养比例会重新计算。")
+                    .font(LMTypography.caption)
+                    .foregroundStyle(LMColors.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                HStack(spacing: 10) {
+                    LMButton(
+                        title: "取消",
+                        role: .secondary,
+                        height: 46
+                    ) {
+                        showsDeleteConfirmation = false
+                    }
+
+                    LMButton(
+                        title: "删除",
+                        role: .destructive,
+                        height: 46,
+                        isLoading: viewModel.isDeleting
+                    ) {
+                        showsDeleteConfirmation = false
+                        deleteSavedEntry()
+                    }
+                }
+            }
+            .padding(.top, 22)
+            .padding(.horizontal, 22)
+            .padding(.bottom, 18)
+            .frame(maxWidth: 342, alignment: .leading)
+            .background(LMColors.card)
+            .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .padding(.horizontal, 24)
+        }
     }
 
     @ViewBuilder
     var entryContent: some View {
-        mealControls
         textSearch
         methodCards
         stateMessage
@@ -135,7 +355,7 @@ private extension DietEntryView {
     }
 
     var mealControls: some View {
-        LMCard(cornerRadius: 16, padding: 14) {
+        VStack(alignment: .leading, spacing: LMSpacing.medium) {
             Picker("餐次", selection: $viewModel.mealType) {
                 ForEach(MealType.allCases) { mealType in
                     Text(mealType.title).tag(mealType)
@@ -310,6 +530,8 @@ private extension DietEntryView {
                 .font(LMTypography.cardTitle)
                 .foregroundStyle(LMColors.textBody)
 
+            mealControls
+
             TextEditor(text: $viewModel.textInput)
                 .font(LMTypography.body)
                 .foregroundStyle(LMColors.textBody)
@@ -334,6 +556,9 @@ private extension DietEntryView {
 
     var manualSection: some View {
         VStack(spacing: LMSpacing.regular) {
+            LMCard(cornerRadius: 16, padding: 14) {
+                mealControls
+            }
             EditableFoodItemCard(title: "手动记录", item: $viewModel.manualItem)
 
             LMButton(
@@ -350,6 +575,8 @@ private extension DietEntryView {
             Text("拍照识别")
                 .font(LMTypography.cardTitle)
                 .foregroundStyle(LMColors.textBody)
+
+            mealControls
 
             ZStack {
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
@@ -509,6 +736,74 @@ private extension DietEntryView {
         } else {
             showsWeightSheet = true
         }
+    }
+}
+
+private struct CompactFoodItemCard: View {
+    @Binding var item: DietEntryViewModel.EditableFoodItem
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 12) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .fill(LMColors.primarySoft)
+                        .frame(width: 42, height: 42)
+
+                    Image(systemName: "fork.knife")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(LMColors.primary)
+                }
+
+                TextField("食物名称", text: $item.name)
+                    .font(LMTypography.bodyStrong)
+                    .foregroundStyle(LMColors.textBody)
+                    .textInputAutocapitalization(.never)
+
+                TextField("热量", text: $item.caloriesText)
+                    .font(LMTypography.bodyStrong)
+                    .foregroundStyle(LMColors.primaryDeep)
+                    .keyboardType(.numberPad)
+                    .multilineTextAlignment(.trailing)
+                    .frame(width: 58)
+            }
+
+            HStack(spacing: 8) {
+                compactField("重量", text: $item.weightGText)
+                compactField("蛋白", text: $item.proteinText)
+                compactField("脂肪", text: $item.fatText)
+                compactField("碳水", text: $item.carbsText)
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(LMColors.card)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(LMColors.inputBorder, lineWidth: 1)
+        }
+    }
+
+    func compactField(_ title: String, text: Binding<String>) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(LMColors.textSecondary)
+                .lineLimit(1)
+
+            TextField("--", text: text)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(LMColors.textBody)
+                .keyboardType(.decimalPad)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+        }
+        .padding(.horizontal, 8)
+        .frame(maxWidth: .infinity)
+        .frame(height: 48)
+        .background(LMColors.background)
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 }
 
