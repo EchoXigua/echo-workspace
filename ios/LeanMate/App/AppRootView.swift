@@ -42,19 +42,18 @@ private extension AppRootView {
                 onAuthExpired: router.showOnboarding
             )
         case .visitorHome:
-            HomeView(
-                viewModel: HomeViewModel.visitor(),
+            MainTabContainerView(
+                environment: environment,
                 selectedTab: $router.selectedTab,
+                isVisitor: true,
                 onLoginRequired: router.showOnboarding,
                 onProfileRequired: router.showProfileSetup
             )
         case .home:
-            HomeView(
-                viewModel: HomeViewModel(
-                    apiClient: environment.apiClient,
-                    tokenStore: environment.tokenStore
-                ),
+            MainTabContainerView(
+                environment: environment,
                 selectedTab: $router.selectedTab,
+                isVisitor: false,
                 onLoginRequired: router.showOnboarding,
                 onProfileRequired: router.showProfileSetup
             )
@@ -97,5 +96,78 @@ private extension AppRootView {
             }
             router.showOnboarding()
         }
+    }
+}
+
+private struct MainTabContainerView: View {
+    let environment: AppEnvironment
+    @Binding var selectedTab: AppTab
+    let isVisitor: Bool
+    let onLoginRequired: () -> Void
+    let onProfileRequired: () -> Void
+
+    var body: some View {
+        switch selectedTab {
+        case .home:
+            HomeView(
+                viewModel: isVisitor ? HomeViewModel.visitor() : HomeViewModel(
+                    apiClient: environment.apiClient,
+                    tokenStore: environment.tokenStore
+                ),
+                selectedTab: $selectedTab,
+                onLoginRequired: onLoginRequired,
+                onProfileRequired: onProfileRequired
+            )
+        case .record:
+            DietEntryView(
+                viewModel: DietEntryViewModel(apiClient: environment.apiClient),
+                weightViewModel: WeightViewModel(apiClient: environment.apiClient),
+                selectedTab: $selectedTab,
+                isVisitor: isVisitor,
+                onLoginRequired: onLoginRequired
+            )
+        case .report:
+            MainTabPlaceholderView(
+                selectedTab: $selectedTab,
+                title: "AI 日报后续接入",
+                message: "第 3 批不实现日报详情。"
+            )
+        case .profile:
+            MainTabPlaceholderView(
+                selectedTab: $selectedTab,
+                title: "我的页后续接入",
+                message: "第 3 批不实现我的页和连续打卡里程碑。"
+            )
+        }
+    }
+}
+
+private struct MainTabPlaceholderView: View {
+    @Binding var selectedTab: AppTab
+    let title: String
+    let message: String
+
+    var body: some View {
+        VStack(spacing: 0) {
+            VStack {
+                LMStateView(
+                    kind: .empty,
+                    title: title,
+                    message: message,
+                    actionTitle: "回到首页",
+                    action: { selectedTab = .home }
+                )
+                .padding(.horizontal, LMSpacing.large)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            LMBottomTabs(
+                items: AppTab.allCases.map {
+                    LMBottomTabItem(id: $0, title: $0.title, systemImage: $0.systemImage)
+                },
+                selection: $selectedTab
+            )
+        }
+        .background(LMColors.background.ignoresSafeArea())
     }
 }
