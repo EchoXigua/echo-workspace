@@ -134,41 +134,15 @@ private struct MainTabContainerView: View {
                 onLoginRequired: onLoginRequired
             )
         case .profile:
-            MainTabPlaceholderView(
+            ProfileSummaryView(
+                viewModel: isVisitor ? ProfileSummaryViewModel.visitor() : ProfileSummaryViewModel(
+                    apiClient: environment.apiClient,
+                    tokenStore: environment.tokenStore
+                ),
                 selectedTab: $selectedTab,
-                title: "我的页后续接入",
-                message: "第 3 批不实现我的页和连续打卡里程碑。"
+                onLoginRequired: onLoginRequired,
+                onProfileRequired: onProfileRequired
             )
         }
-    }
-}
-
-private struct MainTabPlaceholderView: View {
-    @Binding var selectedTab: AppTab
-    let title: String
-    let message: String
-
-    var body: some View {
-        VStack(spacing: 0) {
-            VStack {
-                LMStateView(
-                    kind: .empty,
-                    title: title,
-                    message: message,
-                    actionTitle: "回到首页",
-                    action: { selectedTab = .home }
-                )
-                .padding(.horizontal, LMSpacing.large)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-            LMBottomTabs(
-                items: AppTab.allCases.map {
-                    LMBottomTabItem(id: $0, title: $0.title, systemImage: $0.systemImage)
-                },
-                selection: $selectedTab
-            )
-        }
-        .background(LMColors.background.ignoresSafeArea())
     }
 }

@@ -250,6 +250,9 @@ final class MockAPIClient: APIClient, @unchecked Sendable {
 
     func streak() async throws -> Streak {
         try await prepare()
+        if case .empty = scenario {
+            return MockData.emptyStreak
+        }
         return MockData.streak
     }
 }

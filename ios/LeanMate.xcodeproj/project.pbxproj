@@ -52,6 +52,8 @@
 		000000000000000000001044 /* WeightEntrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002044 /* WeightEntrySheet.swift */; };
 		000000000000000000001045 /* DailyReportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002045 /* DailyReportViewModel.swift */; };
 		000000000000000000001046 /* DailyReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002046 /* DailyReportView.swift */; };
+		000000000000000000001047 /* ProfileSummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002047 /* ProfileSummaryViewModel.swift */; };
+		000000000000000000001048 /* ProfileSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002048 /* ProfileSummaryView.swift */; };
 		00000000000000000000A001 /* APICodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B001 /* APICodingTests.swift */; };
 		00000000000000000000A002 /* MockAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B002 /* MockAPIClientTests.swift */; };
 		00000000000000000000A003 /* FileLocalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B003 /* FileLocalStoreTests.swift */; };
@@ -61,6 +63,7 @@
 		00000000000000000000A007 /* DietEntryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B009 /* DietEntryViewModelTests.swift */; };
 		00000000000000000000A008 /* WeightViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B010 /* WeightViewModelTests.swift */; };
 		00000000000000000000A009 /* DailyReportViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B011 /* DailyReportViewModelTests.swift */; };
+		00000000000000000000A010 /* ProfileSummaryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B012 /* ProfileSummaryViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -120,6 +123,8 @@
 		000000000000000000002044 /* WeightEntrySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightEntrySheet.swift; sourceTree = "<group>"; };
 		000000000000000000002045 /* DailyReportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyReportViewModel.swift; sourceTree = "<group>"; };
 		000000000000000000002046 /* DailyReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyReportView.swift; sourceTree = "<group>"; };
+		000000000000000000002047 /* ProfileSummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSummaryViewModel.swift; sourceTree = "<group>"; };
+		000000000000000000002048 /* ProfileSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSummaryView.swift; sourceTree = "<group>"; };
 		00000000000000000000B000 /* LeanMateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeanMateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00000000000000000000B001 /* APICodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICodingTests.swift; sourceTree = "<group>"; };
 		00000000000000000000B002 /* MockAPIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAPIClientTests.swift; sourceTree = "<group>"; };
@@ -130,6 +135,7 @@
 		00000000000000000000B009 /* DietEntryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DietEntryViewModelTests.swift; sourceTree = "<group>"; };
 		00000000000000000000B010 /* WeightViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightViewModelTests.swift; sourceTree = "<group>"; };
 		00000000000000000000B011 /* DailyReportViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyReportViewModelTests.swift; sourceTree = "<group>"; };
+		00000000000000000000B012 /* ProfileSummaryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSummaryViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -316,6 +322,8 @@
 			children = (
 				000000000000000000002034 /* ProfileSetupViewModel.swift */,
 				000000000000000000002035 /* ProfileSetupView.swift */,
+				000000000000000000002047 /* ProfileSummaryViewModel.swift */,
+				000000000000000000002048 /* ProfileSummaryView.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -379,6 +387,7 @@
 				00000000000000000000B009 /* DietEntryViewModelTests.swift */,
 				00000000000000000000B010 /* WeightViewModelTests.swift */,
 				00000000000000000000B011 /* DailyReportViewModelTests.swift */,
+				00000000000000000000B012 /* ProfileSummaryViewModelTests.swift */,
 			);
 			path = LeanMateTests;
 			sourceTree = "<group>";
@@ -534,6 +543,8 @@
 				000000000000000000001044 /* WeightEntrySheet.swift in Sources */,
 				000000000000000000001045 /* DailyReportViewModel.swift in Sources */,
 				000000000000000000001046 /* DailyReportView.swift in Sources */,
+				000000000000000000001047 /* ProfileSummaryViewModel.swift in Sources */,
+				000000000000000000001048 /* ProfileSummaryView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -549,6 +560,7 @@
 				00000000000000000000A007 /* DietEntryViewModelTests.swift in Sources */,
 				00000000000000000000A008 /* WeightViewModelTests.swift in Sources */,
 				00000000000000000000A009 /* DailyReportViewModelTests.swift in Sources */,
+				00000000000000000000A010 /* ProfileSummaryViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

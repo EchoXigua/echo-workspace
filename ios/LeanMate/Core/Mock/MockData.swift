@@ -140,6 +140,18 @@ enum MockData {
             StreakMilestone(days: 100, achieved: false, achievedAt: nil)
         ]
     )
+
+    static let emptyStreak = Streak(
+        currentDays: 0,
+        longestDays: 0,
+        lastActiveDate: nil,
+        milestones: [
+            StreakMilestone(days: 3, achieved: false, achievedAt: nil),
+            StreakMilestone(days: 7, achieved: false, achievedAt: nil),
+            StreakMilestone(days: 30, achieved: false, achievedAt: nil),
+            StreakMilestone(days: 100, achieved: false, achievedAt: nil)
+        ]
+    )
 }
 
 private extension MockData {
