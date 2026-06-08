@@ -80,9 +80,9 @@ private extension InfrastructurePreviewView {
             .clipShape(Capsule())
 
             HStack(spacing: LMSpacing.small) {
-                LMNutrientChip(label: "碳水", value: "116g")
-                LMNutrientChip(label: "蛋白质", value: "42g")
-                LMNutrientChip(label: "脂肪", value: "28g")
+                LMNutrientChip(label: "碳水", value: "116", unit: "g")
+                LMNutrientChip(label: "蛋白质", value: "42", unit: "g")
+                LMNutrientChip(label: "脂肪", value: "28", unit: "g")
             }
         }
     }

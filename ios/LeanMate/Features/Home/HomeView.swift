@@ -99,18 +99,12 @@ private extension HomeView {
         navHeader(date: nil)
     }
 
-    func navHeader(date: Date?) -> some View {
+    func navHeader(date _: Date?) -> some View {
         HStack {
             VStack(alignment: .leading, spacing: 3) {
                 Text("今天吃得怎么样")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(LMColors.textPrimary)
-
-                if let date {
-                    Text(APICoding.dateString(from: date))
-                        .font(LMTypography.caption)
-                        .foregroundStyle(LMColors.textSecondary)
-                }
             }
 
             Spacer()
@@ -136,7 +130,6 @@ private extension HomeView {
     func loadedContent(_ home: TodayHome) -> some View {
         VStack(alignment: .leading, spacing: LMSpacing.regular) {
             remainingCaloriesCard(home)
-            quickActions
             todaySummary(home)
         }
     }
@@ -144,7 +137,7 @@ private extension HomeView {
     func remainingCaloriesCard(_ home: TodayHome) -> some View {
         LMCard(cornerRadius: 16, padding: 14) {
             HStack {
-                Text(heroLabel(home))
+                Text(calorieContextLabel(home))
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(LMColors.textSecondary)
                     .lineLimit(1)
@@ -162,7 +155,7 @@ private extension HomeView {
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
 
-                Text("千卡")
+                Text("千卡还能吃")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(LMColors.textSecondary)
             }
@@ -170,9 +163,9 @@ private extension HomeView {
             calorieProgress(home)
 
             HStack(spacing: LMSpacing.small) {
-                LMNutrientChip(label: "碳水", value: gramText(home.carbsG))
-                LMNutrientChip(label: "蛋白质", value: gramText(home.proteinG))
-                LMNutrientChip(label: "脂肪", value: gramText(home.fatG))
+                LMNutrientChip(label: "碳水", value: gramValue(home.carbsG), unit: gramUnit(home.carbsG))
+                LMNutrientChip(label: "蛋白质", value: gramValue(home.proteinG), unit: gramUnit(home.proteinG))
+                LMNutrientChip(label: "脂肪", value: gramValue(home.fatG), unit: gramUnit(home.fatG))
             }
         }
     }
@@ -191,50 +184,6 @@ private extension HomeView {
         .clipShape(Capsule())
     }
 
-    var quickActions: some View {
-        HStack(spacing: LMSpacing.small) {
-            quickAction(title: "拍照", systemImage: "camera", mode: .photo)
-            quickAction(title: "文本", systemImage: "text.bubble", mode: .text)
-            quickAction(title: "手动", systemImage: "pencil", mode: .manual)
-        }
-    }
-
-    func quickAction(title: String, systemImage: String, mode: DietEntryLaunchMode) -> some View {
-        Button {
-            openRecordTab(mode: mode)
-        } label: {
-            VStack(spacing: 6) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .fill(title == "手动" ? LMColors.warmMuted : LMColors.primarySoft)
-                        .frame(width: 42, height: 42)
-
-                    if title == "手动" {
-                        LMManualEntryIcon(size: 18)
-                    } else {
-                        Image(systemName: systemImage)
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(LMColors.primary)
-                    }
-                }
-
-                Text(title)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(LMColors.textBody)
-            }
-            .padding(.vertical, 12)
-            .frame(maxWidth: .infinity)
-            .background(LMColors.card)
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(LMColors.inputBorder, lineWidth: 1)
-            }
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(title)
-    }
-
     func todaySummary(_ home: TodayHome) -> some View {
         LMCard(cornerRadius: 16, padding: 14) {
             HStack(alignment: .firstTextBaseline) {
@@ -244,59 +193,39 @@ private extension HomeView {
 
                 Spacer()
 
-                Text(home.reportSummary ?? "暂无日报摘要")
+                Text(mealHeaderActionTitle(home))
                     .font(LMTypography.badge)
-                    .foregroundStyle(home.reportSummary == nil ? LMColors.textMuted : LMColors.primary)
+                    .foregroundStyle(LMColors.primary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
             }
 
-            HStack(spacing: LMSpacing.small) {
-                LMMetricTile(title: "目标", value: "\(home.calorieTargetKcal)", unit: "kcal")
-                LMMetricTile(title: "已摄入", value: "\(home.caloriesInKcal)", unit: "kcal")
-            }
-
-            HStack(spacing: LMSpacing.small) {
-                LMMetricTile(
-                    title: "当前体重",
-                    value: weightText(home.currentWeightKg),
-                    unit: home.currentWeightKg == nil ? nil : "kg"
-                )
-                LMMetricTile(title: "连续打卡", value: "\(home.streakDays)", unit: "天")
-            }
-
-            if home.foodEntries.isEmpty {
-                Text("今天还没有正式饮食记录。")
-                    .font(LMTypography.caption)
-                    .foregroundStyle(LMColors.textSecondary)
-            } else {
-                VStack(spacing: LMSpacing.medium) {
-                    ForEach(home.foodEntries) { entry in
-                        foodEntryRow(entry)
-                    }
+            VStack(spacing: 10) {
+                ForEach(mealRows(home)) { row in
+                    foodEntryRow(row)
                 }
             }
         }
     }
 
-    func foodEntryRow(_ entry: FoodEntrySummary) -> some View {
+    func foodEntryRow(_ row: HomeMealRow) -> some View {
         HStack(spacing: 12) {
             ZStack {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(LMColors.primarySoft)
+                    .fill(row.isRecorded ? LMColors.primarySoft : LMColors.warmMuted)
                     .frame(width: 42, height: 42)
 
-                Text(entry.mealType.shortTitle)
+                Text(row.mealType.shortTitle)
                     .font(LMTypography.badge)
-                    .foregroundStyle(LMColors.primary)
+                    .foregroundStyle(row.isRecorded ? LMColors.primary : Color(hex: 0x7A746A))
             }
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(entry.mealType.title)
+                Text(row.mealType.title)
                     .font(LMTypography.bodyStrong)
                     .foregroundStyle(LMColors.textBody)
 
-                Text(entry.itemNames.joined(separator: "、"))
+                Text(row.description)
                     .font(LMTypography.caption)
                     .foregroundStyle(LMColors.textSecondary)
                     .lineLimit(1)
@@ -305,9 +234,18 @@ private extension HomeView {
 
             Spacer()
 
-            Text("\(entry.totalCaloriesKcal)")
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(LMColors.primaryDeep)
+            if row.isRecorded {
+                Text("\(row.totalCaloriesKcal)")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(LMColors.primaryDeep)
+            } else {
+                Button(action: openRecordTab) {
+                    Text("补录")
+                        .font(LMTypography.badge)
+                        .foregroundStyle(LMColors.primary)
+                }
+                .buttonStyle(.plain)
+            }
         }
     }
 
@@ -481,9 +419,8 @@ private extension HomeView {
         selectedTab = .record
     }
 
-    func heroLabel(_ home: TodayHome) -> String {
-        let weight = home.currentWeightKg.map { "当前\(display($0))kg" } ?? "体重暂无"
-        return "还能吃 · \(weight) · 连续\(home.streakDays)天"
+    func calorieContextLabel(_ home: TodayHome) -> String {
+        "已摄入\(home.caloriesInKcal) / 目标\(home.calorieTargetKcal)"
     }
 
     func calorieRatio(_ home: TodayHome) -> CGFloat {
@@ -494,18 +431,15 @@ private extension HomeView {
         return CGFloat(min(max(ratio, 0), 1))
     }
 
-    func gramText(_ value: Double?) -> String {
-        guard let value else {
-            return "暂无"
-        }
-        return "\(display(value))g"
-    }
-
-    func weightText(_ value: Double?) -> String {
+    func gramValue(_ value: Double?) -> String {
         guard let value else {
             return "暂无"
         }
         return display(value)
+    }
+
+    func gramUnit(_ value: Double?) -> String? {
+        value == nil ? nil : "g"
     }
 
     func display(_ value: Double) -> String {
@@ -522,6 +456,50 @@ private extension HomeView {
         }
         return "\(month)月\(day)日"
     }
+
+    func mealHeaderActionTitle(_ home: TodayHome) -> String {
+        if !hasRecordedMeal(.dinner, in: home) {
+            return "晚餐可补录"
+        }
+        if home.foodEntries.isEmpty {
+            return "开始记录"
+        }
+        return "今日已记录"
+    }
+
+    func mealRows(_ home: TodayHome) -> [HomeMealRow] {
+        let baseMealTypes: [MealType] = [.breakfast, .lunch, .dinner]
+        var extraMealTypes: [MealType] = []
+        for entry in home.foodEntries where !baseMealTypes.contains(entry.mealType) && !extraMealTypes.contains(entry.mealType) {
+            extraMealTypes.append(entry.mealType)
+        }
+        let mealTypes = baseMealTypes + extraMealTypes.sorted { $0.sortOrder < $1.sortOrder }
+
+        return mealTypes.map { mealType in
+            let entries = home.foodEntries.filter { $0.mealType == mealType }
+            let calories = entries.map(\.totalCaloriesKcal).reduce(0, +)
+            let names = entries.flatMap(\.itemNames)
+            return HomeMealRow(
+                mealType: mealType,
+                totalCaloriesKcal: calories,
+                description: names.isEmpty ? "还没记录，点补录添加这一餐" : names.joined(separator: "、"),
+                isRecorded: !entries.isEmpty
+            )
+        }
+    }
+
+    func hasRecordedMeal(_ mealType: MealType, in home: TodayHome) -> Bool {
+        home.foodEntries.contains { $0.mealType == mealType }
+    }
+}
+
+private struct HomeMealRow: Identifiable {
+    var id: MealType { mealType }
+
+    let mealType: MealType
+    let totalCaloriesKcal: Int
+    let description: String
+    let isRecorded: Bool
 }
 
 private extension MealType {
@@ -548,6 +526,19 @@ private extension MealType {
             "晚"
         case .snack:
             "加"
+        }
+    }
+
+    var sortOrder: Int {
+        switch self {
+        case .breakfast:
+            0
+        case .lunch:
+            1
+        case .dinner:
+            2
+        case .snack:
+            3
         }
     }
 }
