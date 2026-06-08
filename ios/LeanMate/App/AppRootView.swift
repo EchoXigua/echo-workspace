@@ -45,6 +45,7 @@ private extension AppRootView {
             MainTabContainerView(
                 environment: environment,
                 selectedTab: $router.selectedTab,
+                pendingDietEntryMode: $router.pendingDietEntryMode,
                 isVisitor: true,
                 onLoginRequired: router.showOnboarding,
                 onProfileRequired: router.showProfileSetup
@@ -53,6 +54,7 @@ private extension AppRootView {
             MainTabContainerView(
                 environment: environment,
                 selectedTab: $router.selectedTab,
+                pendingDietEntryMode: $router.pendingDietEntryMode,
                 isVisitor: false,
                 onLoginRequired: router.showOnboarding,
                 onProfileRequired: router.showProfileSetup
@@ -102,6 +104,7 @@ private extension AppRootView {
 private struct MainTabContainerView: View {
     let environment: AppEnvironment
     @Binding var selectedTab: AppTab
+    @Binding var pendingDietEntryMode: DietEntryLaunchMode?
     let isVisitor: Bool
     let onLoginRequired: () -> Void
     let onProfileRequired: () -> Void
@@ -115,6 +118,7 @@ private struct MainTabContainerView: View {
                     tokenStore: environment.tokenStore
                 ),
                 selectedTab: $selectedTab,
+                pendingDietEntryMode: $pendingDietEntryMode,
                 onLoginRequired: onLoginRequired,
                 onProfileRequired: onProfileRequired
             )
@@ -123,6 +127,7 @@ private struct MainTabContainerView: View {
                 viewModel: DietEntryViewModel(apiClient: environment.apiClient),
                 weightViewModel: WeightViewModel(apiClient: environment.apiClient),
                 selectedTab: $selectedTab,
+                pendingLaunchMode: $pendingDietEntryMode,
                 isVisitor: isVisitor,
                 onLoginRequired: onLoginRequired
             )

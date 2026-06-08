@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @Binding private var selectedTab: AppTab
+    @Binding private var pendingDietEntryMode: DietEntryLaunchMode?
     @State private var isVisitorBannerVisible = true
 
     let onLoginRequired: () -> Void
@@ -11,11 +12,13 @@ struct HomeView: View {
     init(
         viewModel: HomeViewModel,
         selectedTab: Binding<AppTab>,
+        pendingDietEntryMode: Binding<DietEntryLaunchMode?> = .constant(nil),
         onLoginRequired: @escaping () -> Void,
         onProfileRequired: @escaping () -> Void
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         _selectedTab = selectedTab
+        _pendingDietEntryMode = pendingDietEntryMode
         self.onLoginRequired = onLoginRequired
         self.onProfileRequired = onProfileRequired
     }
@@ -378,15 +381,17 @@ private extension HomeView {
             }
 
             HStack(spacing: LMSpacing.small) {
-                visitorRecordAction(title: "拍照", systemImage: "camera")
-                visitorRecordAction(title: "文本", systemImage: "text.bubble")
-                visitorRecordAction(title: "手动", systemImage: "pencil")
+                visitorRecordAction(title: "拍照", systemImage: "camera", mode: .photo)
+                visitorRecordAction(title: "文本", systemImage: "text.bubble", mode: .text)
+                visitorRecordAction(title: "手动", systemImage: "pencil", mode: .manual)
             }
         }
     }
 
-    func visitorRecordAction(title: String, systemImage: String) -> some View {
-        Button(action: openRecordTab) {
+    func visitorRecordAction(title: String, systemImage: String, mode: DietEntryLaunchMode) -> some View {
+        Button {
+            openRecordTab(mode: mode)
+        } label: {
             VStack(spacing: 6) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
@@ -444,6 +449,12 @@ private extension HomeView {
     }
 
     func openRecordTab() {
+        pendingDietEntryMode = nil
+        selectedTab = .record
+    }
+
+    func openRecordTab(mode: DietEntryLaunchMode) {
+        pendingDietEntryMode = mode
         selectedTab = .record
     }
 

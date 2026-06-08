@@ -43,10 +43,17 @@ enum AppTab: String, CaseIterable, Identifiable, Hashable {
     }
 }
 
+enum DietEntryLaunchMode: Equatable {
+    case photo
+    case text
+    case manual
+}
+
 @MainActor
 final class AppRouter: ObservableObject {
     @Published var rootState: AppRootState = .coldStart
     @Published var selectedTab: AppTab = .home
+    @Published var pendingDietEntryMode: DietEntryLaunchMode?
     @Published var path = NavigationPath()
 
     func showOnboarding() {

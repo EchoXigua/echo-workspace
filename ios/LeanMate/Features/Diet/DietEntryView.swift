@@ -5,6 +5,7 @@ struct DietEntryView: View {
     @StateObject private var viewModel: DietEntryViewModel
     @StateObject private var weightViewModel: WeightViewModel
     @Binding private var selectedTab: AppTab
+    @Binding private var pendingLaunchMode: DietEntryLaunchMode?
     @State private var showsWeightSheet = false
     @State private var showsDeleteConfirmation = false
     @State private var photoPickerItem: PhotosPickerItem?
@@ -17,12 +18,14 @@ struct DietEntryView: View {
         viewModel: DietEntryViewModel,
         weightViewModel: WeightViewModel,
         selectedTab: Binding<AppTab>,
+        pendingLaunchMode: Binding<DietEntryLaunchMode?> = .constant(nil),
         isVisitor: Bool = false,
         onLoginRequired: @escaping () -> Void
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         _weightViewModel = StateObject(wrappedValue: weightViewModel)
         _selectedTab = selectedTab
+        _pendingLaunchMode = pendingLaunchMode
         self.isVisitor = isVisitor
         self.onLoginRequired = onLoginRequired
     }
@@ -56,6 +59,10 @@ struct DietEntryView: View {
         }
         .onChange(of: photoPickerItem) { _, newItem in
             loadSelectedPhoto(newItem)
+        }
+        .onAppear(perform: applyPendingLaunchMode)
+        .onChange(of: pendingLaunchMode) { _, _ in
+            applyPendingLaunchMode()
         }
     }
 }
@@ -662,6 +669,23 @@ private extension DietEntryView {
         } else {
             showsWeightSheet = true
         }
+    }
+
+    func applyPendingLaunchMode() {
+        guard let pendingLaunchMode else {
+            return
+        }
+
+        switch pendingLaunchMode {
+        case .photo:
+            viewModel.selectPhotoMode()
+        case .text:
+            viewModel.selectTextMode()
+        case .manual:
+            viewModel.selectManualMode()
+        }
+
+        self.pendingLaunchMode = nil
     }
 }
 
