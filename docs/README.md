@@ -22,6 +22,7 @@ docs/
 - [后端架构设计](architecture/backend.md)
 - [领域模型设计](architecture/domain-model.md)
 - [OpenAPI 契约](api/openapi.yaml)
+- [V1.1 后端接口文档](../server/docs/v1.1-api-reference.md)
 - [后端技术选型](../server/docs/technology-selection.md)
 - [后端数据库设计](../server/docs/database-design.md)
 - [AI Provider 方案](../server/docs/ai-provider.md)

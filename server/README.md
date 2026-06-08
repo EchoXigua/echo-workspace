@@ -9,6 +9,7 @@ LeanMate 后端 API 服务。V1.1 从一开始接入后端，作为 iOS、Androi
 - AI Provider 方案：[docs/ai-provider.md](docs/ai-provider.md)
 - 环境配置：[docs/env-config.md](docs/env-config.md)
 - 开发就绪说明：[docs/development-readiness.md](docs/development-readiness.md)
+- V1.1 后端接口文档：[docs/v1.1-api-reference.md](docs/v1.1-api-reference.md)
 - 本地环境变量示例：[.env.local.example](.env.local.example)
 - 联调环境变量示例：[.env.dev.example](.env.dev.example)
 - 生产环境变量示例：[.env.prod.example](.env.prod.example)
