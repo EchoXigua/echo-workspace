@@ -325,8 +325,8 @@
     {
       "type": "frame",
       "id": "jxnV5",
-      "x": 11290,
-      "y": 142,
+      "x": 11194,
+      "y": 133,
       "name": "欢迎启动页 / 食卡卡风",
       "clip": true,
       "width": 402,
@@ -685,6 +685,7 @@
               "type": "frame",
               "id": "MtyIP",
               "name": "Remaining Calories Card",
+              "rotation": 0.0663800503567882,
               "width": "fill_container",
               "fill": "#FFFFFF",
               "cornerRadius": 16,
@@ -5500,239 +5501,6 @@
           "width": "fill_container"
         },
         {
-          "type": "frame",
-          "id": "c942Dm",
-          "name": "Content",
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 14,
-          "padding": [
-            8,
-            16,
-            16,
-            16
-          ],
-          "children": [
-            {
-              "type": "frame",
-              "id": "oeUKJ",
-              "name": "Login Banner",
-              "width": "fill_container",
-              "fill": "#EAF8EF",
-              "cornerRadius": 16,
-              "stroke": "#BEE6CC",
-              "strokeWidth": 1,
-              "gap": 12,
-              "padding": 14,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "G7PX4V",
-                  "name": "Banner Icon",
-                  "width": 42,
-                  "height": 42,
-                  "fill": "#EAF8EF",
-                  "cornerRadius": 14,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "VIDSX",
-                      "name": "Banner Icon Icon",
-                      "width": 21,
-                      "height": 21,
-                      "icon": "sparkles",
-                      "library": "lucide",
-                      "fill": "#48B878"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "d5Bij",
-                  "name": "Banner Text",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 2,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "PVg7O",
-                      "name": "Banner Title",
-                      "fill": "#1F241F",
-                      "content": "登录后同步记录",
-                      "fontFamily": "Inter",
-                      "fontSize": 12,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "A7YJf1",
-                      "name": "Banner Desc",
-                      "fill": "#6F8074",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "保存体重趋势、饮食记录和 AI 日报",
-                      "lineHeight": 1.25,
-                      "fontFamily": "Inter",
-                      "fontSize": 12,
-                      "fontWeight": "500"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "tx74N",
-                  "name": "Login CTA",
-                  "fill": "#EAF8EF",
-                  "cornerRadius": 999,
-                  "stroke": "#BEE6CC",
-                  "padding": [
-                    6,
-                    10
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "lTfkX",
-                      "name": "Login CTA Text",
-                      "fill": "#23965B",
-                      "content": "登录",
-                      "fontFamily": "Inter",
-                      "fontSize": 11,
-                      "fontWeight": "600"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "NWP3V",
-              "name": "Nav / 今天吃得怎么样",
-              "width": "fill_container",
-              "height": 52,
-              "justifyContent": "space_between",
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "text",
-                  "id": "s0IuM",
-                  "name": "Nav Title",
-                  "fill": "#183326",
-                  "content": "今天吃得怎么样",
-                  "fontFamily": "Inter",
-                  "fontSize": 15,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "frame",
-                  "id": "SKLAq",
-                  "name": "Nav Action",
-                  "fill": "#EAF8EF",
-                  "cornerRadius": 999,
-                  "stroke": "#BEE6CC",
-                  "padding": [
-                    6,
-                    10
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "b6oyAE",
-                      "name": "Nav Action Text",
-                      "fill": "#48B878",
-                      "content": "补记录",
-                      "fontFamily": "Inter",
-                      "fontSize": 11,
-                      "fontWeight": "600"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "P9bj1",
-              "name": "Visitor Calorie Card",
-              "width": "fill_container",
-              "fill": "#FFFFFF",
-              "cornerRadius": 16,
-              "stroke": "#DDEBDD",
-              "strokeWidth": 1,
-              "effect": {
-                "type": "shadow",
-                "shadowType": "outer",
-                "color": "#143B230A",
-                "offset": {
-                  "x": 0,
-                  "y": 2
-                },
-                "blur": 8
-              },
-              "layout": "vertical",
-              "gap": 10,
-              "padding": 14,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "OdWEa",
-                  "name": "Visitor Title",
-                  "fill": "#1F241F",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "游客也可以先记一餐",
-                  "lineHeight": 1.25,
-                  "fontFamily": "Inter",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "m2Lu6",
-                  "name": "Visitor Desc",
-                  "fill": "#6F8074",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "本次记录会临时保留，登录后可以合并到你的健康档案。",
-                  "lineHeight": 1.25,
-                  "fontFamily": "Inter",
-                  "fontSize": 12,
-                  "fontWeight": "500"
-                },
-                {
-                  "type": "frame",
-                  "id": "J7ftF",
-                  "name": "Visitor Button",
-                  "width": "fill_container",
-                  "height": 50,
-                  "fill": "#48B878",
-                  "cornerRadius": 15,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "HdORH",
-                      "name": "Visitor Text",
-                      "fill": "#FFFFFF",
-                      "content": "拍照记录",
-                      "fontFamily": "Inter",
-                      "fontSize": 13,
-                      "fontWeight": "600"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
           "id": "oYSxG",
           "type": "ref",
           "ref": "hhYjg",
@@ -5784,6 +5552,222 @@
               "fill": "#9AA79D"
             }
           }
+        },
+        {
+          "type": "frame",
+          "id": "oeUKJ",
+          "name": "Login Banner",
+          "width": "fill_container",
+          "fill": "#EAF8EF",
+          "cornerRadius": 16,
+          "stroke": "#BEE6CC",
+          "strokeWidth": 1,
+          "gap": 12,
+          "padding": 14,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "G7PX4V",
+              "name": "Banner Icon",
+              "width": 42,
+              "height": 42,
+              "fill": "#EAF8EF",
+              "cornerRadius": 14,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "VIDSX",
+                  "name": "Banner Icon Icon",
+                  "width": 21,
+                  "height": 21,
+                  "icon": "sparkles",
+                  "library": "lucide",
+                  "fill": "#48B878"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "d5Bij",
+              "name": "Banner Text",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "PVg7O",
+                  "name": "Banner Title",
+                  "fill": "#1F241F",
+                  "content": "登录后同步记录",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "A7YJf1",
+                  "name": "Banner Desc",
+                  "fill": "#6F8074",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "保存体重趋势、饮食记录和 AI 日报",
+                  "lineHeight": 1.25,
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tx74N",
+              "name": "Login CTA",
+              "fill": "#EAF8EF",
+              "cornerRadius": 999,
+              "stroke": "#BEE6CC",
+              "padding": [
+                6,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "lTfkX",
+                  "name": "Login CTA Text",
+                  "fill": "#23965B",
+                  "content": "登录",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "NWP3V",
+          "name": "Nav / 今天吃得怎么样",
+          "width": "fill_container",
+          "height": 52,
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "s0IuM",
+              "name": "Nav Title",
+              "fill": "#183326",
+              "content": "今天吃得怎么样",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "SKLAq",
+              "name": "Nav Action",
+              "fill": "#EAF8EF",
+              "cornerRadius": 999,
+              "stroke": "#BEE6CC",
+              "padding": [
+                6,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "b6oyAE",
+                  "name": "Nav Action Text",
+                  "fill": "#48B878",
+                  "content": "补记录",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "P9bj1",
+          "name": "Visitor Calorie Card",
+          "width": "fill_container",
+          "fill": "#FFFFFF",
+          "cornerRadius": 16,
+          "stroke": "#DDEBDD",
+          "strokeWidth": 1,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#143B230A",
+            "offset": {
+              "x": 0,
+              "y": 2
+            },
+            "blur": 8
+          },
+          "layout": "vertical",
+          "gap": 10,
+          "padding": 14,
+          "children": [
+            {
+              "type": "text",
+              "id": "OdWEa",
+              "name": "Visitor Title",
+              "fill": "#1F241F",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "游客也可以先记一餐",
+              "lineHeight": 1.25,
+              "fontFamily": "Inter",
+              "fontSize": 18,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "m2Lu6",
+              "name": "Visitor Desc",
+              "fill": "#6F8074",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "本次记录会临时保留，登录后可以合并到你的健康档案。",
+              "lineHeight": 1.25,
+              "fontFamily": "Inter",
+              "fontSize": 12,
+              "fontWeight": "500"
+            },
+            {
+              "type": "frame",
+              "id": "J7ftF",
+              "name": "Visitor Button",
+              "width": "fill_container",
+              "height": 50,
+              "fill": "#48B878",
+              "cornerRadius": 15,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "HdORH",
+                  "name": "Visitor Text",
+                  "fill": "#FFFFFF",
+                  "content": "拍照记录",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
         }
       ]
     }

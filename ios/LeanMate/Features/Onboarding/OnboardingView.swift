@@ -20,45 +20,33 @@ struct OnboardingView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            brandStack
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                brandStack
+                    .padding(.top, topPadding(for: geometry.size.height))
 
-            VStack(spacing: LMSpacing.regular) {
-                todayPreviewCard
+                Spacer(minLength: 0)
 
-                if case .loginFailed(let message) = viewModel.state {
-                    LMStateView(
-                        kind: .error,
-                        title: "登录失败",
-                        message: message
-                    )
-                }
-            }
+                VStack(spacing: LMSpacing.regular) {
+                    todayPreviewCard
 
-            VStack(spacing: LMSpacing.medium) {
-                LMButton(
-                    title: "开始记录",
-                    systemImage: "arrow.right",
-                    isLoading: viewModel.isLoggingIn
-                ) {
-                    Task {
-                        await handleLogin()
+                    if case .loginFailed(let message) = viewModel.state {
+                        LMStateView(
+                            kind: .error,
+                            title: "登录失败",
+                            message: message
+                        )
                     }
                 }
 
-                LMButton(
-                    title: "先看看首页",
-                    systemImage: "eye",
-                    role: .secondary,
-                    height: 48,
-                    action: onVisitorPreview
-                )
+                Spacer(minLength: 0)
+
+                actionsStack
+                    .padding(.bottom, bottomPadding(for: geometry.size.height))
             }
+            .padding(.horizontal, 28)
+            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .top)
         }
-        .padding(.top, 78)
-        .padding(.horizontal, 28)
-        .padding(.bottom, 42)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(LMColors.background.ignoresSafeArea())
     }
 }
@@ -75,6 +63,7 @@ private extension OnboardingView {
                     .font(.system(size: 30, weight: .semibold))
                     .foregroundStyle(.white)
             }
+            .frame(maxWidth: .infinity, alignment: .center)
 
             VStack(alignment: .leading, spacing: 8) {
                 Text("LeanMate")
@@ -87,6 +76,35 @@ private extension OnboardingView {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    var actionsStack: some View {
+        VStack(spacing: 12) {
+            LMButton(
+                title: "开始记录",
+                isLoading: viewModel.isLoggingIn
+            ) {
+                Task {
+                    await handleLogin()
+                }
+            }
+
+            Button(action: onVisitorPreview) {
+                Text("随便看看")
+                    .font(LMTypography.bodyStrong)
+                    .foregroundStyle(LMColors.primaryDeep)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 48)
+                    .background(LMColors.card)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(LMColors.primaryBorder, lineWidth: 1)
+                    }
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("随便看看")
+        }
     }
 
     var todayPreviewCard: some View {
@@ -122,6 +140,14 @@ private extension OnboardingView {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(LMColors.warmSurface)
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+
+    func topPadding(for height: CGFloat) -> CGFloat {
+        min(max(height * 0.08, 54), 78)
+    }
+
+    func bottomPadding(for height: CGFloat) -> CGFloat {
+        min(max(height * 0.04, 30), 42)
     }
 
     func handleLogin() async {
