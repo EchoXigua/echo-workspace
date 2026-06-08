@@ -151,6 +151,11 @@ final class DietEntryViewModel: ObservableObject {
         validationMessage = nil
     }
 
+    func discardDraftAndSelectSelectionMode() {
+        resetDraft()
+        selectSelectionMode()
+    }
+
     func selectManualMode() {
         mode = .manual
         state = .idle
@@ -376,6 +381,17 @@ final class DietEntryViewModel: ObservableObject {
 }
 
 private extension DietEntryViewModel {
+    func resetDraft() {
+        textInput = ""
+        manualItem = EditableFoodItem()
+        confirmationItems = []
+        validationMessage = nil
+        selectedImageName = nil
+        savedEntry = nil
+        currentRecognitionTaskId = nil
+        currentDraftSource = .text
+    }
+
     func applyRecognitionTask(_ task: RecognitionTask) {
         currentRecognitionTaskId = task.id
         let taskSource = task.draftEntry?.sourceType ?? task.sourceType

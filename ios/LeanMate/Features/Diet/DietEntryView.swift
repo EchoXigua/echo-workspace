@@ -715,7 +715,7 @@ private extension DietEntryView {
 
             Spacer(minLength: 8)
 
-            Button(action: viewModel.selectSelectionMode) {
+            Button(action: changeMethod) {
                 Text("换方式")
                     .font(LMTypography.badge)
                     .foregroundStyle(LMColors.primary)
@@ -966,10 +966,11 @@ private extension DietEntryView {
         placeholder: String,
         keyboard: UIKeyboardType = .default
     ) -> some View {
-        VStack(alignment: .leading, spacing: 5) {
+        VStack(alignment: .leading, spacing: 4) {
             Text(title)
                 .font(LMTypography.badge)
                 .foregroundStyle(LMColors.textSecondary)
+                .frame(height: 16, alignment: .leading)
 
             TextField(placeholder, text: text)
                 .font(LMTypography.bodyStrong)
@@ -977,10 +978,12 @@ private extension DietEntryView {
                 .keyboardType(keyboard)
                 .textInputAutocapitalization(.never)
                 .lineLimit(1)
+                .frame(height: 22, alignment: .leading)
         }
         .padding(.horizontal, 12)
+        .padding(.vertical, 8)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .frame(height: 58)
+        .frame(height: 58, alignment: .topLeading)
         .background(LMColors.warmSurface)
         .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
         .overlay {
@@ -1078,6 +1081,12 @@ private extension DietEntryView {
         viewModel.selectSelectionMode()
         pendingLaunchMode = nil
         selectedTab = .home
+    }
+
+    func changeMethod() {
+        selectedPhotoData = nil
+        photoPickerItem = nil
+        viewModel.discardDraftAndSelectSelectionMode()
     }
 
     func startPhotoRecognition() {
