@@ -113,18 +113,23 @@ private struct MainTabContainerView: View {
         switch selectedTab {
         case .home:
             HomeView(
-                viewModel: isVisitor ? HomeViewModel.visitor() : HomeViewModel(
+                viewModel: isVisitor ? HomeViewModel.visitor(localStore: environment.localStore) : HomeViewModel(
                     apiClient: environment.apiClient,
                     tokenStore: environment.tokenStore
                 ),
                 selectedTab: $selectedTab,
                 pendingDietEntryMode: $pendingDietEntryMode,
+                isVisitor: isVisitor,
                 onLoginRequired: onLoginRequired,
                 onProfileRequired: onProfileRequired
             )
         case .record:
             DietEntryView(
-                viewModel: DietEntryViewModel(apiClient: environment.apiClient),
+                viewModel: DietEntryViewModel(
+                    apiClient: environment.apiClient,
+                    localStore: environment.localStore,
+                    savesLocally: isVisitor
+                ),
                 weightViewModel: WeightViewModel(apiClient: environment.apiClient),
                 selectedTab: $selectedTab,
                 pendingLaunchMode: $pendingDietEntryMode,

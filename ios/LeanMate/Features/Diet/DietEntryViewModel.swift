@@ -3,6 +3,7 @@ import Foundation
 @MainActor
 final class DietEntryViewModel: ObservableObject {
     enum Mode: Equatable {
+        case selection
         case text
         case manual
         case photo
@@ -64,10 +65,10 @@ final class DietEntryViewModel: ObservableObject {
         }
     }
 
-    @Published var mode: Mode = .text
+    @Published var mode: Mode = .selection
     @Published var state: State = .idle
     @Published var mealDate: Date
-    @Published var mealType: MealType = .breakfast
+    @Published var mealType: MealType
     @Published var textInput = ""
     @Published var manualItem = EditableFoodItem()
     @Published var confirmationItems: [EditableFoodItem] = []
@@ -76,12 +77,22 @@ final class DietEntryViewModel: ObservableObject {
     @Published private(set) var savedEntry: FoodEntry?
 
     private let apiClient: APIClient
+    private let localStore: (any LocalStore)?
+    private let savesLocally: Bool
     private var currentRecognitionTaskId: UUID?
     private var currentDraftSource: FoodSourceType = .text
 
-    init(apiClient: APIClient, mealDate: Date = Date()) {
+    init(
+        apiClient: APIClient,
+        localStore: (any LocalStore)? = nil,
+        savesLocally: Bool = false,
+        mealDate: Date = Date()
+    ) {
         self.apiClient = apiClient
+        self.localStore = localStore
+        self.savesLocally = savesLocally
         self.mealDate = mealDate
+        mealType = MealType.defaultMealType(for: mealDate)
     }
 
     var isBusy: Bool {
@@ -115,9 +126,9 @@ final class DietEntryViewModel: ObservableObject {
     var confirmationTitle: String {
         switch currentDraftSource {
         case .photo:
-            "拍照识别结果"
+            "确认记录"
         case .text:
-            "文本识别结果"
+            "确认记录"
         case .manual:
             "手动记录"
         }
@@ -134,6 +145,12 @@ final class DietEntryViewModel: ObservableObject {
         validationMessage = nil
     }
 
+    func selectSelectionMode() {
+        mode = .selection
+        state = .idle
+        validationMessage = nil
+    }
+
     func selectManualMode() {
         mode = .manual
         state = .idle
@@ -144,6 +161,55 @@ final class DietEntryViewModel: ObservableObject {
         mode = .photo
         state = .idle
         validationMessage = nil
+    }
+
+    func closeConfirmation() {
+        switch currentDraftSource {
+        case .photo:
+            mode = .photo
+        case .text:
+            mode = .text
+        case .manual:
+            mode = .manual
+        }
+        state = .idle
+        validationMessage = nil
+    }
+
+    func clearLocalValidation() {
+        if state == .localValidationFailed {
+            state = .idle
+        }
+        validationMessage = nil
+    }
+
+    func showLocalValidation(_ message: String) {
+        validationMessage = message
+        state = .localValidationFailed
+    }
+
+    func appendTextExpression(_ expression: String) {
+        let trimmedExpression = expression.trimmed
+        guard !trimmedExpression.isEmpty else {
+            return
+        }
+
+        let existing = textInput.trimmed
+        textInput = existing.isEmpty ? trimmedExpression : "\(existing)，\(trimmedExpression)"
+        clearLocalValidation()
+    }
+
+    func applyCommonUnit(foodName: String, quantityText: String, weightGText: String) {
+        if manualItem.name.trimmed.isEmpty {
+            manualItem.name = foodName
+        }
+        if manualItem.quantityText.trimmed.isEmpty {
+            manualItem.quantityText = quantityText
+        }
+        if manualItem.weightGText.trimmed.isEmpty {
+            manualItem.weightGText = weightGText
+        }
+        clearLocalValidation()
     }
 
     func startTextRecognition() async {
@@ -340,14 +406,54 @@ private extension DietEntryViewModel {
         state = .saving
 
         do {
-            let result = try await apiClient.saveDietEntry(request)
-            savedEntry = result.entry
+            if savesLocally, let localStore {
+                let entry = makeLocalFoodEntry(from: request)
+                try await localStore.saveLocalDietEntry(entry)
+                savedEntry = entry
+            } else {
+                let result = try await apiClient.saveDietEntry(request)
+                savedEntry = result.entry
+            }
             state = .saveSucceeded
             return true
         } catch {
             state = .saveFailed(AppError(error).localizedDescription)
             return false
         }
+    }
+
+    func makeLocalFoodEntry(from request: SaveFoodEntryRequest) -> FoodEntry {
+        let items = request.items.map { item in
+            FoodItem(
+                id: item.id ?? UUID(),
+                name: item.name,
+                quantityText: item.quantityText,
+                weightG: item.weightG,
+                caloriesKcal: item.caloriesKcal,
+                proteinG: item.proteinG,
+                fatG: item.fatG,
+                carbsG: item.carbsG,
+                confidence: item.confidence,
+                userEdited: item.userEdited ?? true
+            )
+        }
+
+        return FoodEntry(
+            id: UUID(),
+            recognitionTaskId: request.recognitionTaskId,
+            mealDate: request.mealDate,
+            mealType: request.mealType,
+            sourceType: request.sourceType,
+            rawText: request.rawText,
+            imageUrl: request.imageUrl,
+            status: .confirmed,
+            totalCaloriesKcal: items.compactMap(\.caloriesKcal).reduce(0, +),
+            totalProteinG: items.compactMap(\.proteinG).reduce(0, +),
+            totalFatG: items.compactMap(\.fatG).reduce(0, +),
+            totalCarbsG: items.compactMap(\.carbsG).reduce(0, +),
+            items: items,
+            createdAt: Date()
+        )
     }
 
     func validate(item: EditableFoodItem) -> SaveFoodItemRequest? {
@@ -423,6 +529,22 @@ private extension DietEntryViewModel {
         return number
     }
 
+}
+
+private extension MealType {
+    static func defaultMealType(for date: Date, calendar: Calendar = .current) -> MealType {
+        let hour = calendar.component(.hour, from: date)
+        switch hour {
+        case 5..<11:
+            return .breakfast
+        case 11..<16:
+            return .lunch
+        case 16..<21:
+            return .dinner
+        default:
+            return .snack
+        }
+    }
 }
 
 private extension String {

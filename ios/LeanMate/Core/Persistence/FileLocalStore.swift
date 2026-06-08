@@ -15,6 +15,25 @@ actor FileLocalStore: LocalStore {
         self.decoder.dateDecodingStrategy = .iso8601
     }
 
+    func localDietEntries(date: Date) async throws -> [FoodEntry] {
+        try load([FoodEntry].self, fileName: FileName.localDietEntries)
+            .filter { Calendar.current.isDate($0.mealDate, inSameDayAs: date) }
+            .sorted { ($0.createdAt ?? $0.mealDate) > ($1.createdAt ?? $1.mealDate) }
+    }
+
+    func saveLocalDietEntry(_ entry: FoodEntry) async throws {
+        var entries = try load([FoodEntry].self, fileName: FileName.localDietEntries)
+        entries.removeAll { $0.id == entry.id }
+        entries.append(entry)
+        try save(entries, fileName: FileName.localDietEntries)
+    }
+
+    func deleteLocalDietEntry(id: UUID) async throws {
+        var entries = try load([FoodEntry].self, fileName: FileName.localDietEntries)
+        entries.removeAll { $0.id == id }
+        try save(entries, fileName: FileName.localDietEntries)
+    }
+
     func dietDrafts() async throws -> [DietDraft] {
         try load([DietDraft].self, fileName: FileName.dietDrafts)
             .sorted { $0.updatedAt > $1.updatedAt }
@@ -54,6 +73,7 @@ actor FileLocalStore: LocalStore {
 
 private extension FileLocalStore {
     enum FileName {
+        static let localDietEntries = "local-diet-entries.json"
         static let dietDrafts = "diet-drafts.json"
         static let pendingWeights = "pending-weights.json"
     }

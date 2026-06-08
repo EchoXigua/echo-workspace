@@ -6,6 +6,7 @@ struct HomeView: View {
     @Binding private var pendingDietEntryMode: DietEntryLaunchMode?
     @State private var isVisitorBannerVisible = true
 
+    let isVisitor: Bool
     let onLoginRequired: () -> Void
     let onProfileRequired: () -> Void
 
@@ -13,12 +14,14 @@ struct HomeView: View {
         viewModel: HomeViewModel,
         selectedTab: Binding<AppTab>,
         pendingDietEntryMode: Binding<DietEntryLaunchMode?> = .constant(nil),
+        isVisitor: Bool = false,
         onLoginRequired: @escaping () -> Void,
         onProfileRequired: @escaping () -> Void
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         _selectedTab = selectedTab
         _pendingDietEntryMode = pendingDietEntryMode
+        self.isVisitor = isVisitor
         self.onLoginRequired = onLoginRequired
         self.onProfileRequired = onProfileRequired
     }
@@ -33,7 +36,7 @@ struct HomeView: View {
             content
         }
         .task {
-            await viewModel.load()
+            await viewModel.refresh()
         }
     }
 }
@@ -74,6 +77,12 @@ private extension HomeView {
         case .loaded(let home):
             navHeader(date: home.date)
             loadedContent(home)
+            if isVisitor && isVisitorBannerVisible {
+                VisitorHomeBanner(
+                    onLoginRequired: onLoginRequired,
+                    onClose: { isVisitorBannerVisible = false }
+                )
+            }
         case .error(let message, let recovery):
             navHeader
             LMStateView(
@@ -143,7 +152,7 @@ private extension HomeView {
 
                 Spacer()
 
-                LMTag(title: "今日 \(APICoding.dateString(from: home.date))")
+                LMTag(title: monthDayText(home.date))
             }
 
             HStack(alignment: .firstTextBaseline, spacing: 6) {
@@ -184,23 +193,29 @@ private extension HomeView {
 
     var quickActions: some View {
         HStack(spacing: LMSpacing.small) {
-            quickAction(title: "拍照", systemImage: "camera")
-            quickAction(title: "文本", systemImage: "text.bubble")
-            quickAction(title: "手动", systemImage: "pencil")
+            quickAction(title: "拍照", systemImage: "camera", mode: .photo)
+            quickAction(title: "文本", systemImage: "text.bubble", mode: .text)
+            quickAction(title: "手动", systemImage: "pencil", mode: .manual)
         }
     }
 
-    func quickAction(title: String, systemImage: String) -> some View {
-        Button(action: openRecordTab) {
+    func quickAction(title: String, systemImage: String, mode: DietEntryLaunchMode) -> some View {
+        Button {
+            openRecordTab(mode: mode)
+        } label: {
             VStack(spacing: 6) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
                         .fill(title == "手动" ? LMColors.warmMuted : LMColors.primarySoft)
                         .frame(width: 42, height: 42)
 
-                    Image(systemName: systemImage)
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundStyle(LMColors.primary)
+                    if title == "手动" {
+                        LMManualEntryIcon(size: 18)
+                    } else {
+                        Image(systemName: systemImage)
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundStyle(LMColors.primary)
+                    }
                 }
 
                 Text(title)
@@ -242,7 +257,11 @@ private extension HomeView {
             }
 
             HStack(spacing: LMSpacing.small) {
-                LMMetricTile(title: "当前体重", value: weightText(home.currentWeightKg), unit: "kg")
+                LMMetricTile(
+                    title: "当前体重",
+                    value: weightText(home.currentWeightKg),
+                    unit: home.currentWeightKg == nil ? nil : "kg"
+                )
                 LMMetricTile(title: "连续打卡", value: "\(home.streakDays)", unit: "天")
             }
 
@@ -398,9 +417,13 @@ private extension HomeView {
                         .fill(title == "手动" ? LMColors.warmMuted : LMColors.primarySoft)
                         .frame(width: 38, height: 38)
 
-                    Image(systemName: systemImage)
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(LMColors.primary)
+                    if title == "手动" {
+                        LMManualEntryIcon(size: 18)
+                    } else {
+                        Image(systemName: systemImage)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(LMColors.primary)
+                    }
                 }
 
                 Text(title)
@@ -490,6 +513,14 @@ private extension HomeView {
             return String(Int(value))
         }
         return String(format: "%.1f", value)
+    }
+
+    func monthDayText(_ date: Date) -> String {
+        let components = Calendar.current.dateComponents([.month, .day], from: date)
+        guard let month = components.month, let day = components.day else {
+            return APICoding.dateString(from: date)
+        }
+        return "\(month)月\(day)日"
     }
 }
 

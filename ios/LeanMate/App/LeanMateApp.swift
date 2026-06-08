@@ -5,7 +5,7 @@ struct LeanMateApp: App {
     private let environment = AppEnvironment(
         apiClient: MockAPIClient(scenario: .profileIncomplete),
         tokenStore: InMemoryTokenStore(),
-        localStore: InMemoryLocalStore()
+        localStore: FileLocalStore()
     )
 
     var body: some Scene {

@@ -13,6 +13,9 @@ struct PendingWeightDraft: Identifiable, Codable, Sendable {
 }
 
 protocol LocalStore: Sendable {
+    func localDietEntries(date: Date) async throws -> [FoodEntry]
+    func saveLocalDietEntry(_ entry: FoodEntry) async throws
+    func deleteLocalDietEntry(id: UUID) async throws
     func dietDrafts() async throws -> [DietDraft]
     func saveDietDraft(_ draft: DietDraft) async throws
     func deleteDietDraft(id: UUID) async throws
@@ -22,8 +25,23 @@ protocol LocalStore: Sendable {
 }
 
 actor InMemoryLocalStore: LocalStore {
+    private var localDietEntriesById: [UUID: FoodEntry] = [:]
     private var dietDraftsById: [UUID: DietDraft] = [:]
     private var pendingWeightsById: [UUID: PendingWeightDraft] = [:]
+
+    func localDietEntries(date: Date) async throws -> [FoodEntry] {
+        Array(localDietEntriesById.values)
+            .filter { Calendar.current.isDate($0.mealDate, inSameDayAs: date) }
+            .sorted { ($0.createdAt ?? $0.mealDate) > ($1.createdAt ?? $1.mealDate) }
+    }
+
+    func saveLocalDietEntry(_ entry: FoodEntry) async throws {
+        localDietEntriesById[entry.id] = entry
+    }
+
+    func deleteLocalDietEntry(id: UUID) async throws {
+        localDietEntriesById.removeValue(forKey: id)
+    }
 
     func dietDrafts() async throws -> [DietDraft] {
         Array(dietDraftsById.values).sorted { $0.updatedAt > $1.updatedAt }

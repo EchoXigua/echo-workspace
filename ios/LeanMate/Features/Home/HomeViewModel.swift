@@ -20,6 +20,7 @@ enum HomeErrorRecovery: Equatable {
 final class HomeViewModel: ObservableObject {
     private let apiClient: (any APIClient)?
     private let tokenStore: (any TokenStore)?
+    private let localStore: (any LocalStore)?
     private let startsAsVisitor: Bool
 
     @Published private(set) var state: HomeState = .idle
@@ -34,21 +35,24 @@ final class HomeViewModel: ObservableObject {
     init(
         apiClient: any APIClient,
         tokenStore: (any TokenStore)? = nil,
+        localStore: (any LocalStore)? = nil,
         startsAsVisitor: Bool = false
     ) {
         self.apiClient = apiClient
         self.tokenStore = tokenStore
+        self.localStore = localStore
         self.startsAsVisitor = startsAsVisitor
     }
 
-    private init() {
+    private init(localStore: (any LocalStore)?) {
         self.apiClient = nil
         self.tokenStore = nil
+        self.localStore = localStore
         self.startsAsVisitor = true
     }
 
-    static func visitor() -> HomeViewModel {
-        HomeViewModel()
+    static func visitor(localStore: (any LocalStore)? = nil) -> HomeViewModel {
+        HomeViewModel(localStore: localStore)
     }
 
     func load() async {
@@ -60,7 +64,7 @@ final class HomeViewModel: ObservableObject {
 
     func refresh() async {
         if startsAsVisitor {
-            state = .visitor
+            await refreshVisitorHome()
             return
         }
 
@@ -92,6 +96,58 @@ final class HomeViewModel: ObservableObject {
 }
 
 private extension HomeViewModel {
+    func refreshVisitorHome() async {
+        guard let localStore else {
+            state = .visitor
+            return
+        }
+
+        state = .loading
+
+        do {
+            let today = Date()
+            let entries = try await localStore.localDietEntries(date: today)
+            guard !entries.isEmpty else {
+                state = .visitor
+                return
+            }
+
+            state = .loaded(makeVisitorHome(date: today, entries: entries))
+        } catch {
+            state = .error(AppError(error).localizedDescription, .retry)
+        }
+    }
+
+    func makeVisitorHome(date: Date, entries: [FoodEntry]) -> TodayHome {
+        let calorieTarget = 1500
+        let caloriesIn = entries.map(\.totalCaloriesKcal).reduce(0, +)
+        let protein = entries.map(\.totalProteinG).reduce(0, +)
+        let fat = entries.map(\.totalFatG).reduce(0, +)
+        let carbs = entries.map(\.totalCarbsG).reduce(0, +)
+
+        return TodayHome(
+            date: date,
+            profileCompleted: true,
+            calorieTargetKcal: calorieTarget,
+            caloriesInKcal: caloriesIn,
+            remainingCaloriesKcal: max(calorieTarget - caloriesIn, 0),
+            proteinG: protein,
+            fatG: fat,
+            carbsG: carbs,
+            currentWeightKg: nil,
+            streakDays: 1,
+            reportSummary: nil,
+            foodEntries: entries.map { entry in
+                FoodEntrySummary(
+                    id: entry.id,
+                    mealType: entry.mealType,
+                    totalCaloriesKcal: entry.totalCaloriesKcal,
+                    itemNames: entry.items.map(\.name)
+                )
+            }
+        )
+    }
+
     func isEmptyHome(_ home: TodayHome) -> Bool {
         home.foodEntries.isEmpty
             && home.caloriesInKcal == 0

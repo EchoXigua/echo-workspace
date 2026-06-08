@@ -27,6 +27,8 @@
 
 ## 核心流程
 
+### 登录用户记录流程
+
 ```mermaid
 sequenceDiagram
     participant App
@@ -45,6 +47,41 @@ sequenceDiagram
     API->>DB: 刷新 daily_nutrition_snapshots
     API-->>App: 返回记录和今日统计
 ```
+
+### 游客本地记录和登录后同步
+
+V1.1 iOS 支持轻干扰首次进入：用户未登录时也可以进入首页、记录饮食，并在本地看到今日热量更新。这里需要分成两条数据链路：
+
+- 登录态：拍照、文本、手动记录全部走后端接口，后端保存 confirmed 记录并刷新统计快照。
+- 游客态：记录保存到客户端本地正式记录区，不调用保存接口；首页基于本地记录即时计算展示。
+- 游客登录后：客户端把本地未同步饮食记录批量同步给后端；同步成功后，后端数据成为主数据源，客户端可清理或标记本地记录为已同步。
+
+同步流程：
+
+```mermaid
+sequenceDiagram
+    participant App
+    participant API
+    participant DB
+
+    App->>App: 游客保存本地饮食记录
+    App->>App: 本地首页即时更新
+    App->>API: 用户登录/注册成功
+    App->>API: 批量提交本地未同步记录
+    API->>DB: 按 clientLocalId 幂等导入 food_entries/food_items
+    API->>DB: 刷新受影响日期的 daily_nutrition_snapshots
+    API-->>App: 返回导入结果和受影响日期快照
+    App->>App: 标记本地记录已同步
+```
+
+同步约定：
+
+- 客户端本地记录必须保存稳定的 `clientLocalId`，用于幂等导入和失败重试。
+- 后端需要为导入记录保存 `clientLocalId` 或等价的去重键，去重范围是当前用户。
+- 同步接口只接收游客本地已确认记录，不接收 AI 草稿。
+- 如果批量数据中存在无效记录，后端应返回可定位到 `clientLocalId` 的错误信息；客户端保留失败项等待用户修改或重试。
+- 记录可跨多个业务日期；后端需要刷新所有受影响日期的营养快照。
+- 本地记录和远端记录发生重复时，V1.1 先按 `clientLocalId` 幂等去重，不做复杂内容相似度合并。
 
 ## 数据模型影响
 
@@ -66,6 +103,7 @@ sequenceDiagram
 - `food_items.is_user_edited`
 - `ai_recognition_tasks.status`：pending/running/succeeded/failed
 - `ai_recognition_tasks.raw_output`
+- 后续支持游客登录后同步时，`food_entries` 需要增加或关联保存客户端 `client_local_id`，并在 `(user_id, client_local_id)` 上建立唯一约束。
 
 索引建议：
 
@@ -84,6 +122,7 @@ sequenceDiagram
 - `POST /v1/diet/recognitions/text`
 - `GET /v1/diet/entries`
 - `POST /v1/diet/entries`
+- `POST /v1/diet/entries/sync-local`
 - `PUT /v1/diet/entries/{entryId}`
 - `DELETE /v1/diet/entries/{entryId}`
 
@@ -91,6 +130,7 @@ sequenceDiagram
 
 - `POST /v1/diet/recognitions/photo`、`POST /v1/diet/recognitions/text`、`GET /v1/diet/recognitions/{taskId}` 已实现。
 - 保存饮食记录后返回 `entry` 和刷新后的 `today` 统计快照。
+- `POST /v1/diet/entries/sync-local` 用于登录后批量导入游客本地记录；该接口需要后端补实现。
 
 最终接口契约以 `../../../../docs/api/openapi.yaml` 为准。
 
@@ -104,6 +144,7 @@ sequenceDiagram
 - 保存、编辑、删除饮食记录都要求用户已完成档案，以便生成当日热量目标快照。
 - 本批次 `POST /v1/diet/entries`、`PUT /v1/diet/entries/{entryId}` 保存的记录均作为 `confirmed` 记录进入统计。
 - 编辑记录如果改变 `mealDate`，旧日期和新日期的统计快照都要刷新。
+- 游客本地记录在登录后导入服务端时，也作为 `confirmed` 记录进入统计，并触发受影响日期快照刷新。
 
 ## 异常和降级
 
@@ -144,3 +185,4 @@ sequenceDiagram
 - 拍照识别是同步等待结果，还是一律异步任务轮询。
 - 图片是否需要设置保存期限。
 - 食物营养估算采用 AI 直接返回，还是接入第三方食物营养库。
+- 游客本地图片记录登录后同步时，图片是否需要补上传对象存储，以及失败时是否允许先同步无图饮食记录。

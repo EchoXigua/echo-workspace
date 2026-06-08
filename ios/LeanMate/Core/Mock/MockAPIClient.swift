@@ -13,6 +13,7 @@ final class MockAPIClient: APIClient, @unchecked Sendable {
     private let scenario: Scenario
     private let delayNanoseconds: UInt64
     private var completedProfile: UserProfile?
+    private var recognitionTasksById: [UUID: RecognitionTask] = [:]
 
     init(scenario: Scenario = .success, delayNanoseconds: UInt64 = 150_000_000) {
         self.scenario = scenario
@@ -119,56 +120,43 @@ final class MockAPIClient: APIClient, @unchecked Sendable {
         mealDate: Date?,
         note: String?
     ) async throws -> RecognitionTask {
-        try await recognitionTask(id: MockData.taskId)
+        try await prepare()
+        let task = makeRecognitionTask(
+            id: UUID(),
+            sourceType: .photo,
+            mealDate: mealDate ?? Date(),
+            mealType: mealType
+        )
+        recognitionTasksById[task.id] = task
+        return task
     }
 
     func createTextRecognition(_ request: TextRecognitionRequest) async throws -> RecognitionTask {
-        try await recognitionTask(id: MockData.taskId)
+        try await prepare()
+        let task = makeRecognitionTask(
+            id: UUID(),
+            sourceType: .text,
+            mealDate: request.mealDate ?? Date(),
+            mealType: request.mealType
+        )
+        recognitionTasksById[task.id] = task
+        return task
     }
 
     func recognitionTask(id: UUID) async throws -> RecognitionTask {
         try await prepare()
-
-        let status: RecognitionStatus
-        let draft: FoodEntryDraft?
-        let errorCode: String?
-        let errorMessage: String?
-
-        switch scenario {
-        case .recognitionRunning:
-            status = .running
-            draft = nil
-            errorCode = nil
-            errorMessage = nil
-        case .recognitionFailed:
-            status = .failed
-            draft = nil
-            errorCode = "AI_RECOGNITION_FAILED"
-            errorMessage = "识别失败"
-        default:
-            status = .succeeded
-            draft = FoodEntryDraft(
-                mealDate: MockData.today,
-                mealType: .breakfast,
-                sourceType: .text,
-                items: MockData.foodItems
-            )
-            errorCode = nil
-            errorMessage = nil
+        if let task = recognitionTasksById[id] {
+            return task
         }
 
-        return RecognitionTask(
+        let task = makeRecognitionTask(
             id: id,
             sourceType: .text,
-            mealDate: MockData.today,
-            mealType: .breakfast,
-            status: status,
-            draftEntry: draft,
-            errorCode: errorCode,
-            errorMessage: errorMessage,
-            createdAt: MockData.today,
-            finishedAt: status == .succeeded ? MockData.today : nil
+            mealDate: Date(),
+            mealType: .breakfast
         )
+        recognitionTasksById[id] = task
+        return task
     }
 
     func dietEntries(date: Date) async throws -> [FoodEntry] {
@@ -260,6 +248,53 @@ final class MockAPIClient: APIClient, @unchecked Sendable {
 }
 
 private extension MockAPIClient {
+    func makeRecognitionTask(
+        id: UUID,
+        sourceType: FoodSourceType,
+        mealDate: Date,
+        mealType: MealType
+    ) -> RecognitionTask {
+        let status: RecognitionStatus
+        let draft: FoodEntryDraft?
+        let errorCode: String?
+        let errorMessage: String?
+
+        switch scenario {
+        case .recognitionRunning:
+            status = .running
+            draft = nil
+            errorCode = nil
+            errorMessage = nil
+        case .recognitionFailed:
+            status = .failed
+            draft = nil
+            errorCode = "AI_RECOGNITION_FAILED"
+            errorMessage = "识别失败"
+        default:
+            status = .succeeded
+            draft = FoodEntryDraft(
+                mealDate: mealDate,
+                mealType: mealType,
+                sourceType: sourceType,
+                items: MockData.foodItems
+            )
+            errorCode = nil
+            errorMessage = nil
+        }
+
+        return RecognitionTask(
+            id: id,
+            sourceType: sourceType,
+            mealDate: mealDate,
+            mealType: mealType,
+            status: status,
+            draftEntry: draft,
+            errorCode: errorCode,
+            errorMessage: errorMessage,
+            createdAt: Date(),
+            finishedAt: status == .succeeded ? Date() : nil
+        )
+    }
     var isProfileCompleted: Bool {
         if completedProfile != nil {
             return true

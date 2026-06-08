@@ -36,6 +36,7 @@
 		000000000000000000001027 /* LMSheetHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002027 /* LMSheetHandle.swift */; };
 		000000000000000000001028 /* LMTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002028 /* LMTag.swift */; };
 		000000000000000000001029 /* LMMetricTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002029 /* LMMetricTile.swift */; };
+		00000000000000000000104A /* LMManualEntryIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000204A /* LMManualEntryIcon.swift */; };
 		000000000000000000001030 /* PreviewEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002030 /* PreviewEnvironment.swift */; };
 		000000000000000000001031 /* InfrastructurePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002031 /* InfrastructurePreviewView.swift */; };
 		000000000000000000001032 /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002032 /* OnboardingViewModel.swift */; };
@@ -107,6 +108,7 @@
 		000000000000000000002027 /* LMSheetHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMSheetHandle.swift; sourceTree = "<group>"; };
 		000000000000000000002028 /* LMTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMTag.swift; sourceTree = "<group>"; };
 		000000000000000000002029 /* LMMetricTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMMetricTile.swift; sourceTree = "<group>"; };
+		00000000000000000000204A /* LMManualEntryIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMManualEntryIcon.swift; sourceTree = "<group>"; };
 		000000000000000000002030 /* PreviewEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewEnvironment.swift; sourceTree = "<group>"; };
 		000000000000000000002031 /* InfrastructurePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfrastructurePreviewView.swift; sourceTree = "<group>"; };
 		000000000000000000002032 /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
@@ -291,6 +293,7 @@
 				000000000000000000002027 /* LMSheetHandle.swift */,
 				000000000000000000002028 /* LMTag.swift */,
 				000000000000000000002029 /* LMMetricTile.swift */,
+				00000000000000000000204A /* LMManualEntryIcon.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -527,6 +530,7 @@
 				000000000000000000001027 /* LMSheetHandle.swift in Sources */,
 				000000000000000000001028 /* LMTag.swift in Sources */,
 				000000000000000000001029 /* LMMetricTile.swift in Sources */,
+				00000000000000000000104A /* LMManualEntryIcon.swift in Sources */,
 				000000000000000000001030 /* PreviewEnvironment.swift in Sources */,
 				000000000000000000001031 /* InfrastructurePreviewView.swift in Sources */,
 				000000000000000000001032 /* OnboardingViewModel.swift in Sources */,
@@ -699,6 +703,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = LeanMate;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSCameraUsageDescription = "用于拍摄餐食照片并识别饮食记录。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -726,6 +731,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = LeanMate;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSCameraUsageDescription = "用于拍摄餐食照片并识别饮食记录。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

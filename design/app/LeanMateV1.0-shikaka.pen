@@ -780,8 +780,8 @@
               "type": "frame",
               "id": "MtyIP",
               "name": "Remaining Calories Card",
-              "rotation": 0.0663800503567882,
-              "width": "fill_container",
+              "width": 370,
+              "height": 202,
               "fill": "#FFFFFF",
               "cornerRadius": 16,
               "stroke": "#DDEBDD",
@@ -822,6 +822,7 @@
                       "type": "frame",
                       "id": "b5NFw2",
                       "name": "Date Pill",
+                      "width": 64,
                       "fill": "#EAF8EF",
                       "cornerRadius": 999,
                       "gap": 5,
@@ -902,6 +903,7 @@
                   "id": "O49KY",
                   "name": "Nutrition Chips",
                   "width": "fill_container",
+                  "height": 58,
                   "gap": 8,
                   "children": [
                     {
@@ -940,6 +942,7 @@
                       "ref": "nRD9I",
                       "name": "脂肪 Chip",
                       "width": "fill_container",
+                      "height": 58,
                       "descendants": {
                         "PWEBk": {
                           "content": "脂肪"
@@ -1542,40 +1545,30 @@
             },
             {
               "type": "frame",
-              "id": "x3bTVt",
-              "name": "Search Field",
-              "width": "fill_container",
-              "height": 48,
-              "fill": "#FFFFFF",
-              "cornerRadius": 14,
-              "stroke": "#E9E2D6",
-              "strokeWidth": 1,
-              "gap": 10,
-              "padding": [
-                0,
-                14
-              ],
-              "alignItems": "center",
+              "id": "Psa57",
+              "name": "Section Header / Record Method",
+              "width": 370,
+              "layout": "vertical",
+              "gap": 4,
               "children": [
                 {
-                  "type": "icon",
-                  "id": "uTYZT",
-                  "name": "Search Icon",
-                  "width": 20,
-                  "height": 20,
-                  "icon": "search",
-                  "library": "lucide",
-                  "fill": "#7A746A"
+                  "type": "text",
+                  "id": "D87rx",
+                  "name": "Title / Choose Method",
+                  "fill": "#1F241F",
+                  "content": "选择记录方式",
+                  "fontFamily": "Geist",
+                  "fontSize": 16,
+                  "fontWeight": "600"
                 },
                 {
                   "type": "text",
-                  "id": "CVSEf",
-                  "name": "Search Placeholder",
+                  "id": "r5bDPF",
+                  "name": "Description / Choose Method",
                   "fill": "#6F8074",
-                  "content": "输入一句话，如：早餐两个鸡蛋一杯豆浆",
-                  "fontFamily": "Inter",
-                  "fontSize": 12,
-                  "fontWeight": "500"
+                  "content": "选你顺手的方式开始记录。",
+                  "fontFamily": "Geist",
+                  "fontSize": 12
                 }
               ]
             },
@@ -1769,7 +1762,7 @@
                       "name": "Method Icon",
                       "width": 42,
                       "height": 42,
-                      "fill": "#EEF4FF",
+                      "fill": "#FAF7F1",
                       "cornerRadius": 14,
                       "justifyContent": "center",
                       "alignItems": "center",
@@ -1782,7 +1775,7 @@
                           "height": 21,
                           "icon": "pencil-line",
                           "library": "lucide",
-                          "fill": "#4377E8"
+                          "fill": "#2F3A32"
                         }
                       ]
                     },
@@ -1835,51 +1828,42 @@
             },
             {
               "type": "frame",
-              "id": "QxqxR",
-              "name": "Recent Foods",
-              "width": "fill_container",
+              "id": "b8grWl",
+              "name": "Card / Habit Units",
+              "width": 370,
               "fill": "#FFFFFF",
               "cornerRadius": 16,
-              "stroke": "#DDEBDD",
+              "stroke": "#E3EAD8",
               "strokeWidth": 1,
-              "effect": {
-                "type": "shadow",
-                "shadowType": "outer",
-                "color": "#143B230A",
-                "offset": {
-                  "x": 0,
-                  "y": 2
-                },
-                "blur": 8
-              },
               "layout": "vertical",
               "gap": 10,
               "padding": 14,
               "children": [
                 {
                   "type": "frame",
-                  "id": "U15fS5",
-                  "name": "Recent Header",
+                  "id": "P5eob",
+                  "name": "Habit Units Header",
                   "width": "fill_container",
                   "justifyContent": "space_between",
+                  "alignItems": "center",
                   "children": [
                     {
                       "type": "text",
-                      "id": "A5pRFx",
-                      "name": "Recent Title",
+                      "id": "D4peZg",
+                      "name": "Title / Habit Units",
                       "fill": "#1F241F",
-                      "content": "常吃",
-                      "fontFamily": "Inter",
-                      "fontSize": 13,
+                      "content": "常用单位",
+                      "fontFamily": "Geist",
+                      "fontSize": 14,
                       "fontWeight": "600"
                     },
                     {
                       "type": "text",
-                      "id": "HJbcN",
-                      "name": "Recent More",
-                      "fill": "#7A746A",
-                      "content": "常用单位",
-                      "fontFamily": "Inter",
+                      "id": "X1F8V",
+                      "name": "Badge / Habit Units",
+                      "fill": "#6F8074",
+                      "content": "参考",
+                      "fontFamily": "Geist",
                       "fontSize": 11,
                       "fontWeight": "500"
                     }
@@ -1887,20 +1871,22 @@
                 },
                 {
                   "type": "frame",
-                  "id": "q7HTDK",
-                  "name": "Recent Row",
+                  "id": "d8hEr",
+                  "name": "Unit Row",
                   "width": "fill_container",
+                  "height": 36,
                   "gap": 8,
                   "children": [
                     {
                       "type": "frame",
-                      "id": "A892zI",
-                      "name": "Food / 全麦面包",
-                      "width": "fill_container",
+                      "id": "hbls3",
+                      "name": "Unit Chip / 一碗米饭",
+                      "width": 167,
+                      "height": 36,
                       "fill": "#FAF7F1",
                       "cornerRadius": 12,
                       "padding": [
-                        10,
+                        0,
                         12
                       ],
                       "justifyContent": "space_between",
@@ -1908,21 +1894,21 @@
                       "children": [
                         {
                           "type": "text",
-                          "id": "aELM1",
-                          "name": "Food Name",
-                          "fill": "#1F241F",
-                          "content": "全麦面包",
-                          "fontFamily": "Inter",
-                          "fontSize": 11,
-                          "fontWeight": "600"
+                          "id": "acLxp",
+                          "name": "Unit Label / 一碗米饭",
+                          "fill": "#2F3A32",
+                          "content": "一碗米饭",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "500"
                         },
                         {
                           "type": "text",
-                          "id": "gatze",
-                          "name": "Food Kcal",
-                          "fill": "#48B878",
-                          "content": "89",
-                          "fontFamily": "Inter",
+                          "id": "XxZGd",
+                          "name": "Unit Value / 一碗米饭",
+                          "fill": "#49B874",
+                          "content": "约 180g",
+                          "fontFamily": "Geist",
                           "fontSize": 11,
                           "fontWeight": "600"
                         }
@@ -1930,13 +1916,14 @@
                     },
                     {
                       "type": "frame",
-                      "id": "y1MlYD",
-                      "name": "Food / 无糖拿铁",
-                      "width": "fill_container",
+                      "id": "XA9Vg",
+                      "name": "Unit Chip / 一杯豆浆",
+                      "width": 167,
+                      "height": 36,
                       "fill": "#FAF7F1",
                       "cornerRadius": 12,
                       "padding": [
-                        10,
+                        0,
                         12
                       ],
                       "justifyContent": "space_between",
@@ -1944,21 +1931,21 @@
                       "children": [
                         {
                           "type": "text",
-                          "id": "Yu2Ax",
-                          "name": "Food Name",
-                          "fill": "#1F241F",
-                          "content": "无糖拿铁",
-                          "fontFamily": "Inter",
-                          "fontSize": 11,
-                          "fontWeight": "600"
+                          "id": "khz3k",
+                          "name": "Unit Label / 一杯豆浆",
+                          "fill": "#2F3A32",
+                          "content": "一杯豆浆",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "500"
                         },
                         {
                           "type": "text",
-                          "id": "fs0N1",
-                          "name": "Food Kcal",
-                          "fill": "#48B878",
-                          "content": "64",
-                          "fontFamily": "Inter",
+                          "id": "Tkr6p",
+                          "name": "Unit Value / 一杯豆浆",
+                          "fill": "#49B874",
+                          "content": "约 250ml",
+                          "fontFamily": "Geist",
                           "fontSize": 11,
                           "fontWeight": "600"
                         }
@@ -1968,20 +1955,22 @@
                 },
                 {
                   "type": "frame",
-                  "id": "DZzMR",
-                  "name": "Recent Row",
+                  "id": "K30NY",
+                  "name": "Unit Row",
                   "width": "fill_container",
+                  "height": 36,
                   "gap": 8,
                   "children": [
                     {
                       "type": "frame",
-                      "id": "lITe5",
-                      "name": "Food / 鸡胸肉",
-                      "width": "fill_container",
+                      "id": "j4eC6",
+                      "name": "Unit Chip / 一个鸡蛋",
+                      "width": 167,
+                      "height": 36,
                       "fill": "#FAF7F1",
                       "cornerRadius": 12,
                       "padding": [
-                        10,
+                        0,
                         12
                       ],
                       "justifyContent": "space_between",
@@ -1989,21 +1978,21 @@
                       "children": [
                         {
                           "type": "text",
-                          "id": "H3H6G7",
-                          "name": "Food Name",
-                          "fill": "#1F241F",
-                          "content": "鸡胸肉",
-                          "fontFamily": "Inter",
-                          "fontSize": 11,
-                          "fontWeight": "600"
+                          "id": "W2hoR",
+                          "name": "Unit Label / 一个鸡蛋",
+                          "fill": "#2F3A32",
+                          "content": "一个鸡蛋",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "500"
                         },
                         {
                           "type": "text",
-                          "id": "jaXN9",
-                          "name": "Food Kcal",
-                          "fill": "#48B878",
-                          "content": "165",
-                          "fontFamily": "Inter",
+                          "id": "KK3n0",
+                          "name": "Unit Value / 一个鸡蛋",
+                          "fill": "#49B874",
+                          "content": "约 55g",
+                          "fontFamily": "Geist",
                           "fontSize": 11,
                           "fontWeight": "600"
                         }
@@ -2011,13 +2000,14 @@
                     },
                     {
                       "type": "frame",
-                      "id": "OVNs8",
-                      "name": "Food / 香蕉",
-                      "width": "fill_container",
+                      "id": "gmjRR",
+                      "name": "Unit Chip / 一勺坚果",
+                      "width": 167,
+                      "height": 36,
                       "fill": "#FAF7F1",
                       "cornerRadius": 12,
                       "padding": [
-                        10,
+                        0,
                         12
                       ],
                       "justifyContent": "space_between",
@@ -2025,21 +2015,21 @@
                       "children": [
                         {
                           "type": "text",
-                          "id": "xpAtO",
-                          "name": "Food Name",
-                          "fill": "#1F241F",
-                          "content": "香蕉",
-                          "fontFamily": "Inter",
-                          "fontSize": 11,
-                          "fontWeight": "600"
+                          "id": "gVk82",
+                          "name": "Unit Label / 一勺坚果",
+                          "fill": "#2F3A32",
+                          "content": "一勺坚果",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "500"
                         },
                         {
                           "type": "text",
-                          "id": "LJlnc",
-                          "name": "Food Kcal",
-                          "fill": "#48B878",
-                          "content": "92",
-                          "fontFamily": "Inter",
+                          "id": "OaKJm",
+                          "name": "Unit Value / 一勺坚果",
+                          "fill": "#49B874",
+                          "content": "约 15g",
+                          "fontFamily": "Geist",
                           "fontSize": 11,
                           "fontWeight": "600"
                         }
@@ -3149,8 +3139,8 @@
     {
       "type": "frame",
       "id": "xycTh",
-      "x": 13640,
-      "y": 142,
+      "x": 12230,
+      "y": 2006,
       "name": "拍照识别确认 / 食卡卡风",
       "clip": true,
       "width": 402,
@@ -3961,8 +3951,8 @@
     {
       "type": "frame",
       "id": "hBUVo",
-      "x": 14580,
-      "y": 1066,
+      "x": 12700,
+      "y": 2006,
       "name": "文字解析确认 / 食卡卡风",
       "clip": true,
       "width": 402,
@@ -4006,7 +3996,7 @@
                   "id": "YKipg",
                   "name": "Nav Title",
                   "fill": "#183326",
-                  "content": "文字记录",
+                  "content": "确认记录",
                   "fontFamily": "Inter",
                   "fontSize": 15,
                   "fontWeight": "600"
@@ -4029,7 +4019,7 @@
                       "id": "ve68G",
                       "name": "Nav Action Text",
                       "fill": "#48B878",
-                      "content": "早餐",
+                      "content": "重填",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "600"
@@ -4475,8 +4465,8 @@
     {
       "type": "frame",
       "id": "PeZlY",
-      "x": 15050,
-      "y": 1066,
+      "x": 13170,
+      "y": 2006,
       "name": "删除确认弹窗 / 食卡卡风",
       "clip": true,
       "width": 402,
@@ -4613,8 +4603,8 @@
     {
       "type": "frame",
       "id": "fKnyi",
-      "x": 13640,
-      "y": 2006,
+      "x": 11760,
+      "y": 1066,
       "name": "首页 Empty State / 食卡卡风",
       "clip": true,
       "width": 402,
@@ -4907,8 +4897,8 @@
     {
       "type": "frame",
       "id": "hz8EC",
-      "x": 14110,
-      "y": 2006,
+      "x": 12700,
+      "y": 2946,
       "name": "AI日报 Loading State / 食卡卡风",
       "clip": true,
       "width": 402,
@@ -5270,8 +5260,8 @@
     {
       "type": "frame",
       "id": "YPAHX",
-      "x": 14580,
-      "y": 2006,
+      "x": 11290,
+      "y": 1066,
       "name": "Onboarding - 唯一问题 / 食卡卡风",
       "clip": true,
       "width": 402,
@@ -5579,7 +5569,7 @@
     {
       "type": "frame",
       "id": "Dsy8g",
-      "x": 15050,
+      "x": 11760,
       "y": 2006,
       "name": "首页（游客模式）/ 食卡卡风",
       "clip": true,
@@ -6246,9 +6236,9 @@
                               "name": "Icon / 手动",
                               "width": 16,
                               "height": 16,
-                              "icon": "pencil",
+                              "icon": "pencil-line",
                               "library": "lucide",
-                              "fill": "#48B878"
+                              "fill": "#1F241F"
                             }
                           ]
                         },
@@ -6404,6 +6394,1986 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "lWt4q",
+      "x": 12230,
+      "y": 1066,
+      "name": "添加记录 / 拍照模式",
+      "clip": true,
+      "width": 402,
+      "height": 874,
+      "fill": "#F7FBF5",
+      "layout": "none",
+      "children": [
+        {
+          "id": "PWtxb",
+          "type": "ref",
+          "ref": "Nt6Zm",
+          "name": "Status Bar",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 62
+        },
+        {
+          "type": "frame",
+          "id": "ClND1",
+          "x": 16,
+          "y": 70,
+          "name": "Content",
+          "width": 370,
+          "height": 720,
+          "layout": "vertical",
+          "gap": 14,
+          "children": [
+            {
+              "type": "frame",
+              "id": "xosx5",
+              "name": "Header",
+              "width": "fill_container",
+              "height": 52,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Mvpj9",
+                  "name": "Header Title",
+                  "fill": "#1F2A22",
+                  "content": "记录饮食",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "frame",
+                  "id": "iQkZA",
+                  "name": "Weight Pill",
+                  "height": 28,
+                  "fill": "#E8F8EF",
+                  "cornerRadius": 999,
+                  "stroke": "#B9EBCB",
+                  "strokeWidth": 1,
+                  "gap": 5,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "zTGie",
+                      "name": "Weight Pill Label",
+                      "fill": "#4CC17C",
+                      "content": "体重",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "800"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "xHa6c",
+              "name": "Section Intro",
+              "width": "fill_container",
+              "height": 52,
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "hEkFc",
+                  "name": "Section Title",
+                  "fill": "#1F2A22",
+                  "content": "选择记录方式",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "oB7Z5",
+                  "name": "Section Subtitle",
+                  "fill": "#526457",
+                  "content": "先把这一餐记下来。",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "MQHjv",
+              "name": "Photo Flow Card",
+              "width": "fill_container",
+              "height": 504,
+              "fill": "#FFFFFF",
+              "cornerRadius": 18,
+              "stroke": "#DDEEE2",
+              "strokeWidth": 1,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#B8D6C544",
+                "offset": {
+                  "x": 0,
+                  "y": 10
+                },
+                "blur": 24,
+                "spread": -16
+              },
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "rXQ60",
+                  "name": "Selected Method Card",
+                  "width": "fill_container",
+                  "height": 70,
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 16,
+                  "stroke": "#DDEEE2",
+                  "strokeWidth": 1,
+                  "gap": 12,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "o3aN5p",
+                      "name": "Method Icon Surface",
+                      "width": 42,
+                      "height": 42,
+                      "fill": "#E8F8EF",
+                      "cornerRadius": 16,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "kkuxF",
+                          "name": "Method Icon",
+                          "width": 21,
+                          "height": 21,
+                          "icon": "camera",
+                          "library": "lucide",
+                          "fill": "#4CC17C"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ukFyq",
+                      "name": "Method Copy",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "y9GGO",
+                          "name": "Method Title",
+                          "fill": "#1F2A22",
+                          "content": "拍照识别",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "800"
+                        },
+                        {
+                          "type": "text",
+                          "id": "TvBdo",
+                          "name": "Method Subtitle",
+                          "fill": "#526457",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "上传餐食照片，识别后再确认。",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "trJXG",
+                      "name": "Change Method",
+                      "height": 28,
+                      "fill": "#E8F8EF",
+                      "cornerRadius": 999,
+                      "stroke": "#B9EBCB",
+                      "strokeWidth": 1,
+                      "gap": 5,
+                      "padding": [
+                        0,
+                        12
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ftFSl",
+                          "name": "Change Method Label",
+                          "fill": "#4CC17C",
+                          "content": "换方式",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "SG6gx",
+                  "name": "Photo Upload Area",
+                  "width": "fill_container",
+                  "height": 210,
+                  "fill": "#F3FBF6",
+                  "cornerRadius": 16,
+                  "stroke": "#B9EBCB",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "JjJwO",
+                      "name": "Upload Icon Surface",
+                      "width": 48,
+                      "height": 48,
+                      "fill": "#FFFFFF",
+                      "cornerRadius": 24,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "NAzDM",
+                          "name": "Camera Icon",
+                          "width": 24,
+                          "height": 24,
+                          "icon": "camera",
+                          "library": "lucide",
+                          "fill": "#4CC17C"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "aEGEq",
+                      "name": "Upload Title",
+                      "fill": "#1F2A22",
+                      "content": "添加餐食照片",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "TqcLS",
+                      "name": "Upload Subtitle",
+                      "fill": "#526457",
+                      "content": "拍清楚食物主体，识别后再确认",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "w4Jk7",
+                  "name": "Photo Actions",
+                  "width": "fill_container",
+                  "height": 46,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "CQaUQ",
+                      "name": "拍照 Button",
+                      "width": "fill_container",
+                      "height": 46,
+                      "fill": "#FFFFFF",
+                      "cornerRadius": 12,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "gap": 7,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "r0iGmL",
+                          "name": "拍照 Icon",
+                          "width": 17,
+                          "height": 17,
+                          "icon": "camera",
+                          "library": "lucide",
+                          "fill": "#1F2A22"
+                        },
+                        {
+                          "type": "text",
+                          "id": "UuXwx",
+                          "name": "拍照 Label",
+                          "fill": "#1F2A22",
+                          "content": "拍照",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "F4vjPr",
+                      "name": "从相册选 Button",
+                      "width": "fill_container",
+                      "height": 46,
+                      "fill": "#FFFFFF",
+                      "cornerRadius": 12,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "gap": 7,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "A5I2t",
+                          "name": "从相册选 Icon",
+                          "width": 17,
+                          "height": 17,
+                          "icon": "image",
+                          "library": "lucide",
+                          "fill": "#1F2A22"
+                        },
+                        {
+                          "type": "text",
+                          "id": "U1kxh",
+                          "name": "从相册选 Label",
+                          "fill": "#1F2A22",
+                          "content": "从相册选",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "i25jGS",
+                  "name": "Recognition Note",
+                  "width": "fill_container",
+                  "height": 38,
+                  "fill": "#E8F8EF",
+                  "cornerRadius": 12,
+                  "gap": 8,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "YsObC",
+                      "name": "Recognition Note Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "sparkles",
+                      "library": "lucide",
+                      "fill": "#4CC17C"
+                    },
+                    {
+                      "type": "text",
+                      "id": "NfIDo",
+                      "name": "Recognition Note Text",
+                      "fill": "#526457",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "识别后先进入确认页",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qSrY1",
+                  "name": "开始识别 Button",
+                  "width": "fill_container",
+                  "height": 52,
+                  "fill": "#4CC17C",
+                  "cornerRadius": 10,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "kcRos",
+                      "name": "开始识别 Label",
+                      "fill": "#FFFFFF",
+                      "content": "开始识别",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "800"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "V6TYxZ",
+          "type": "ref",
+          "ref": "hhYjg",
+          "name": "Bottom Tabs",
+          "x": 0,
+          "y": 806,
+          "width": 402,
+          "height": 68,
+          "descendants": {
+            "Zc9Lr": {
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "strokeWidth": 0
+            },
+            "QnGsZ": {
+              "fill": "#9AA79D"
+            },
+            "TuP5q": {
+              "fill": "#9AA79D"
+            },
+            "NrPJG": {
+              "fill": "#EAF8EF",
+              "stroke": "#BEE6CC",
+              "strokeWidth": 1
+            },
+            "w4RUd": {
+              "fill": "#48B878"
+            },
+            "h4zuVF": {
+              "fill": "#48B878"
+            },
+            "v7NzI": {
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "strokeWidth": 0
+            },
+            "rbbWS": {
+              "fill": "#9AA79D"
+            },
+            "fBoRM": {
+              "fill": "#9AA79D"
+            },
+            "NIi3D": {
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "strokeWidth": 0
+            },
+            "d9Fv3": {
+              "fill": "#9AA79D"
+            },
+            "E8p9u": {
+              "fill": "#9AA79D"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "qIu9E",
+      "x": 12700,
+      "y": 1066,
+      "name": "添加记录 / 文本模式",
+      "clip": true,
+      "width": 402,
+      "height": 874,
+      "fill": "#F7FBF5",
+      "layout": "none",
+      "children": [
+        {
+          "id": "Mklmf",
+          "type": "ref",
+          "ref": "Nt6Zm",
+          "name": "Status Bar",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 62
+        },
+        {
+          "type": "frame",
+          "id": "nk1VY",
+          "x": 16,
+          "y": 70,
+          "name": "Content",
+          "width": 370,
+          "height": 720,
+          "layout": "vertical",
+          "gap": 14,
+          "children": [
+            {
+              "type": "frame",
+              "id": "k121W",
+              "name": "Header",
+              "width": "fill_container",
+              "height": 52,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "CpQvi",
+                  "name": "Header Title",
+                  "fill": "#1F2A22",
+                  "content": "记录饮食",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "frame",
+                  "id": "PVAD6",
+                  "name": "Weight Pill",
+                  "height": 28,
+                  "fill": "#E8F8EF",
+                  "cornerRadius": 999,
+                  "stroke": "#B9EBCB",
+                  "strokeWidth": 1,
+                  "gap": 5,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "OXFhg",
+                      "name": "Weight Pill Label",
+                      "fill": "#4CC17C",
+                      "content": "体重",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "800"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "IxYof",
+              "name": "Section Intro",
+              "width": "fill_container",
+              "height": 52,
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "eBwX9",
+                  "name": "Section Title",
+                  "fill": "#1F2A22",
+                  "content": "选择记录方式",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "vc94J",
+                  "name": "Section Subtitle",
+                  "fill": "#526457",
+                  "content": "先把这一餐记下来。",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "CbtEA",
+              "name": "Text Flow Card",
+              "width": "fill_container",
+              "height": 478,
+              "fill": "#FFFFFF",
+              "cornerRadius": 18,
+              "stroke": "#DDEEE2",
+              "strokeWidth": 1,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#B8D6C544",
+                "offset": {
+                  "x": 0,
+                  "y": 10
+                },
+                "blur": 24,
+                "spread": -16
+              },
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "lm9mI",
+                  "x": 14,
+                  "y": 14,
+                  "name": "Selected Method Card",
+                  "width": 342,
+                  "height": 70,
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 16,
+                  "stroke": "#DDEEE2",
+                  "strokeWidth": 1,
+                  "gap": 12,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "C0jMUH",
+                      "name": "Method Icon Surface",
+                      "width": 42,
+                      "height": 42,
+                      "fill": "#E8F8EF",
+                      "cornerRadius": 16,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "WJglP",
+                          "name": "Method Icon",
+                          "width": 21,
+                          "height": 21,
+                          "icon": "message-square",
+                          "library": "lucide",
+                          "fill": "#4CC17C"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "l3M15e",
+                      "name": "Method Copy",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "GMwcd",
+                          "name": "Method Title",
+                          "fill": "#1F2A22",
+                          "content": "文本识别",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "800"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Hkd72",
+                          "name": "Method Subtitle",
+                          "fill": "#526457",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "点选下方表达可追加到输入。",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "MKO2Z",
+                      "name": "Change Method",
+                      "height": 28,
+                      "fill": "#E8F8EF",
+                      "cornerRadius": 999,
+                      "stroke": "#B9EBCB",
+                      "strokeWidth": 1,
+                      "gap": 5,
+                      "padding": [
+                        0,
+                        12
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "iff67",
+                          "name": "Change Method Label",
+                          "fill": "#4CC17C",
+                          "content": "换方式",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "gZVXA",
+                  "x": 14,
+                  "y": 96,
+                  "name": "Text Input Area",
+                  "width": 342,
+                  "height": 164,
+                  "fill": "#FBFAF7",
+                  "cornerRadius": 16,
+                  "stroke": "#E7DCCB",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 14,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "P9VOe",
+                      "name": "Text Input Placeholder",
+                      "fill": "#87958A",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "例如：早餐两个鸡蛋、一杯豆浆",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "okCyY",
+                      "name": "Text Input Hint",
+                      "fill": "#87958A",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "点选下方表达可自动追加",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "wsnIP",
+                  "x": 14,
+                  "y": 272,
+                  "name": "Common Expressions",
+                  "width": 342,
+                  "height": 158,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "bFHZI",
+                      "x": 0,
+                      "y": 0,
+                      "name": "Common Expressions Header",
+                      "width": 342,
+                      "height": 22,
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "YjXdc",
+                          "name": "Common Expressions Title",
+                          "fill": "#1F2A22",
+                          "content": "常用表达",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "800"
+                        },
+                        {
+                          "type": "text",
+                          "id": "AxdWn",
+                          "name": "Common Expressions Badge",
+                          "fill": "#87958A",
+                          "content": "点选追加",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "z1Kz10",
+                      "x": 0,
+                      "y": 30,
+                      "name": "Expression Row 1",
+                      "width": 342,
+                      "height": 34,
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Ox5Xu",
+                          "name": "一碗米饭 Expression",
+                          "width": "fill_container",
+                          "height": 34,
+                          "fill": "#F7F2EA",
+                          "cornerRadius": 12,
+                          "padding": [
+                            0,
+                            12
+                          ],
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "w65SPT",
+                              "name": "一碗米饭 Text",
+                              "fill": "#1F2A22",
+                              "content": "一碗米饭",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "800"
+                            },
+                            {
+                              "type": "text",
+                              "id": "UdQDs",
+                              "name": "约180g Text",
+                              "fill": "#4CC17C",
+                              "content": "约180g",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "800"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Rb1X5",
+                          "name": "一杯豆浆 Expression",
+                          "width": "fill_container",
+                          "height": 34,
+                          "fill": "#F7F2EA",
+                          "cornerRadius": 12,
+                          "padding": [
+                            0,
+                            12
+                          ],
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "b9kir",
+                              "name": "一杯豆浆 Text",
+                              "fill": "#1F2A22",
+                              "content": "一杯豆浆",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "800"
+                            },
+                            {
+                              "type": "text",
+                              "id": "WCQnb",
+                              "name": "约250ml Text",
+                              "fill": "#4CC17C",
+                              "content": "约250ml",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "800"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "vB44Z",
+                      "x": 0,
+                      "y": 72,
+                      "name": "Expression Row 2",
+                      "width": 342,
+                      "height": 34,
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "jXwb1",
+                          "name": "两个鸡蛋 Expression",
+                          "width": "fill_container",
+                          "height": 34,
+                          "fill": "#F7F2EA",
+                          "cornerRadius": 12,
+                          "padding": [
+                            0,
+                            12
+                          ],
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "rknQv",
+                              "name": "两个鸡蛋 Text",
+                              "fill": "#1F2A22",
+                              "content": "两个鸡蛋",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "800"
+                            },
+                            {
+                              "type": "text",
+                              "id": "VTfcv",
+                              "name": "约110g Text",
+                              "fill": "#4CC17C",
+                              "content": "约110g",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "800"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "kILFz",
+                          "name": "一份青菜 Expression",
+                          "width": "fill_container",
+                          "height": 34,
+                          "fill": "#F7F2EA",
+                          "cornerRadius": 12,
+                          "padding": [
+                            0,
+                            12
+                          ],
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "p3Tlh",
+                              "name": "一份青菜 Text",
+                              "fill": "#1F2A22",
+                              "content": "一份青菜",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "800"
+                            },
+                            {
+                              "type": "text",
+                              "id": "xrNS2",
+                              "name": "约150g Text",
+                              "fill": "#4CC17C",
+                              "content": "约150g",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "800"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qLkU3",
+                  "x": 14,
+                  "y": 410,
+                  "name": "生成确认清单 Button",
+                  "width": 342,
+                  "height": 52,
+                  "fill": "#4CC17C",
+                  "cornerRadius": 10,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "VR1As",
+                      "name": "生成确认清单 Label",
+                      "fill": "#FFFFFF",
+                      "content": "识别并确认",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "800"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "uDTd7",
+          "type": "ref",
+          "ref": "hhYjg",
+          "name": "Bottom Tabs",
+          "x": 0,
+          "y": 806,
+          "width": 402,
+          "height": 68,
+          "descendants": {
+            "Zc9Lr": {
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "strokeWidth": 0
+            },
+            "QnGsZ": {
+              "fill": "#9AA79D"
+            },
+            "TuP5q": {
+              "fill": "#9AA79D"
+            },
+            "NrPJG": {
+              "fill": "#EAF8EF",
+              "stroke": "#BEE6CC",
+              "strokeWidth": 1
+            },
+            "w4RUd": {
+              "fill": "#48B878"
+            },
+            "h4zuVF": {
+              "fill": "#48B878"
+            },
+            "v7NzI": {
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "strokeWidth": 0
+            },
+            "rbbWS": {
+              "fill": "#9AA79D"
+            },
+            "fBoRM": {
+              "fill": "#9AA79D"
+            },
+            "NIi3D": {
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "strokeWidth": 0
+            },
+            "d9Fv3": {
+              "fill": "#9AA79D"
+            },
+            "E8p9u": {
+              "fill": "#9AA79D"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "hNhyG",
+      "x": 13170,
+      "y": 1066,
+      "name": "添加记录 / 手动模式",
+      "clip": true,
+      "width": 402,
+      "height": 874,
+      "fill": "#F7FBF5",
+      "layout": "none",
+      "children": [
+        {
+          "id": "wUHYS",
+          "type": "ref",
+          "ref": "Nt6Zm",
+          "name": "Status Bar",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 62
+        },
+        {
+          "type": "frame",
+          "id": "DNkz0",
+          "x": 16,
+          "y": 70,
+          "name": "Content",
+          "width": 370,
+          "height": 720,
+          "layout": "vertical",
+          "gap": 14,
+          "children": [
+            {
+              "type": "frame",
+              "id": "d1eFiB",
+              "name": "Header",
+              "width": "fill_container",
+              "height": 52,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "bcVRT",
+                  "name": "Header Title",
+                  "fill": "#1F2A22",
+                  "content": "记录饮食",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "frame",
+                  "id": "I5y57",
+                  "name": "Weight Pill",
+                  "height": 28,
+                  "fill": "#E8F8EF",
+                  "cornerRadius": 999,
+                  "stroke": "#B9EBCB",
+                  "strokeWidth": 1,
+                  "gap": 5,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "AkBsl",
+                      "name": "Weight Pill Label",
+                      "fill": "#4CC17C",
+                      "content": "体重",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "800"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "U9Bys",
+              "name": "Section Intro",
+              "width": "fill_container",
+              "height": 52,
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "L6Vgr",
+                  "name": "Section Title",
+                  "fill": "#1F2A22",
+                  "content": "选择记录方式",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "KoeOq",
+                  "name": "Section Subtitle",
+                  "fill": "#526457",
+                  "content": "先把这一餐记下来。",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "yXDPv",
+              "name": "Manual Flow Card",
+              "width": "fill_container",
+              "height": 438,
+              "fill": "#FFFFFF",
+              "cornerRadius": 18,
+              "stroke": "#DDEEE2",
+              "strokeWidth": 1,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#B8D6C544",
+                "offset": {
+                  "x": 0,
+                  "y": 10
+                },
+                "blur": 24,
+                "spread": -16
+              },
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "v4fimG",
+                  "name": "Selected Method Card",
+                  "width": "fill_container",
+                  "height": 70,
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 16,
+                  "stroke": "#E7DCCB",
+                  "strokeWidth": 1,
+                  "gap": 12,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "c2exI",
+                      "name": "Method Icon Surface",
+                      "width": 42,
+                      "height": 42,
+                      "fill": "#F4F1EA",
+                      "cornerRadius": 16,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "erIvM",
+                          "name": "Method Icon",
+                          "width": 21,
+                          "height": 21,
+                          "icon": "pencil-line",
+                          "library": "lucide",
+                          "fill": "#1F2A22"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "XHSGz",
+                      "name": "Method Copy",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "TRDGu",
+                          "name": "Method Title",
+                          "fill": "#1F2A22",
+                          "content": "手动记录",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "800"
+                        },
+                        {
+                          "type": "text",
+                          "id": "pmrBD",
+                          "name": "Method Subtitle",
+                          "fill": "#526457",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "点选常用单位可快速填入。",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "rNVB2",
+                      "name": "Change Method",
+                      "height": 28,
+                      "fill": "#E8F8EF",
+                      "cornerRadius": 999,
+                      "stroke": "#B9EBCB",
+                      "strokeWidth": 1,
+                      "gap": 5,
+                      "padding": [
+                        0,
+                        12
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "OO3p9",
+                          "name": "Change Method Label",
+                          "fill": "#4CC17C",
+                          "content": "换方式",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "k9sVF",
+                  "name": "食物名称 Field",
+                  "width": "fill_container",
+                  "height": 58,
+                  "fill": "#FBFAF7",
+                  "cornerRadius": 13,
+                  "stroke": "#E7DCCB",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 5,
+                  "padding": [
+                    9,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "EKdX3",
+                      "name": "食物名称 Label",
+                      "fill": "#87958A",
+                      "content": "食物名称",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "wkGEX",
+                      "name": "食物名称 Placeholder",
+                      "fill": "#1F2A22",
+                      "content": "如：鸡蛋",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "V3MNE",
+                  "name": "Amount Row",
+                  "width": "fill_container",
+                  "height": 58,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "xwuVc",
+                      "name": "数量 Field",
+                      "width": "fill_container",
+                      "height": 58,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 13,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        9,
+                        12
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "mzcYw",
+                          "name": "数量 Label",
+                          "fill": "#87958A",
+                          "content": "数量",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "AuQBc",
+                          "name": "数量 Placeholder",
+                          "fill": "#1F2A22",
+                          "content": "2 个",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ZffE2",
+                      "name": "重量 Field",
+                      "width": "fill_container",
+                      "height": 58,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 13,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        9,
+                        12
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "R7EaF",
+                          "name": "重量 Label",
+                          "fill": "#87958A",
+                          "content": "重量",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "rnDGD",
+                          "name": "重量 Placeholder",
+                          "fill": "#1F2A22",
+                          "content": "约 110g",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "XvOID",
+                  "name": "Nutrition Row",
+                  "width": "fill_container",
+                  "height": 58,
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Yskfe",
+                      "name": "热量 Field",
+                      "width": "fill_container",
+                      "height": 58,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 13,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        9,
+                        12
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "lzxyL",
+                          "name": "热量 Label",
+                          "fill": "#87958A",
+                          "content": "热量",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "HsNWu",
+                          "name": "热量 Placeholder",
+                          "fill": "#1F2A22",
+                          "content": "140 kcal",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "q1b14",
+                      "name": "蛋白 Field",
+                      "width": "fill_container",
+                      "height": 58,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 13,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        9,
+                        12
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "OBnu3",
+                          "name": "蛋白 Label",
+                          "fill": "#87958A",
+                          "content": "蛋白",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "SJPU8",
+                          "name": "蛋白 Placeholder",
+                          "fill": "#1F2A22",
+                          "content": "12 g",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "A7N14E",
+                  "name": "Macro Row",
+                  "width": "fill_container",
+                  "height": 58,
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "p3ervR",
+                      "name": "脂肪 Field",
+                      "width": "fill_container",
+                      "height": 58,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 13,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        9,
+                        12
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Ry9KX",
+                          "name": "脂肪 Label",
+                          "fill": "#87958A",
+                          "content": "脂肪",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "IkKsv",
+                          "name": "脂肪 Placeholder",
+                          "fill": "#1F2A22",
+                          "content": "10 g",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "s6YVwh",
+                      "name": "碳水 Field",
+                      "width": "fill_container",
+                      "height": 58,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 13,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        9,
+                        12
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "XCHvz",
+                          "name": "碳水 Label",
+                          "fill": "#87958A",
+                          "content": "碳水",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "DKWza",
+                          "name": "碳水 Placeholder",
+                          "fill": "#1F2A22",
+                          "content": "1 g",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "C6cPi",
+                      "name": "备注 Field",
+                      "width": "fill_container",
+                      "height": 58,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 13,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        9,
+                        12
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "syXMo",
+                          "name": "备注 Label",
+                          "fill": "#87958A",
+                          "content": "备注",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "N0UE7I",
+                          "name": "备注 Placeholder",
+                          "fill": "#1F2A22",
+                          "content": "可选",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "tYuVJ",
+                  "name": "保存记录 Button",
+                  "width": "fill_container",
+                  "height": 52,
+                  "fill": "#4CC17C",
+                  "cornerRadius": 10,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "hRii6",
+                      "name": "保存记录 Label",
+                      "fill": "#FFFFFF",
+                      "content": "保存记录",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "800"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tQmIi",
+              "name": "Common Units Card",
+              "width": "fill_container",
+              "height": 130,
+              "fill": "#FFFFFF",
+              "cornerRadius": 16,
+              "stroke": "#DDEEE2",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "kc1ZW",
+                  "name": "Common Units Header",
+                  "width": "fill_container",
+                  "height": 24,
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "hHYzt",
+                      "name": "Common Units Title",
+                      "fill": "#1F2A22",
+                      "content": "常用单位",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "J2l4a",
+                      "name": "Common Units Badge",
+                      "fill": "#87958A",
+                      "content": "点选填入",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "tzDnO",
+                  "name": "Units Row 1",
+                  "width": "fill_container",
+                  "height": 34,
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "cgn6j",
+                      "name": "一碗米饭 Unit",
+                      "width": "fill_container",
+                      "height": 34,
+                      "fill": "#F7F2EA",
+                      "cornerRadius": 12,
+                      "padding": [
+                        0,
+                        12
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Fk60c",
+                          "name": "一碗米饭 Text",
+                          "fill": "#1F2A22",
+                          "content": "一碗米饭",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "800"
+                        },
+                        {
+                          "type": "text",
+                          "id": "NifWr",
+                          "name": "约180g Text",
+                          "fill": "#4CC17C",
+                          "content": "约180g",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "vqGA6",
+                      "name": "一杯豆浆 Unit",
+                      "width": "fill_container",
+                      "height": 34,
+                      "fill": "#F7F2EA",
+                      "cornerRadius": 12,
+                      "padding": [
+                        0,
+                        12
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "B33Uu",
+                          "name": "一杯豆浆 Text",
+                          "fill": "#1F2A22",
+                          "content": "一杯豆浆",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "800"
+                        },
+                        {
+                          "type": "text",
+                          "id": "t68X40",
+                          "name": "约250ml Text",
+                          "fill": "#4CC17C",
+                          "content": "约250ml",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "azUjV",
+                  "name": "Units Row 2",
+                  "width": "fill_container",
+                  "height": 34,
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Elbrj",
+                      "name": "一个鸡蛋 Unit",
+                      "width": "fill_container",
+                      "height": 34,
+                      "fill": "#F7F2EA",
+                      "cornerRadius": 12,
+                      "padding": [
+                        0,
+                        12
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Ehtgw",
+                          "name": "一个鸡蛋 Text",
+                          "fill": "#1F2A22",
+                          "content": "一个鸡蛋",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "800"
+                        },
+                        {
+                          "type": "text",
+                          "id": "F5AAS",
+                          "name": "约55g Text",
+                          "fill": "#4CC17C",
+                          "content": "约55g",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "J8nQ9",
+                      "name": "一勺坚果 Unit",
+                      "width": "fill_container",
+                      "height": 34,
+                      "fill": "#F7F2EA",
+                      "cornerRadius": 12,
+                      "padding": [
+                        0,
+                        12
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "YrqLJ",
+                          "name": "一勺坚果 Text",
+                          "fill": "#1F2A22",
+                          "content": "一勺坚果",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "800"
+                        },
+                        {
+                          "type": "text",
+                          "id": "yQM6q",
+                          "name": "约15g Text",
+                          "fill": "#4CC17C",
+                          "content": "约15g",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "Mmr8R",
+          "type": "ref",
+          "ref": "hhYjg",
+          "name": "Bottom Tabs",
+          "x": 0,
+          "y": 806,
+          "width": 402,
+          "height": 68,
+          "descendants": {
+            "Zc9Lr": {
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "strokeWidth": 0
+            },
+            "QnGsZ": {
+              "fill": "#9AA79D"
+            },
+            "TuP5q": {
+              "fill": "#9AA79D"
+            },
+            "NrPJG": {
+              "fill": "#EAF8EF",
+              "stroke": "#BEE6CC",
+              "strokeWidth": 1
+            },
+            "w4RUd": {
+              "fill": "#48B878"
+            },
+            "h4zuVF": {
+              "fill": "#48B878"
+            },
+            "v7NzI": {
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "strokeWidth": 0
+            },
+            "rbbWS": {
+              "fill": "#9AA79D"
+            },
+            "fBoRM": {
+              "fill": "#9AA79D"
+            },
+            "NIi3D": {
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "strokeWidth": 0
+            },
+            "d9Fv3": {
+              "fill": "#9AA79D"
+            },
+            "E8p9u": {
+              "fill": "#9AA79D"
+            }
+          }
         }
       ]
     }
