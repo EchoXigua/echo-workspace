@@ -39,12 +39,7 @@ struct DietEntryView: View {
                     selection: $selectedTab
                 ) {
                     header
-
-                    if isVisitor {
-                        visitorContent
-                    } else {
-                        entryContent
-                    }
+                    entryContent
                 }
             }
 
@@ -99,75 +94,6 @@ private extension DietEntryView {
             .buttonStyle(.plain)
         }
         .frame(height: 52)
-    }
-
-    var visitorContent: some View {
-        VStack(alignment: .leading, spacing: LMSpacing.regular) {
-            LMSearchField(
-                text: .constant(""),
-                placeholder: "输入一句话，如：早餐两个鸡蛋一杯豆浆"
-            )
-            .disabled(true)
-
-            visitorMethodPreview
-
-            LMStateView(
-                kind: .empty,
-                title: "登录后再保存记录",
-                message: "游客可以查看入口，但饮食和体重记录需要登录后保存。",
-                actionTitle: "去登录",
-                action: onLoginRequired
-            )
-        }
-    }
-
-    var visitorMethodPreview: some View {
-        VStack(spacing: 8) {
-            visitorMethodButton(title: "拍照识别", subtitle: "选择照片后生成确认清单", systemImage: "camera")
-            visitorMethodButton(title: "文本识别", subtitle: "输入一句话后生成确认清单", systemImage: "text.bubble")
-            visitorMethodButton(title: "手动记录", subtitle: "直接填写食物名称和营养估算", systemImage: "pencil")
-        }
-    }
-
-    func visitorMethodButton(title: String, subtitle: String, systemImage: String) -> some View {
-        Button(action: onLoginRequired) {
-            HStack(spacing: 12) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .fill(LMColors.primarySoft)
-                        .frame(width: 42, height: 42)
-
-                    Image(systemName: systemImage)
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundStyle(LMColors.primary)
-                }
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
-                        .font(LMTypography.bodyStrong)
-                        .foregroundStyle(LMColors.textBody)
-                    Text(subtitle)
-                        .font(LMTypography.caption)
-                        .foregroundStyle(LMColors.textSecondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
-                }
-
-                Spacer()
-
-                Image(systemName: "lock")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(LMColors.textMuted)
-            }
-            .padding(14)
-            .background(LMColors.card)
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(LMColors.inputBorder, lineWidth: 1)
-            }
-        }
-        .buttonStyle(.plain)
     }
 
     var photoConfirmationScreen: some View {

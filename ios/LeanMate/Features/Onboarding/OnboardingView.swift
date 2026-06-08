@@ -117,24 +117,30 @@ private extension OnboardingView {
                 .fixedSize(horizontal: false, vertical: true)
 
             HStack(spacing: LMSpacing.small) {
-                previewMetric(label: "早餐", value: "268")
-                previewMetric(label: "喝水", value: "900ml")
-                previewMetric(label: "蛋白", value: "42g")
+                previewMetric(label: "已摄入", value: "637", unit: "kcal")
+                previewMetric(label: "蛋白", value: "18", unit: "g")
+                previewMetric(label: "碳水", value: "58", unit: "g")
             }
         }
     }
 
-    func previewMetric(label: String, value: String) -> some View {
+    func previewMetric(label: String, value: String, unit: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(label)
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(LMColors.textSecondary)
 
-            Text(value)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(LMColors.textBody)
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
+            HStack(alignment: .firstTextBaseline, spacing: 3) {
+                Text(value)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(LMColors.textBody)
+
+                Text(unit)
+                    .font(LMTypography.badge)
+                    .foregroundStyle(LMColors.textSecondary)
+            }
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
         }
         .padding(10)
         .frame(maxWidth: .infinity, alignment: .leading)

@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @Binding private var selectedTab: AppTab
+    @State private var isVisitorBannerVisible = true
 
     let onLoginRequired: () -> Void
     let onProfileRequired: () -> Void
@@ -46,9 +47,15 @@ private extension HomeView {
                 message: "目标、摄入和记录会以后端返回为准。"
             )
         case .visitor:
-            VisitorHomeBanner(onLoginRequired: onLoginRequired)
             navHeader
-            visitorCard
+            visitorPreviewCard
+            visitorRecordPreview
+            if isVisitorBannerVisible {
+                VisitorHomeBanner(
+                    onLoginRequired: onLoginRequired,
+                    onClose: { isVisitorBannerVisible = false }
+                )
+            }
         case .profileIncomplete:
             navHeader
             LMStateView(
@@ -282,33 +289,130 @@ private extension HomeView {
         }
     }
 
-    var visitorCard: some View {
+    var visitorPreviewCard: some View {
         LMCard(cornerRadius: 16, padding: 14) {
-            HStack {
-                Text("今日热量待同步")
+            HStack(alignment: .firstTextBaseline) {
+                Text("今日热量预览")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(LMColors.textBody)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+
+                Spacer(minLength: 10)
+
+                LMTag(title: "体验预览")
+            }
+
+            Text("记录一餐后，首页会这样展示热量和营养结构。")
+                .font(LMTypography.caption)
+                .foregroundStyle(LMColors.textSecondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Text("863")
+                    .font(LMTypography.numberLarge)
+                    .foregroundStyle(LMColors.textPrimary)
+                    .lineLimit(1)
+
+                Text("千卡还能吃")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(LMColors.textSecondary)
+            }
+
+            visitorCalorieProgress
+
+            HStack(spacing: LMSpacing.small) {
+                previewMetric(title: "已摄入", value: "637", unit: "kcal")
+                previewMetric(title: "蛋白", value: "18", unit: "g")
+                previewMetric(title: "碳水", value: "58", unit: "g")
+            }
+        }
+    }
+
+    var visitorCalorieProgress: some View {
+        GeometryReader { proxy in
+            ZStack(alignment: .leading) {
+                Capsule()
+                    .fill(LMColors.primarySoft)
+                Capsule()
+                    .fill(LMColors.primary)
+                    .frame(width: proxy.size.width * 0.42)
+            }
+        }
+        .frame(height: 12)
+        .clipShape(Capsule())
+    }
+
+    var visitorRecordPreview: some View {
+        LMCard(cornerRadius: 16, padding: 14) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("选择一种记录方式")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(LMColors.textBody)
+
+                    Text("选一种方式，先把这一餐记下来。")
+                        .font(LMTypography.caption)
+                        .foregroundStyle(LMColors.textSecondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.82)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
 
                 Spacer()
 
-                LMTag(title: "游客模式")
+                Button(action: openRecordTab) {
+                    Text("开始")
+                        .font(LMTypography.badge)
+                        .foregroundStyle(LMColors.primaryDeep)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(LMColors.primarySoft)
+                        .clipShape(Capsule())
+                        .overlay {
+                            Capsule()
+                                .stroke(LMColors.primaryBorder, lineWidth: 1)
+                        }
+                }
+                .buttonStyle(.plain)
             }
-
-            Text("登录后展示目标、摄入、剩余热量和连续打卡进度。")
-                .font(LMTypography.caption)
-                .foregroundStyle(LMColors.textSecondary)
 
             HStack(spacing: LMSpacing.small) {
-                previewMetric(title: "目标", value: "--", unit: "kcal")
-                previewMetric(title: "已摄入", value: "--", unit: "kcal")
+                visitorRecordAction(title: "拍照", systemImage: "camera")
+                visitorRecordAction(title: "文本", systemImage: "text.bubble")
+                visitorRecordAction(title: "手动", systemImage: "pencil")
             }
-
-            LMButton(
-                title: "登录后记录",
-                systemImage: "person.crop.circle",
-                action: onLoginRequired
-            )
         }
+    }
+
+    func visitorRecordAction(title: String, systemImage: String) -> some View {
+        Button(action: openRecordTab) {
+            VStack(spacing: 6) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .fill(title == "手动" ? LMColors.warmMuted : LMColors.primarySoft)
+                        .frame(width: 38, height: 38)
+
+                    Image(systemName: systemImage)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(LMColors.primary)
+                }
+
+                Text(title)
+                    .font(LMTypography.badge)
+                    .foregroundStyle(LMColors.textBody)
+            }
+            .padding(.vertical, 10)
+            .frame(maxWidth: .infinity)
+            .background(LMColors.card)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(LMColors.inputBorder, lineWidth: 1)
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(title)
     }
 
     func previewMetric(title: String, value: String, unit: String) -> some View {

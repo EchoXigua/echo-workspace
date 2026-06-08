@@ -325,28 +325,23 @@
     {
       "type": "frame",
       "id": "jxnV5",
-      "x": 11194,
-      "y": 133,
+      "x": 11290,
+      "y": 132,
       "name": "欢迎启动页 / 食卡卡风",
       "clip": true,
       "width": 402,
       "height": 874,
       "fill": "#F7FBF6",
-      "layout": "vertical",
-      "padding": [
-        78,
-        28,
-        42,
-        28
-      ],
-      "justifyContent": "space_between",
-      "alignItems": "center",
+      "layout": "none",
       "children": [
         {
           "type": "frame",
           "id": "TUtkX",
+          "x": 28,
+          "y": 76,
           "name": "Brand Stack",
-          "width": "fill_container",
+          "width": 346,
+          "height": 167,
           "layout": "vertical",
           "gap": 18,
           "alignItems": "center",
@@ -405,8 +400,11 @@
         {
           "type": "frame",
           "id": "w8uXwa",
+          "x": 28,
+          "y": 400,
           "name": "Today Preview Card",
-          "width": "fill_container",
+          "width": 346,
+          "height": 162,
           "fill": "#FFFFFF",
           "cornerRadius": 18,
           "stroke": "#DDEBDD",
@@ -487,20 +485,39 @@
                       "id": "Nsf8k",
                       "name": "Demo Label",
                       "fill": "#7A746A",
-                      "content": "早餐",
+                      "content": "已摄入",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "500"
                     },
                     {
-                      "type": "text",
-                      "id": "YfCYi",
-                      "name": "Demo Value",
-                      "fill": "#1F241F",
-                      "content": "268",
-                      "fontFamily": "Inter",
-                      "fontSize": 14,
-                      "fontWeight": "600"
+                      "type": "frame",
+                      "id": "b7nrJh",
+                      "name": "Value Row / 已摄入",
+                      "gap": 3,
+                      "alignItems": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ERcfW",
+                          "name": "Value / 已摄入",
+                          "fill": "#202820",
+                          "content": "637",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "AD9Vu",
+                          "name": "Unit / 已摄入",
+                          "fill": "#6F8074",
+                          "content": "kcal",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -520,20 +537,39 @@
                       "id": "Sxasd",
                       "name": "Demo Label",
                       "fill": "#7A746A",
-                      "content": "喝水",
+                      "content": "蛋白",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "500"
                     },
                     {
-                      "type": "text",
-                      "id": "UHUw6",
-                      "name": "Demo Value",
-                      "fill": "#1F241F",
-                      "content": "900ml",
-                      "fontFamily": "Inter",
-                      "fontSize": 14,
-                      "fontWeight": "600"
+                      "type": "frame",
+                      "id": "roskf",
+                      "name": "Value Row / 蛋白",
+                      "gap": 3,
+                      "alignItems": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "pawcL",
+                          "name": "Value / 蛋白",
+                          "fill": "#202820",
+                          "content": "18",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "f4S2A",
+                          "name": "Unit / 蛋白",
+                          "fill": "#6F8074",
+                          "content": "g",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -553,20 +589,39 @@
                       "id": "S3dqF",
                       "name": "Demo Label",
                       "fill": "#7A746A",
-                      "content": "蛋白",
+                      "content": "碳水",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "500"
                     },
                     {
-                      "type": "text",
-                      "id": "vpBvM",
-                      "name": "Demo Value",
-                      "fill": "#1F241F",
-                      "content": "42g",
-                      "fontFamily": "Inter",
-                      "fontSize": 14,
-                      "fontWeight": "600"
+                      "type": "frame",
+                      "id": "TXTx1",
+                      "name": "Value Row / 碳水",
+                      "gap": 3,
+                      "alignItems": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "aE7OZ",
+                          "name": "Value / 碳水",
+                          "fill": "#202820",
+                          "content": "58",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "wgatV",
+                          "name": "Unit / 碳水",
+                          "fill": "#6F8074",
+                          "content": "g",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -576,25 +631,65 @@
         },
         {
           "type": "frame",
-          "id": "C9BSrr",
-          "name": "Start Button",
-          "width": "fill_container",
-          "height": 54,
-          "fill": "#48B878",
-          "cornerRadius": 16,
-          "gap": 8,
-          "justifyContent": "center",
+          "id": "Q9Hfy",
+          "x": 28,
+          "y": 724,
+          "name": "Actions / Welcome Entry",
+          "width": 346,
+          "height": 114,
+          "layout": "vertical",
+          "gap": 12,
           "alignItems": "center",
           "children": [
             {
-              "type": "text",
-              "id": "O6PuJo",
-              "name": "Start Label",
+              "type": "frame",
+              "id": "C9BSrr",
+              "name": "Start Button",
+              "width": "fill_container",
+              "height": 54,
+              "fill": "#48B878",
+              "cornerRadius": 16,
+              "gap": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "O6PuJo",
+                  "name": "Start Label",
+                  "fill": "#FFFFFF",
+                  "content": "开始记录",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "D7AcOV",
+              "name": "Button / 随便看看",
+              "width": 346,
+              "height": 48,
               "fill": "#FFFFFF",
-              "content": "开始记录",
-              "fontFamily": "Inter",
-              "fontSize": 13,
-              "fontWeight": "600"
+              "cornerRadius": 12,
+              "stroke": "#DDE9E1",
+              "strokeWidth": 1,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ua0QG",
+                  "x": 151,
+                  "y": 16,
+                  "name": "Label / 随便看看",
+                  "fill": "#2F6848",
+                  "content": "随便看看",
+                  "fontFamily": "Geist",
+                  "fontSize": 11,
+                  "fontWeight": "600"
+                }
+              ]
             }
           ]
         }
@@ -5491,21 +5586,27 @@
       "width": 402,
       "height": 874,
       "fill": "#F7FBF6",
-      "layout": "vertical",
+      "layout": "none",
       "children": [
         {
           "id": "K2wWH",
           "type": "ref",
           "ref": "Nt6Zm",
           "name": "Status Bar",
-          "width": "fill_container"
+          "width": 402,
+          "x": 0,
+          "y": 0,
+          "height": 62
         },
         {
           "id": "oYSxG",
           "type": "ref",
           "ref": "hhYjg",
           "name": "Bottom Tabs",
-          "width": "fill_container",
+          "width": 402,
+          "x": 0,
+          "y": 806,
+          "height": 68,
           "descendants": {
             "Zc9Lr": {
               "fill": "#EAF8EF",
@@ -5555,215 +5656,750 @@
         },
         {
           "type": "frame",
-          "id": "oeUKJ",
-          "name": "Login Banner",
-          "width": "fill_container",
-          "fill": "#EAF8EF",
-          "cornerRadius": 16,
-          "stroke": "#BEE6CC",
-          "strokeWidth": 1,
-          "gap": 12,
-          "padding": 14,
-          "alignItems": "center",
+          "id": "Y2W2QE",
+          "x": 16,
+          "y": 78,
+          "name": "Content / 游客首页优化",
+          "width": 370,
+          "layout": "vertical",
+          "gap": 14,
           "children": [
             {
               "type": "frame",
-              "id": "G7PX4V",
-              "name": "Banner Icon",
-              "width": 42,
-              "height": 42,
-              "fill": "#EAF8EF",
-              "cornerRadius": 14,
-              "justifyContent": "center",
+              "id": "nHayf",
+              "name": "Nav / 游客首页",
+              "width": "fill_container",
+              "height": 52,
               "alignItems": "center",
               "children": [
                 {
-                  "type": "icon",
-                  "id": "VIDSX",
-                  "name": "Banner Icon Icon",
-                  "width": 21,
-                  "height": 21,
-                  "icon": "sparkles",
-                  "library": "lucide",
-                  "fill": "#48B878"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "d5Bij",
-              "name": "Banner Text",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 2,
-              "children": [
-                {
                   "type": "text",
-                  "id": "PVg7O",
-                  "name": "Banner Title",
-                  "fill": "#1F241F",
-                  "content": "登录后同步记录",
-                  "fontFamily": "Inter",
-                  "fontSize": 12,
+                  "id": "y0Uhzb",
+                  "name": "Title / 今天吃得怎么样",
+                  "fill": "#183326",
+                  "content": "今天吃得怎么样",
+                  "fontFamily": "Geist",
+                  "fontSize": 15,
                   "fontWeight": "600"
                 },
                 {
+                  "type": "frame",
+                  "id": "H6xxAG",
+                  "name": "Nav Spacer",
+                  "width": "fill_container",
+                  "height": 1
+                },
+                {
+                  "type": "frame",
+                  "id": "jFBXh",
+                  "name": "Pill / 补记录",
+                  "height": 28,
+                  "fill": "#EAF8EF",
+                  "cornerRadius": 999,
+                  "stroke": "#BEE6CC",
+                  "strokeWidth": 1,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "z4Vnpa",
+                      "name": "Text / 补记录",
+                      "fill": "#23965B",
+                      "content": "补记录",
+                      "fontFamily": "Geist",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ZGRrs",
+              "name": "Card / 游客示例热量",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 16,
+              "stroke": "#DDEBDD",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Ww5NO",
+                  "name": "Row / 示例标题",
+                  "width": "fill_container",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ihL9o",
+                      "name": "Title / 随便看看今天怎么吃",
+                      "fill": "#1F241F",
+                      "textGrowth": "fixed-width",
+                      "width": 230,
+                      "content": "今日热量预览",
+                      "fontFamily": "Geist",
+                      "fontSize": 18,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "cdE9f",
+                      "name": "Title Spacer",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "I7VbWE",
+                      "name": "Tag / 示例数据",
+                      "height": 28,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 999,
+                      "stroke": "#BEE6CC",
+                      "strokeWidth": 1,
+                      "padding": [
+                        6,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ERolv",
+                          "name": "Text / 示例数据",
+                          "fill": "#23965B",
+                          "content": "体验预览",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "type": "text",
-                  "id": "A7YJf1",
-                  "name": "Banner Desc",
+                  "id": "p1Ex3",
+                  "name": "Desc / 不用先登录",
                   "fill": "#6F8074",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "保存体重趋势、饮食记录和 AI 日报",
-                  "lineHeight": 1.25,
-                  "fontFamily": "Inter",
+                  "content": "记录一餐后，这里会显示剩余热量和营养结构。",
+                  "fontFamily": "Geist",
                   "fontSize": 12,
                   "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "xBq8H",
+                  "name": "Metric / 还能吃",
+                  "width": "fill_container",
+                  "gap": 6,
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "BLTW0",
+                      "name": "Number / 863",
+                      "fill": "#183326",
+                      "content": "863",
+                      "fontFamily": "Geist",
+                      "fontSize": 36,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "tLxpU",
+                      "name": "Unit / 千卡还能吃",
+                      "fill": "#6F8074",
+                      "content": "千卡还能吃",
+                      "fontFamily": "Geist",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vIqf3",
+                  "name": "Progress / 示例热量",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": 12,
+                  "fill": "#EAF8EF",
+                  "cornerRadius": 999,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 999,
+                      "id": "UtDb2",
+                      "x": 0,
+                      "y": 0,
+                      "name": "Progress Fill / 示例热量",
+                      "fill": "#48B878",
+                      "width": 145,
+                      "height": 12
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Orx8h",
+                  "name": "Stats / 示例指标",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "MKopS",
+                      "name": "Stat / 早餐",
+                      "width": "fill_container",
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 14,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "fp4iU",
+                          "name": "Label / 早餐",
+                          "fill": "#6F8074",
+                          "content": "已摄入",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "xqu4B",
+                          "name": "Value Row / 早餐",
+                          "gap": 3,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "X80SD",
+                              "name": "Value / 早餐",
+                              "fill": "#1F241F",
+                              "content": "637",
+                              "fontFamily": "Geist",
+                              "fontSize": 22,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "tWQX2",
+                              "name": "Unit / 早餐",
+                              "fill": "#6F8074",
+                              "content": "kcal",
+                              "fontFamily": "Geist",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "yUMD1",
+                      "name": "Stat / 喝水",
+                      "width": "fill_container",
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 14,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Q3aUzA",
+                          "name": "Label / 喝水",
+                          "fill": "#6F8074",
+                          "content": "蛋白",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "uBpxR",
+                          "name": "Value Row / 喝水",
+                          "gap": 3,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "ulsih",
+                              "name": "Value / 喝水",
+                              "fill": "#1F241F",
+                              "content": "18",
+                              "fontFamily": "Geist",
+                              "fontSize": 22,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "MKX5B",
+                              "name": "Unit / 喝水",
+                              "fill": "#6F8074",
+                              "content": "g",
+                              "fontFamily": "Geist",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Zbnzq",
+                      "name": "Stat / 蛋白",
+                      "width": "fill_container",
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 14,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "U5crLh",
+                          "name": "Label / 蛋白",
+                          "fill": "#6F8074",
+                          "content": "碳水",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Iznao",
+                          "name": "Value Row / 蛋白",
+                          "gap": 3,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "wVglt",
+                              "name": "Value / 蛋白",
+                              "fill": "#1F241F",
+                              "content": "58",
+                              "fontFamily": "Geist",
+                              "fontSize": 22,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "ROsZC",
+                              "name": "Unit / 蛋白",
+                              "fill": "#6F8074",
+                              "content": "g",
+                              "fontFamily": "Geist",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             },
             {
               "type": "frame",
-              "id": "tx74N",
-              "name": "Login CTA",
-              "fill": "#EAF8EF",
-              "cornerRadius": 999,
-              "stroke": "#BEE6CC",
-              "padding": [
-                6,
-                10
-              ],
-              "alignItems": "center",
+              "id": "Sc3F0",
+              "name": "Card / 游客记录入口",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 16,
+              "stroke": "#DDEBDD",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 14,
               "children": [
                 {
-                  "type": "text",
-                  "id": "lTfkX",
-                  "name": "Login CTA Text",
-                  "fill": "#23965B",
-                  "content": "登录",
-                  "fontFamily": "Inter",
-                  "fontSize": 11,
-                  "fontWeight": "600"
+                  "type": "frame",
+                  "id": "UctLM",
+                  "name": "Row / 记录入口标题",
+                  "width": "fill_container",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Oy4Fx",
+                      "name": "Copy / 游客记录入口",
+                      "width": 254,
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "F2wYW",
+                          "name": "Title / 游客也可以先记一餐",
+                          "fill": "#1F241F",
+                          "content": "选择一种记录方式",
+                          "fontFamily": "Geist",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "AWg6V",
+                          "name": "Desc / 入口都能先看",
+                          "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": 250,
+                          "content": "选一种方式，先把这一餐记下来。",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "HWMzM",
+                      "name": "Record Spacer",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "N5uiBq",
+                      "name": "Pill / 去看看",
+                      "height": 28,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 999,
+                      "stroke": "#BEE6CC",
+                      "strokeWidth": 1,
+                      "padding": [
+                        6,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "OG4Sh",
+                          "name": "Text / 去看看",
+                          "fill": "#23965B",
+                          "content": "开始",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FoIMU",
+                  "name": "Actions / 记录入口",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "F667oO",
+                      "name": "Action / 拍照",
+                      "width": "fill_container",
+                      "height": 74,
+                      "fill": "#FFFFFF",
+                      "cornerRadius": 14,
+                      "stroke": "#E9E2D6",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 6,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "kazpc",
+                          "name": "Icon Bg / 拍照",
+                          "width": 38,
+                          "height": 38,
+                          "fill": "#EAF8EF",
+                          "cornerRadius": 14,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "zVd43",
+                              "name": "Icon / 拍照",
+                              "width": 16,
+                              "height": 16,
+                              "icon": "camera",
+                              "library": "lucide",
+                              "fill": "#48B878"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "K7kiUv",
+                          "name": "Text / 拍照",
+                          "fill": "#1F241F",
+                          "content": "拍照",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "XhkbC",
+                      "name": "Action / 文本",
+                      "width": "fill_container",
+                      "height": 74,
+                      "fill": "#FFFFFF",
+                      "cornerRadius": 14,
+                      "stroke": "#E9E2D6",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 6,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "m4Yhw",
+                          "name": "Icon Bg / 文本",
+                          "width": 38,
+                          "height": 38,
+                          "fill": "#EAF8EF",
+                          "cornerRadius": 14,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "lxzES",
+                              "name": "Icon / 文本",
+                              "width": 16,
+                              "height": 16,
+                              "icon": "message-square",
+                              "library": "lucide",
+                              "fill": "#48B878"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "AK1ql",
+                          "name": "Text / 文本",
+                          "fill": "#1F241F",
+                          "content": "文本",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "A8pjT",
+                      "name": "Action / 手动",
+                      "width": "fill_container",
+                      "height": 74,
+                      "fill": "#FFFFFF",
+                      "cornerRadius": 14,
+                      "stroke": "#E9E2D6",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 6,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "OGP8h",
+                          "name": "Icon Bg / 手动",
+                          "width": 38,
+                          "height": 38,
+                          "fill": "#F4F1EA",
+                          "cornerRadius": 14,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "HVpwC",
+                              "name": "Icon / 手动",
+                              "width": 16,
+                              "height": 16,
+                              "icon": "pencil",
+                              "library": "lucide",
+                              "fill": "#48B878"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "GPhlQ",
+                          "name": "Text / 手动",
+                          "fill": "#1F241F",
+                          "content": "手动",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "NWP3V",
-          "name": "Nav / 今天吃得怎么样",
-          "width": "fill_container",
-          "height": 52,
-          "justifyContent": "space_between",
-          "alignItems": "center",
-          "children": [
-            {
-              "type": "text",
-              "id": "s0IuM",
-              "name": "Nav Title",
-              "fill": "#183326",
-              "content": "今天吃得怎么样",
-              "fontFamily": "Inter",
-              "fontSize": 15,
-              "fontWeight": "600"
             },
             {
               "type": "frame",
-              "id": "SKLAq",
-              "name": "Nav Action",
-              "fill": "#EAF8EF",
-              "cornerRadius": 999,
-              "stroke": "#BEE6CC",
-              "padding": [
-                6,
-                10
-              ],
-              "alignItems": "center",
+              "id": "K9bCz",
+              "name": "Banner / 保存数据时再登录",
+              "width": "fill_container",
+              "height": 66,
+              "fill": "#F4FBF6",
+              "cornerRadius": 16,
+              "stroke": "#CFEBD8",
+              "strokeWidth": 1,
+              "layout": "none",
               "children": [
                 {
-                  "type": "text",
-                  "id": "b6oyAE",
-                  "name": "Nav Action Text",
-                  "fill": "#48B878",
-                  "content": "补记录",
-                  "fontFamily": "Inter",
-                  "fontSize": 11,
-                  "fontWeight": "600"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "P9bj1",
-          "name": "Visitor Calorie Card",
-          "width": "fill_container",
-          "fill": "#FFFFFF",
-          "cornerRadius": 16,
-          "stroke": "#DDEBDD",
-          "strokeWidth": 1,
-          "effect": {
-            "type": "shadow",
-            "shadowType": "outer",
-            "color": "#143B230A",
-            "offset": {
-              "x": 0,
-              "y": 2
-            },
-            "blur": 8
-          },
-          "layout": "vertical",
-          "gap": 10,
-          "padding": 14,
-          "children": [
-            {
-              "type": "text",
-              "id": "OdWEa",
-              "name": "Visitor Title",
-              "fill": "#1F241F",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "游客也可以先记一餐",
-              "lineHeight": 1.25,
-              "fontFamily": "Inter",
-              "fontSize": 18,
-              "fontWeight": "600"
-            },
-            {
-              "type": "text",
-              "id": "m2Lu6",
-              "name": "Visitor Desc",
-              "fill": "#6F8074",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "本次记录会临时保留，登录后可以合并到你的健康档案。",
-              "lineHeight": 1.25,
-              "fontFamily": "Inter",
-              "fontSize": 12,
-              "fontWeight": "500"
-            },
-            {
-              "type": "frame",
-              "id": "J7ftF",
-              "name": "Visitor Button",
-              "width": "fill_container",
-              "height": 50,
-              "fill": "#48B878",
-              "cornerRadius": 15,
-              "justifyContent": "center",
-              "alignItems": "center",
-              "children": [
+                  "type": "frame",
+                  "id": "Pz1ka",
+                  "layoutPosition": "absolute",
+                  "x": 14,
+                  "y": 16,
+                  "name": "Icon Bg / 保存数据",
+                  "width": 34,
+                  "height": 34,
+                  "fill": "#EAF8EF",
+                  "cornerRadius": 12,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "xp7Gc",
+                      "name": "Icon / Sparkles",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "sparkles",
+                      "library": "lucide",
+                      "fill": "#48B878"
+                    }
+                  ]
+                },
                 {
-                  "type": "text",
-                  "id": "HdORH",
-                  "name": "Visitor Text",
+                  "type": "frame",
+                  "id": "npSP9",
+                  "layoutPosition": "absolute",
+                  "x": 60,
+                  "y": 13,
+                  "name": "Copy / 保存数据",
+                  "width": 190,
+                  "height": 40,
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "MDX8q",
+                      "name": "Title / 想保存数据时再登录",
+                      "fill": "#1F241F",
+                      "content": "登录后同步到账号",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "pGXY3",
+                      "name": "Desc / 登录后同步",
+                      "fill": "#6F8074",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "饮食、体重和日报会自动保留",
+                      "fontFamily": "Geist",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "NTPkf",
+                  "layoutPosition": "absolute",
+                  "x": 276,
+                  "y": 18,
+                  "name": "Pill / 登录",
+                  "width": 62,
+                  "height": 28,
                   "fill": "#FFFFFF",
-                  "content": "拍照记录",
-                  "fontFamily": "Inter",
-                  "fontSize": 13,
-                  "fontWeight": "600"
+                  "cornerRadius": 999,
+                  "stroke": "#BEE6CC",
+                  "strokeWidth": 1,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "fRmpB",
+                      "name": "Text / 登录",
+                      "fill": "#23965B",
+                      "content": "登录同步",
+                      "fontFamily": "Geist",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "tS8IC",
+                  "layoutPosition": "absolute",
+                  "x": 340,
+                  "y": 7,
+                  "name": "Button / 关闭登录提示",
+                  "width": 22,
+                  "height": 22,
+                  "fill": "#FFFFFF00",
+                  "cornerRadius": 999,
+                  "stroke": "#FFFFFF00",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Y9mP8p",
+                      "name": "Icon / 关闭",
+                      "width": 10,
+                      "height": 10,
+                      "icon": "x",
+                      "library": "lucide",
+                      "fill": "#6F8074"
+                    }
+                  ]
                 }
               ]
             }
