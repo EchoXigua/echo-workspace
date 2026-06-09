@@ -11070,10 +11070,10 @@
                     {
                       "type": "icon",
                       "id": "fAwCN",
-                      "name": "Notice Icon",
+                      "name": "Icon / Settings",
                       "width": 18,
                       "height": 18,
-                      "icon": "bell",
+                      "icon": "settings",
                       "library": "lucide",
                       "fill": "#1F3327"
                     }
@@ -14417,10 +14417,10 @@
                     {
                       "type": "icon",
                       "id": "fFvVo",
-                      "name": "Notice Icon",
+                      "name": "Icon / Settings",
                       "width": 18,
                       "height": 18,
-                      "icon": "bell",
+                      "icon": "settings",
                       "library": "lucide",
                       "fill": "#1F3327"
                     }
@@ -15838,6 +15838,879 @@
               "fontFamily": "Inter",
               "fontSize": 12,
               "fontWeight": "600"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Auk5t",
+      "x": 18076,
+      "y": 142,
+      "name": "我的 / 设置",
+      "clip": true,
+      "width": 402,
+      "height": 910,
+      "fill": "#F7FBF6",
+      "layout": "none",
+      "children": [
+        {
+          "id": "ridVO",
+          "type": "ref",
+          "ref": "Nt6Zm",
+          "name": "Status Bar",
+          "width": 402,
+          "height": 62,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "type": "frame",
+          "id": "s98SX",
+          "x": 0,
+          "y": 62,
+          "name": "Content",
+          "width": 402,
+          "height": 848,
+          "fill": "#F7FBF6",
+          "layout": "vertical",
+          "gap": 14,
+          "padding": [
+            6,
+            16,
+            24,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "ryVz2",
+              "name": "Top Bar",
+              "width": "fill_container",
+              "height": 46,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "NU9KH",
+                  "name": "Back Button",
+                  "width": 38,
+                  "height": 38,
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 19,
+                  "stroke": "#DDEBDD",
+                  "strokeWidth": 1,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "UqvU3",
+                      "name": "Icon / Back",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "chevron-left",
+                      "library": "lucide",
+                      "fill": "#33483A"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "m7bKY7",
+                  "name": "Title",
+                  "fill": "#183326",
+                  "content": "设置",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "wToc8",
+                  "name": "Top Spacer",
+                  "width": 38,
+                  "height": 38,
+                  "fill": "#F7FBF600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "bzEet",
+              "name": "Local Data Status",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 18,
+              "stroke": "#DDEBDD",
+              "strokeWidth": 1,
+              "gap": 12,
+              "padding": 14,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "w4Xq5H",
+                  "name": "Status Icon",
+                  "width": 42,
+                  "height": 42,
+                  "fill": "#EAF8EF",
+                  "cornerRadius": 14,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "HoKBY",
+                      "name": "Icon / Device",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "smartphone",
+                      "library": "lucide",
+                      "fill": "#48B878"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "m8Fvq",
+                  "name": "Status Copy",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "wltH1",
+                      "name": "Status Title",
+                      "fill": "#1F241F",
+                      "content": "当前数据保存在本机",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "X3AElX",
+                      "name": "Status Subtitle",
+                      "fill": "#6F8074",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "登录后可同步到账号，当前不影响本地使用。",
+                      "lineHeight": 1.25,
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "XrsXs",
+              "name": "档案与目标",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 18,
+              "stroke": "#DDEBDD",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "padding": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "QSvoF",
+                  "name": "档案与目标 Title",
+                  "fill": "#1F241F",
+                  "content": "档案与目标",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "SrPmH",
+                  "name": "身体档案",
+                  "width": "fill_container",
+                  "height": 54,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "c3Wpj",
+                      "name": "身体档案 Icon Box",
+                      "width": 34,
+                      "height": 34,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 12,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "lXg3q",
+                          "name": "身体档案 Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "user-round",
+                          "library": "lucide",
+                          "fill": "#48B878"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "G4bcJj",
+                      "name": "身体档案 Copy",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ifYa3",
+                          "name": "身体档案 Label",
+                          "fill": "#1F241F",
+                          "content": "身体档案",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "rVaJi",
+                          "name": "身体档案 Description",
+                          "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "年龄、身高、活动水平",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "GHeWF",
+                      "name": "身体档案 Chevron",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "chevron-right",
+                      "library": "lucide",
+                      "fill": "#9AA79D"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Rocor",
+                  "name": "目标计划",
+                  "width": "fill_container",
+                  "height": 54,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ix88X",
+                      "name": "目标计划 Icon Box",
+                      "width": 34,
+                      "height": 34,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 12,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "XXhj6",
+                          "name": "目标计划 Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "target",
+                          "library": "lucide",
+                          "fill": "#48B878"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "gRCMH",
+                      "name": "目标计划 Copy",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "lGnvh",
+                          "name": "目标计划 Label",
+                          "fill": "#1F241F",
+                          "content": "目标计划",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "bT4t3",
+                          "name": "目标计划 Description",
+                          "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "目标体重、每日热量",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "cpMuH",
+                      "name": "目标计划 Chevron",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "chevron-right",
+                      "library": "lucide",
+                      "fill": "#9AA79D"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QPMoF",
+                  "name": "体重记录",
+                  "width": "fill_container",
+                  "height": 54,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "aV6wA",
+                      "name": "体重记录 Icon Box",
+                      "width": 34,
+                      "height": 34,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 12,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "KyWS5",
+                          "name": "体重记录 Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "scale",
+                          "library": "lucide",
+                          "fill": "#48B878"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "iYmY6",
+                      "name": "体重记录 Copy",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "LdDXO",
+                          "name": "体重记录 Label",
+                          "fill": "#1F241F",
+                          "content": "体重记录",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "swxVE",
+                          "name": "体重记录 Description",
+                          "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "记录入口与趋势偏好",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "j5eeY",
+                      "name": "体重记录 Chevron",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "chevron-right",
+                      "library": "lucide",
+                      "fill": "#9AA79D"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "gIdQX",
+              "name": "数据",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 18,
+              "stroke": "#DDEBDD",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "padding": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "wMeZc",
+                  "name": "数据 Title",
+                  "fill": "#1F241F",
+                  "content": "数据",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "edCAw",
+                  "name": "数据同步",
+                  "width": "fill_container",
+                  "height": 54,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "eg4st",
+                      "name": "数据同步 Icon Box",
+                      "width": 34,
+                      "height": 34,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 12,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "Kqj4x",
+                          "name": "数据同步 Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "refresh-cw",
+                          "library": "lucide",
+                          "fill": "#48B878"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "sHdNP",
+                      "name": "数据同步 Copy",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "TOc9Z",
+                          "name": "数据同步 Label",
+                          "fill": "#1F241F",
+                          "content": "数据同步",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Krzff",
+                          "name": "数据同步 Description",
+                          "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "登录后自动保留饮食和体重",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "yziRj",
+                      "name": "数据同步 Chevron",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "chevron-right",
+                      "library": "lucide",
+                      "fill": "#9AA79D"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "r0zhc",
+                  "name": "隐私与本地数据",
+                  "width": "fill_container",
+                  "height": 54,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "h6fZIx",
+                      "name": "隐私与本地数据 Icon Box",
+                      "width": 34,
+                      "height": 34,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 12,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "Cxty0",
+                          "name": "隐私与本地数据 Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "shield",
+                          "library": "lucide",
+                          "fill": "#48B878"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "tybFl",
+                      "name": "隐私与本地数据 Copy",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "b5FOYQ",
+                          "name": "隐私与本地数据 Label",
+                          "fill": "#1F241F",
+                          "content": "隐私与本地数据",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "j14u8",
+                          "name": "隐私与本地数据 Description",
+                          "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "查看本机保存范围",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "Xzoih",
+                      "name": "隐私与本地数据 Chevron",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "chevron-right",
+                      "library": "lucide",
+                      "fill": "#9AA79D"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Z92cA",
+              "name": "提醒",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 18,
+              "stroke": "#DDEBDD",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "padding": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "O8r2n",
+                  "name": "提醒 Title",
+                  "fill": "#1F241F",
+                  "content": "提醒",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "LEyYC",
+                  "name": "记录提醒",
+                  "width": "fill_container",
+                  "height": 54,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "L4qOHI",
+                      "name": "记录提醒 Icon Box",
+                      "width": 34,
+                      "height": 34,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 12,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "iB5Of",
+                          "name": "记录提醒 Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "bell",
+                          "library": "lucide",
+                          "fill": "#48B878"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "J1sNUK",
+                      "name": "记录提醒 Copy",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "zLEXJ",
+                          "name": "记录提醒 Label",
+                          "fill": "#1F241F",
+                          "content": "记录提醒",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "NxOps",
+                          "name": "记录提醒 Description",
+                          "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "按你的节奏提醒补记录",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "BkIrW",
+                      "name": "记录提醒 Chevron",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "chevron-right",
+                      "library": "lucide",
+                      "fill": "#9AA79D"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "r5aeC",
+                  "name": "里程碑提示",
+                  "width": "fill_container",
+                  "height": 54,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "TOj8Z",
+                      "name": "里程碑提示 Icon Box",
+                      "width": 34,
+                      "height": 34,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 12,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "dw30c",
+                          "name": "里程碑提示 Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "sparkles",
+                          "library": "lucide",
+                          "fill": "#48B878"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "vQLZy",
+                      "name": "里程碑提示 Copy",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Thn2A",
+                          "name": "里程碑提示 Label",
+                          "fill": "#1F241F",
+                          "content": "里程碑提示",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "zCFxk",
+                          "name": "里程碑提示 Description",
+                          "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "连续记录达成时轻提示",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "wCHnB",
+                      "name": "里程碑提示 Chevron",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "chevron-right",
+                      "library": "lucide",
+                      "fill": "#9AA79D"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "S8F5mU",
+              "name": "关于",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 18,
+              "stroke": "#DDEBDD",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "padding": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "grn6h",
+                  "name": "关于 Title",
+                  "fill": "#1F241F",
+                  "content": "关于",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "aCpIA",
+                  "name": "LeanMate",
+                  "width": "fill_container",
+                  "height": 54,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "S6G7j",
+                      "name": "LeanMate Icon Box",
+                      "width": 34,
+                      "height": 34,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 12,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "aFmG1",
+                          "name": "LeanMate Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "info",
+                          "library": "lucide",
+                          "fill": "#48B878"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "BZVNA",
+                      "name": "LeanMate Copy",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "lmn2z",
+                          "name": "LeanMate Label",
+                          "fill": "#1F241F",
+                          "content": "LeanMate",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "T5mh8",
+                          "name": "LeanMate Description",
+                          "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "版本、协议与反馈",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "Z03aF",
+                      "name": "LeanMate Chevron",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "chevron-right",
+                      "library": "lucide",
+                      "fill": "#9AA79D"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }
