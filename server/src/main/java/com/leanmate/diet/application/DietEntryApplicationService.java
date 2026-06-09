@@ -8,6 +8,7 @@ import com.leanmate.diet.domain.FoodEntryTotals;
 import com.leanmate.diet.domain.FoodEntrySourceType;
 import com.leanmate.diet.domain.MealType;
 import com.leanmate.diet.domain.NutritionDataValidator;
+import com.leanmate.diet.domain.NutritionSource;
 import com.leanmate.diet.dto.FoodEntryResponse;
 import com.leanmate.diet.dto.FoodEntrySaveResultResponse;
 import com.leanmate.diet.dto.FoodItemResponse;
@@ -21,6 +22,7 @@ import com.leanmate.diet.repository.FoodEntryEntity;
 import com.leanmate.diet.repository.FoodEntryRepository;
 import com.leanmate.diet.repository.FoodItemEntity;
 import com.leanmate.diet.repository.FoodItemRepository;
+import com.leanmate.food.repository.FoodCatalogRepository;
 import com.leanmate.stats.application.DailyNutritionSnapshotApplicationService;
 import com.leanmate.stats.dto.DailyNutritionSnapshotResponse;
 import com.leanmate.user.application.CurrentUserApplicationService;
@@ -53,6 +55,7 @@ public class DietEntryApplicationService {
     private final UserProfileRepository userProfileRepository;
     private final FoodEntryRepository foodEntryRepository;
     private final FoodItemRepository foodItemRepository;
+    private final FoodCatalogRepository foodCatalogRepository;
     private final FoodEntryCalculator foodEntryCalculator;
     private final NutritionDataValidator nutritionDataValidator;
     private final DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService;
@@ -64,6 +67,7 @@ public class DietEntryApplicationService {
             UserProfileRepository userProfileRepository,
             FoodEntryRepository foodEntryRepository,
             FoodItemRepository foodItemRepository,
+            FoodCatalogRepository foodCatalogRepository,
             FoodEntryCalculator foodEntryCalculator,
             NutritionDataValidator nutritionDataValidator,
             DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService
@@ -73,6 +77,7 @@ public class DietEntryApplicationService {
                 userProfileRepository,
                 foodEntryRepository,
                 foodItemRepository,
+                foodCatalogRepository,
                 foodEntryCalculator,
                 nutritionDataValidator,
                 dailyNutritionSnapshotApplicationService,
@@ -84,6 +89,7 @@ public class DietEntryApplicationService {
             UserProfileRepository userProfileRepository,
             FoodEntryRepository foodEntryRepository,
             FoodItemRepository foodItemRepository,
+            FoodCatalogRepository foodCatalogRepository,
             FoodEntryCalculator foodEntryCalculator,
             NutritionDataValidator nutritionDataValidator,
             DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService,
@@ -93,6 +99,7 @@ public class DietEntryApplicationService {
         this.userProfileRepository = userProfileRepository;
         this.foodEntryRepository = foodEntryRepository;
         this.foodItemRepository = foodItemRepository;
+        this.foodCatalogRepository = foodCatalogRepository;
         this.foodEntryCalculator = foodEntryCalculator;
         this.nutritionDataValidator = nutritionDataValidator;
         this.dailyNutritionSnapshotApplicationService = dailyNutritionSnapshotApplicationService;
@@ -315,6 +322,7 @@ public class DietEntryApplicationService {
             item.setId(request.id());
         }
         item.setFoodEntryId(foodEntryId);
+        item.setFoodCatalogId(validFoodCatalogId(request));
         item.setName(request.name().trim());
         item.setQuantityText(trimToNull(request.quantityText()));
         item.setWeightG(scale(request.weightG(), 2));
@@ -324,8 +332,32 @@ public class DietEntryApplicationService {
         item.setCarbsG(scale(request.carbsG(), 2));
         item.setConfidence(scale(request.confidence(), 4));
         item.setUserEdited(Boolean.TRUE.equals(request.userEdited()));
+        item.setNutritionSource(nutritionSource(request).value());
         item.setSortOrder(sortOrder);
         return item;
+    }
+
+    private UUID validFoodCatalogId(SaveFoodItemRequest request) {
+        if (request.foodId() == null) {
+            return null;
+        }
+        if (!foodCatalogRepository.existsById(request.foodId())) {
+            throw new BusinessException(ErrorCode.BAD_REQUEST, "foodId 不存在");
+        }
+        return request.foodId();
+    }
+
+    private NutritionSource nutritionSource(SaveFoodItemRequest request) {
+        if (request.nutritionSource() != null) {
+            return request.nutritionSource();
+        }
+        if (Boolean.TRUE.equals(request.userEdited())) {
+            return NutritionSource.USER_OVERRIDE;
+        }
+        if (request.foodId() != null) {
+            return NutritionSource.FOOD_DB;
+        }
+        return NutritionSource.USER_CONFIRMED;
     }
 
     private FoodEntryEntity requireEditableEntry(UUID userId, UUID entryId) {
@@ -404,7 +436,9 @@ public class DietEntryApplicationService {
                 item.getFatG(),
                 item.getCarbsG(),
                 item.getConfidence(),
-                Boolean.TRUE.equals(item.getUserEdited()));
+                Boolean.TRUE.equals(item.getUserEdited()),
+                item.getFoodCatalogId(),
+                item.getNutritionSource() == null ? null : NutritionSource.fromValue(item.getNutritionSource()));
     }
 
     private BigDecimal scale(BigDecimal value, int scale) {

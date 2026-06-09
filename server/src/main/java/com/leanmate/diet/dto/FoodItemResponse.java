@@ -1,5 +1,6 @@
 package com.leanmate.diet.dto;
 
+import com.leanmate.diet.domain.NutritionSource;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -13,6 +14,8 @@ public record FoodItemResponse(
         BigDecimal fatG,
         BigDecimal carbsG,
         BigDecimal confidence,
-        boolean userEdited
+        boolean userEdited,
+        UUID foodId,
+        NutritionSource nutritionSource
 ) {
 }

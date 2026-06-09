@@ -20,6 +20,9 @@ public class FoodItemEntity {
     @Column(name = "food_entry_id", nullable = false)
     private UUID foodEntryId;
 
+    @Column(name = "food_catalog_id")
+    private UUID foodCatalogId;
+
     @Column(name = "name", nullable = false, length = 128)
     private String name;
 
@@ -46,6 +49,9 @@ public class FoodItemEntity {
 
     @Column(name = "is_user_edited", nullable = false)
     private Boolean userEdited;
+
+    @Column(name = "nutrition_source", length = 32)
+    private String nutritionSource;
 
     @Column(name = "sort_order", nullable = false)
     private Integer sortOrder;
@@ -85,6 +91,14 @@ public class FoodItemEntity {
 
     public void setFoodEntryId(UUID foodEntryId) {
         this.foodEntryId = foodEntryId;
+    }
+
+    public UUID getFoodCatalogId() {
+        return foodCatalogId;
+    }
+
+    public void setFoodCatalogId(UUID foodCatalogId) {
+        this.foodCatalogId = foodCatalogId;
     }
 
     public String getName() {
@@ -157,6 +171,14 @@ public class FoodItemEntity {
 
     public void setUserEdited(Boolean userEdited) {
         this.userEdited = userEdited;
+    }
+
+    public String getNutritionSource() {
+        return nutritionSource;
+    }
+
+    public void setNutritionSource(String nutritionSource) {
+        this.nutritionSource = nutritionSource;
     }
 
     public Integer getSortOrder() {

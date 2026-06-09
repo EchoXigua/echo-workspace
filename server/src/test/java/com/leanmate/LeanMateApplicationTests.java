@@ -3,6 +3,9 @@ package com.leanmate;
 import com.leanmate.diet.repository.AiRecognitionTaskRepository;
 import com.leanmate.diet.repository.FoodEntryRepository;
 import com.leanmate.diet.repository.FoodItemRepository;
+import com.leanmate.food.repository.FoodAliasRepository;
+import com.leanmate.food.repository.FoodCatalogRepository;
+import com.leanmate.food.repository.FoodPortionRepository;
 import com.leanmate.retention.repository.AchievementRepository;
 import com.leanmate.report.repository.DailyAiReportRepository;
 import com.leanmate.stats.repository.DailyAiReportSummaryRepository;
@@ -75,6 +78,15 @@ class LeanMateApplicationTests {
 
     @MockitoBean
     AiRecognitionTaskRepository aiRecognitionTaskRepository;
+
+    @MockitoBean
+    FoodCatalogRepository foodCatalogRepository;
+
+    @MockitoBean
+    FoodAliasRepository foodAliasRepository;
+
+    @MockitoBean
+    FoodPortionRepository foodPortionRepository;
 
     @Test
     void contextLoads() {

@@ -23,6 +23,8 @@ tags:
     description: 首页今日状态
   - name: Diet
     description: 饮食识别和饮食记录
+  - name: Foods
+    description: 本地基础食物库、份量和营养计算
   - name: Weight
     description: 体重记录
   - name: Report
@@ -367,6 +369,82 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /v1/foods/search:
+    get:
+      tags: [Foods]
+      summary: 搜索本地基础食物库
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema:
+            type: string
+          description: 搜索关键词。
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+          description: 返回数量，不传默认 10。
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiFoodSearchResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /v1/foods/{foodId}:
+    get:
+      tags: [Foods]
+      summary: 获取食物详情
+      parameters:
+        - in: path
+          name: foodId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiFoodDetailResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /v1/foods/calculate:
+    post:
+      tags: [Foods]
+      summary: 计算食物营养值
+      description: 按 foodId + weightG 或 foodId + portionId 计算营养值。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CalculateFoodNutritionRequest"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiFoodNutritionCalculationResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /v1/weights:
     get:
       tags: [Weight]
@@ -689,6 +767,32 @@ components:
           properties:
             data:
               $ref: "#/components/schemas/SyncLocalDietEntriesResult"
+    ApiFoodSearchResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/FoodSearchResult"
+    ApiFoodDetailResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: "#/components/schemas/FoodDetail"
+    ApiFoodNutritionCalculationResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: "#/components/schemas/FoodNutritionCalculation"
     ApiWeightEntryListResponse:
       allOf:
         - $ref: "#/components/schemas/ApiResponse"
@@ -1084,6 +1188,10 @@ components:
           type: string
           format: uuid
           nullable: true
+        foodId:
+          type: string
+          format: uuid
+          nullable: true
         name:
           type: string
           minLength: 1
@@ -1124,6 +1232,169 @@ components:
         userEdited:
           type: boolean
           default: false
+        nutritionSource:
+          nullable: true
+          allOf:
+            - $ref: "#/components/schemas/NutritionSource"
+    CalculateFoodNutritionRequest:
+      type: object
+      required: [foodId]
+      properties:
+        foodId:
+          type: string
+          format: uuid
+        weightG:
+          type: number
+          minimum: 0
+          exclusiveMinimum: true
+          maximum: 10000
+          nullable: true
+        portionId:
+          type: string
+          format: uuid
+          nullable: true
+    FoodPortion:
+      type: object
+      required: [id, label, gramWeight, defaultPortion]
+      properties:
+        id:
+          type: string
+          format: uuid
+        label:
+          type: string
+        gramWeight:
+          type: number
+        defaultPortion:
+          type: boolean
+    FoodNutrition:
+      type: object
+      required: [caloriesKcal, proteinG, fatG, carbsG]
+      properties:
+        caloriesKcal:
+          type: integer
+        proteinG:
+          type: number
+        fatG:
+          type: number
+        carbsG:
+          type: number
+    FoodSearchResult:
+      type: object
+      required:
+        - id
+        - name
+        - category
+        - caloriesPer100g
+        - proteinPer100g
+        - fatPer100g
+        - carbsPer100g
+        - source
+        - confidence
+        - verified
+        - estimateBasis
+        - displayHint
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        category:
+          type: string
+        caloriesPer100g:
+          type: integer
+        proteinPer100g:
+          type: number
+        fatPer100g:
+          type: number
+        carbsPer100g:
+          type: number
+        source:
+          $ref: "#/components/schemas/FoodCatalogSource"
+        confidence:
+          type: number
+        verified:
+          type: boolean
+        defaultPortion:
+          nullable: true
+          allOf:
+            - $ref: "#/components/schemas/FoodPortion"
+        estimatedNutrition:
+          nullable: true
+          allOf:
+            - $ref: "#/components/schemas/FoodNutrition"
+        estimateBasis:
+          type: string
+          enum: [default_portion, per_100g]
+        displayHint:
+          type: string
+    FoodDetail:
+      type: object
+      required:
+        - id
+        - name
+        - category
+        - caloriesPer100g
+        - proteinPer100g
+        - fatPer100g
+        - carbsPer100g
+        - source
+        - confidence
+        - verified
+        - aliases
+        - portions
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        category:
+          type: string
+        caloriesPer100g:
+          type: integer
+        proteinPer100g:
+          type: number
+        fatPer100g:
+          type: number
+        carbsPer100g:
+          type: number
+        source:
+          $ref: "#/components/schemas/FoodCatalogSource"
+        confidence:
+          type: number
+        verified:
+          type: boolean
+        aliases:
+          type: array
+          items:
+            type: string
+        portions:
+          type: array
+          items:
+            $ref: "#/components/schemas/FoodPortion"
+    FoodNutritionCalculation:
+      type: object
+      required: [foodId, name, weightG, caloriesKcal, proteinG, fatG, carbsG, estimateBasis]
+      properties:
+        foodId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        weightG:
+          type: number
+        caloriesKcal:
+          type: integer
+        proteinG:
+          type: number
+        fatG:
+          type: number
+        carbsG:
+          type: number
+        estimateBasis:
+          type: string
+          enum: [weight, portion]
     FoodEntryDraft:
       type: object
       required: [mealDate, mealType, sourceType, items]
@@ -1223,6 +1494,10 @@ components:
         id:
           type: string
           format: uuid
+        foodId:
+          type: string
+          format: uuid
+          nullable: true
         name:
           type: string
         quantityText:
@@ -1248,6 +1523,10 @@ components:
           nullable: true
         userEdited:
           type: boolean
+        nutritionSource:
+          nullable: true
+          allOf:
+            - $ref: "#/components/schemas/NutritionSource"
     SaveWeightEntryRequest:
       type: object
       required: [recordDate, weightKg]
@@ -1388,3 +1667,9 @@ components:
     MealType:
       type: string
       enum: [breakfast, lunch, dinner, snack]
+    NutritionSource:
+      type: string
+      enum: [food_db, ai_estimated, user_confirmed, user_override]
+    FoodCatalogSource:
+      type: string
+      enum: [curated, usda, open_food_facts, vendor, ai_estimated]

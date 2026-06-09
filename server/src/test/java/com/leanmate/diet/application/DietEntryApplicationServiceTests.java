@@ -26,6 +26,7 @@ import com.leanmate.diet.repository.FoodEntryEntity;
 import com.leanmate.diet.repository.FoodEntryRepository;
 import com.leanmate.diet.repository.FoodItemEntity;
 import com.leanmate.diet.repository.FoodItemRepository;
+import com.leanmate.food.repository.FoodCatalogRepository;
 import com.leanmate.stats.application.DailyNutritionSnapshotApplicationService;
 import com.leanmate.stats.dto.DailyNutritionSnapshotResponse;
 import com.leanmate.user.application.CurrentUserApplicationService;
@@ -49,11 +50,13 @@ class DietEntryApplicationServiceTests {
     private static final UUID USER_ID = UUID.fromString("11111111-2222-3333-4444-555555555555");
     private static final UUID ENTRY_ID = UUID.fromString("aaaaaaaa-1111-2222-3333-444444444444");
     private static final UUID CLIENT_LOCAL_ID = UUID.fromString("cccccccc-1111-2222-3333-444444444444");
+    private static final UUID FOOD_ID = UUID.fromString("10000000-0000-0000-0000-000000000011");
 
     private CurrentUserApplicationService currentUserApplicationService;
     private UserProfileRepository userProfileRepository;
     private FoodEntryRepository foodEntryRepository;
     private FoodItemRepository foodItemRepository;
+    private FoodCatalogRepository foodCatalogRepository;
     private DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService;
     private DietEntryApplicationService dietEntryApplicationService;
 
@@ -63,12 +66,14 @@ class DietEntryApplicationServiceTests {
         userProfileRepository = mock(UserProfileRepository.class);
         foodEntryRepository = mock(FoodEntryRepository.class);
         foodItemRepository = mock(FoodItemRepository.class);
+        foodCatalogRepository = mock(FoodCatalogRepository.class);
         dailyNutritionSnapshotApplicationService = mock(DailyNutritionSnapshotApplicationService.class);
         dietEntryApplicationService = new DietEntryApplicationService(
                 currentUserApplicationService,
                 userProfileRepository,
                 foodEntryRepository,
                 foodItemRepository,
+                foodCatalogRepository,
                 new FoodEntryCalculator(),
                 new NutritionDataValidator(),
                 dailyNutritionSnapshotApplicationService,
@@ -114,6 +119,29 @@ class DietEntryApplicationServiceTests {
                 .extracting("errorCode")
                 .isEqualTo(ErrorCode.BAD_REQUEST);
         verifyNoInteractions(dailyNutritionSnapshotApplicationService);
+    }
+
+    @Test
+    void createEntryPersistsFoodCatalogReferenceAndNutritionSource() {
+        SaveFoodEntryRequest request = requestWithFoodId(LocalDate.parse("2026-06-07"));
+        when(foodCatalogRepository.existsById(FOOD_ID)).thenReturn(true);
+        when(foodEntryRepository.save(any(FoodEntryEntity.class))).thenAnswer(invocation -> {
+            FoodEntryEntity entry = invocation.getArgument(0);
+            entry.setId(ENTRY_ID);
+            return entry;
+        });
+        when(foodItemRepository.saveAll(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(dailyNutritionSnapshotApplicationService.recalculateDietTotals(
+                USER_ID,
+                request.mealDate(),
+                1800))
+                .thenReturn(snapshot(LocalDate.parse("2026-06-07")));
+
+        FoodEntrySaveResultResponse response = dietEntryApplicationService.createEntry(USER_ID, request);
+
+        assertThat(response.entry().items()).hasSize(1);
+        assertThat(response.entry().items().get(0).foodId()).isEqualTo(FOOD_ID);
+        assertThat(response.entry().items().get(0).nutritionSource().value()).isEqualTo("food_db");
     }
 
     @Test
@@ -287,6 +315,29 @@ class DietEntryApplicationServiceTests {
                 entry,
                 Instant.parse("2026-06-07T01:00:00Z"),
                 Instant.parse("2026-06-07T01:05:00Z"))));
+    }
+
+    private SaveFoodEntryRequest requestWithFoodId(LocalDate mealDate) {
+        return new SaveFoodEntryRequest(
+                null,
+                mealDate,
+                MealType.LUNCH,
+                FoodEntrySourceType.MANUAL,
+                null,
+                null,
+                List.of(new SaveFoodItemRequest(
+                        null,
+                        "苹果",
+                        "1个中等大小",
+                        new BigDecimal("180"),
+                        94,
+                        new BigDecimal("0.5"),
+                        new BigDecimal("0.4"),
+                        new BigDecimal("24.8"),
+                        null,
+                        false,
+                        FOOD_ID,
+                        null)));
     }
 
     private SaveFoodEntryRequest invalidNutritionRequest(LocalDate mealDate) {

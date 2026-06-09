@@ -12,6 +12,7 @@ import com.leanmate.common.config.LimitProperties;
 import com.leanmate.common.error.ErrorCode;
 import com.leanmate.common.exception.BusinessException;
 import com.leanmate.diet.domain.FoodEntrySourceType;
+import com.leanmate.diet.domain.NutritionSource;
 import com.leanmate.diet.domain.MealType;
 import com.leanmate.diet.domain.RecognitionTaskStatus;
 import com.leanmate.diet.dto.FoodEntryDraftResponse;
@@ -21,6 +22,8 @@ import com.leanmate.diet.dto.RecognitionTaskResponse;
 import com.leanmate.diet.dto.TextRecognitionRequest;
 import com.leanmate.diet.repository.AiRecognitionTaskEntity;
 import com.leanmate.diet.repository.AiRecognitionTaskRepository;
+import com.leanmate.food.repository.FoodCatalogEntity;
+import com.leanmate.food.repository.FoodCatalogRepository;
 import com.leanmate.user.application.CurrentUserApplicationService;
 import com.leanmate.user.repository.UserProfileEntity;
 import com.leanmate.user.repository.UserProfileRepository;
@@ -39,6 +42,7 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -57,6 +61,7 @@ public class DietRecognitionApplicationService {
     private final CurrentUserApplicationService currentUserApplicationService;
     private final UserProfileRepository userProfileRepository;
     private final AiRecognitionTaskRepository aiRecognitionTaskRepository;
+    private final FoodCatalogRepository foodCatalogRepository;
     private final DietRecognitionClient dietRecognitionClient;
     private final ObjectMapper objectMapper;
     private final LimitProperties limitProperties;
@@ -67,6 +72,7 @@ public class DietRecognitionApplicationService {
             CurrentUserApplicationService currentUserApplicationService,
             UserProfileRepository userProfileRepository,
             AiRecognitionTaskRepository aiRecognitionTaskRepository,
+            FoodCatalogRepository foodCatalogRepository,
             DietRecognitionClient dietRecognitionClient,
             ObjectMapper objectMapper,
             LimitProperties limitProperties
@@ -75,6 +81,7 @@ public class DietRecognitionApplicationService {
                 currentUserApplicationService,
                 userProfileRepository,
                 aiRecognitionTaskRepository,
+                foodCatalogRepository,
                 dietRecognitionClient,
                 objectMapper,
                 limitProperties,
@@ -85,6 +92,7 @@ public class DietRecognitionApplicationService {
             CurrentUserApplicationService currentUserApplicationService,
             UserProfileRepository userProfileRepository,
             AiRecognitionTaskRepository aiRecognitionTaskRepository,
+            FoodCatalogRepository foodCatalogRepository,
             DietRecognitionClient dietRecognitionClient,
             ObjectMapper objectMapper,
             LimitProperties limitProperties,
@@ -93,6 +101,7 @@ public class DietRecognitionApplicationService {
         this.currentUserApplicationService = currentUserApplicationService;
         this.userProfileRepository = userProfileRepository;
         this.aiRecognitionTaskRepository = aiRecognitionTaskRepository;
+        this.foodCatalogRepository = foodCatalogRepository;
         this.dietRecognitionClient = dietRecognitionClient;
         this.objectMapper = objectMapper;
         this.limitProperties = limitProperties;
@@ -247,7 +256,21 @@ public class DietRecognitionApplicationService {
                 scale(item.fatG(), 2),
                 scale(item.carbsG(), 2),
                 scale(item.confidence(), 4),
-                false);
+                false,
+                matchedFoodId(item),
+                NutritionSource.AI_ESTIMATED);
+    }
+
+    private UUID matchedFoodId(DietRecognitionItem item) {
+        String normalizedName = normalize(item.name());
+        if (!StringUtils.hasText(normalizedName)) {
+            return null;
+        }
+        return foodCatalogRepository.searchVerified(normalizedName, PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .map(FoodCatalogEntity::getId)
+                .orElse(null);
     }
 
     private RecognitionTaskResponse toResponse(AiRecognitionTaskEntity task) {
@@ -348,6 +371,13 @@ public class DietRecognitionApplicationService {
             return null;
         }
         return value.trim();
+    }
+
+    private String normalize(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value.trim().toLowerCase().replaceAll("\\s+", "");
     }
 
     private record StoredFoodEntryDraft(

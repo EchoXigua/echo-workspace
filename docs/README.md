@@ -33,6 +33,7 @@ docs/
 - [后端技术方案检查清单](../server/docs/technical-design/checklist.md)
 - [V1.1 后端技术方案索引](../server/docs/technical-design/v1.1/README.md)
 - [V1.1 API 设计说明](../server/docs/technical-design/v1.1/api-design.md)
+- [本地基础食物库后端技术方案](../server/docs/technical-design/v1.1/06-food-catalog.md)
 - [埋点事件](data/events.md)
 - [指标口径](data/metrics.md)
 - [iOS 开发就绪说明](../ios/docs/development-readiness.md)

@@ -1,5 +1,6 @@
 package com.leanmate.diet.dto;
 
+import com.leanmate.diet.domain.NutritionSource;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
@@ -18,6 +19,34 @@ public record SaveFoodItemRequest(
         @DecimalMin("0.0") BigDecimal fatG,
         @DecimalMin("0.0") BigDecimal carbsG,
         @DecimalMin("0.0") @DecimalMax("1.0") BigDecimal confidence,
-        Boolean userEdited
+        Boolean userEdited,
+        UUID foodId,
+        NutritionSource nutritionSource
 ) {
+    public SaveFoodItemRequest(
+            UUID id,
+            String name,
+            String quantityText,
+            BigDecimal weightG,
+            Integer caloriesKcal,
+            BigDecimal proteinG,
+            BigDecimal fatG,
+            BigDecimal carbsG,
+            BigDecimal confidence,
+            Boolean userEdited
+    ) {
+        this(
+                id,
+                name,
+                quantityText,
+                weightG,
+                caloriesKcal,
+                proteinG,
+                fatG,
+                carbsG,
+                confidence,
+                userEdited,
+                null,
+                null);
+    }
 }

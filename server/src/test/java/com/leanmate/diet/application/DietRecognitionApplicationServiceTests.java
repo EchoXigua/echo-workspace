@@ -3,6 +3,7 @@ package com.leanmate.diet.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -24,6 +25,8 @@ import com.leanmate.diet.dto.RecognitionTaskResponse;
 import com.leanmate.diet.dto.TextRecognitionRequest;
 import com.leanmate.diet.repository.AiRecognitionTaskEntity;
 import com.leanmate.diet.repository.AiRecognitionTaskRepository;
+import com.leanmate.food.repository.FoodCatalogEntity;
+import com.leanmate.food.repository.FoodCatalogRepository;
 import com.leanmate.user.application.CurrentUserApplicationService;
 import com.leanmate.user.repository.UserEntity;
 import com.leanmate.user.repository.UserProfileEntity;
@@ -39,16 +42,19 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Pageable;
 
 class DietRecognitionApplicationServiceTests {
 
     private static final UUID USER_ID = UUID.fromString("11111111-2222-3333-4444-555555555555");
     private static final UUID OTHER_USER_ID = UUID.fromString("99999999-2222-3333-4444-555555555555");
     private static final UUID TASK_ID = UUID.fromString("aaaaaaaa-1111-2222-3333-444444444444");
+    private static final UUID EGG_FOOD_ID = UUID.fromString("10000000-0000-0000-0000-000000000004");
 
     private CurrentUserApplicationService currentUserApplicationService;
     private UserProfileRepository userProfileRepository;
     private AiRecognitionTaskRepository aiRecognitionTaskRepository;
+    private FoodCatalogRepository foodCatalogRepository;
     private DietRecognitionClient dietRecognitionClient;
     private DietRecognitionApplicationService dietRecognitionApplicationService;
 
@@ -57,11 +63,13 @@ class DietRecognitionApplicationServiceTests {
         currentUserApplicationService = mock(CurrentUserApplicationService.class);
         userProfileRepository = mock(UserProfileRepository.class);
         aiRecognitionTaskRepository = mock(AiRecognitionTaskRepository.class);
+        foodCatalogRepository = mock(FoodCatalogRepository.class);
         dietRecognitionClient = mock(DietRecognitionClient.class);
         dietRecognitionApplicationService = new DietRecognitionApplicationService(
                 currentUserApplicationService,
                 userProfileRepository,
                 aiRecognitionTaskRepository,
+                foodCatalogRepository,
                 dietRecognitionClient,
                 new ObjectMapper().findAndRegisterModules(),
                 new LimitProperties(8, 30, 3),
@@ -71,6 +79,7 @@ class DietRecognitionApplicationServiceTests {
         when(userProfileRepository.findByUserId(USER_ID)).thenReturn(Optional.of(profile()));
         when(aiRecognitionTaskRepository.save(any(AiRecognitionTaskEntity.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
+        when(foodCatalogRepository.searchVerified(any(), any(Pageable.class))).thenReturn(List.of());
     }
 
     @Test
@@ -89,6 +98,7 @@ class DietRecognitionApplicationServiceTests {
                                 new BigDecimal("0.82666"))),
                         "识别完成",
                         Map.of("provider", "test")));
+        when(foodCatalogRepository.searchVerified(eq("鸡蛋"), any(Pageable.class))).thenReturn(List.of(eggFood()));
 
         RecognitionTaskResponse response = dietRecognitionApplicationService.createTextTask(
                 USER_ID,
@@ -100,6 +110,8 @@ class DietRecognitionApplicationServiceTests {
         assertThat(response.draftEntry()).isNotNull();
         assertThat(response.draftEntry().items()).hasSize(1);
         assertThat(response.draftEntry().items().get(0).name()).isEqualTo("鸡蛋");
+        assertThat(response.draftEntry().items().get(0).foodId()).isEqualTo(EGG_FOOD_ID);
+        assertThat(response.draftEntry().items().get(0).nutritionSource().value()).isEqualTo("ai_estimated");
         assertThat(response.draftEntry().items().get(0).weightG()).isEqualByComparingTo("100.12");
         assertThat(response.draftEntry().items().get(0).confidence()).isEqualByComparingTo("0.8267");
         assertThat(response.errorCode()).isNull();
@@ -160,5 +172,22 @@ class DietRecognitionApplicationServiceTests {
         profile.setTimezone("Asia/Shanghai");
         profile.setDailyCalorieTargetKcal(1800);
         return profile;
+    }
+
+    private FoodCatalogEntity eggFood() {
+        FoodCatalogEntity food = new FoodCatalogEntity();
+        food.setId(EGG_FOOD_ID);
+        food.setName("鸡蛋");
+        food.setNormalizedName("鸡蛋");
+        food.setCategory("protein");
+        food.setCaloriesPer100g(143);
+        food.setProteinPer100g(new BigDecimal("12.60"));
+        food.setFatPer100g(new BigDecimal("9.50"));
+        food.setCarbsPer100g(new BigDecimal("0.70"));
+        food.setSource("curated");
+        food.setConfidence(new BigDecimal("1.0000"));
+        food.setVerified(true);
+        food.setLocale("zh-CN");
+        return food;
     }
 }
