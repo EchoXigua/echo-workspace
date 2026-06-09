@@ -182,6 +182,31 @@ V1.1 可以同步返回已完成结果，也可以返回任务状态。为了兼
 - 后端统一按每 100g 营养值换算，客户端不自行计算。
 - 用户可以覆盖结果，但保存时仍需要通过营养合理性校验。
 
+### 食物库数据维护
+
+公共基础食物库不通过 Java 代码新增食物。
+
+后端启动时读取 CSV 并幂等导入：
+
+```text
+server/src/main/resources/db/seed/food-catalog/foods.csv
+server/src/main/resources/db/seed/food-catalog/aliases.csv
+server/src/main/resources/db/seed/food-catalog/portions.csv
+```
+
+以后新增公共基础食物的常规流程：
+
+```text
+整理并审核食物营养值
+追加 foods.csv 主数据
+按需追加 aliases.csv 搜索别名
+追加 portions.csv 默认份量和常见份量
+运行后端测试
+发布后由启动导入器同步到数据库
+```
+
+已经上线过的食物不建议从 CSV 删除；需要下线时将 `foods.csv` 中的 `verified` 改为 `false`。
+
 ## Weight
 
 ### GET /v1/weights

@@ -68,3 +68,7 @@ leanmate:
     max-upload-image-size-mb: ${MAX_UPLOAD_IMAGE_SIZE_MB:8}
     daily-ai-recognition-limit: ${DAILY_AI_RECOGNITION_LIMIT:30}
     daily-report-generate-limit: ${DAILY_REPORT_GENERATE_LIMIT:3}
+  food-catalog:
+    seed:
+      enabled: ${FOOD_CATALOG_SEED_ENABLED:true}
+      location: ${FOOD_CATALOG_SEED_LOCATION:classpath:db/seed/food-catalog}

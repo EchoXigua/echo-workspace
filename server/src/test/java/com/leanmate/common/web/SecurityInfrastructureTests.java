@@ -58,6 +58,7 @@ import org.springframework.web.bind.annotation.RestController;
                         + "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,"
                         + "org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration,"
                         + "org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration",
+                "leanmate.food-catalog.seed.enabled=false",
                 "leanmate.jwt.issuer=leanmate-test",
                 "leanmate.jwt.secret=leanmate-test-jwt-secret-with-enough-length",
                 "leanmate.jwt.access-token-ttl-seconds=3600",

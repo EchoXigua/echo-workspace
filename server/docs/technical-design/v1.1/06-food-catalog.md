@@ -420,6 +420,35 @@ V1.1 一开始需要建立一个小而准的基础食物库，建议 100-200 个
 - 每 100g 热量和三大营养素。
 - 至少一个默认份量。
 
+### 种子数据维护方式
+
+基础食物库数据不继续写进 Java 代码，也不在后续迁移里手写大段 `insert`。
+
+V1.1 后端启动时会读取下面 3 个 CSV 文件，并幂等 upsert 到数据库：
+
+```text
+server/src/main/resources/db/seed/food-catalog/foods.csv
+server/src/main/resources/db/seed/food-catalog/aliases.csv
+server/src/main/resources/db/seed/food-catalog/portions.csv
+```
+
+CSV 分工：
+
+| 文件 | 作用 |
+| --- | --- |
+| `foods.csv` | 食物主数据：名称、分类、每 100g 热量和三大营养素、来源、可信度、是否审核 |
+| `aliases.csv` | 搜索别名，例如“番茄”可配置“西红柿” |
+| `portions.csv` | 默认份量和常见份量，例如“1个中等大小 = 180g” |
+
+导入规则：
+
+- 以 CSV 中的 `id` 作为稳定主键，重复启动不会重复插入。
+- 已存在的食物会按 CSV 更新主数据。
+- CSV 中某个食物的别名和份量是权威配置，启动导入时会覆盖该食物原有别名和份量。
+- 不建议从 CSV 直接删除已经上线过的食物；需要下线时将 `verified` 改为 `false`，避免历史 `food_items.food_catalog_id` 失去可读性。
+- 默认开启自动导入，可通过 `FOOD_CATALOG_SEED_ENABLED=false` 关闭。
+- CSV 目录可通过 `FOOD_CATALOG_SEED_LOCATION` 覆盖，默认是 `classpath:db/seed/food-catalog`。
+
 ## 后续新增食物策略
 
 新增食物不能全部直接进入公共基础食物库，需要按来源分层处理。
@@ -433,9 +462,10 @@ V1.1 一开始需要建立一个小而准的基础食物库，建议 100-200 个
 ```text
 整理食物数据
 人工确认每 100g 营养值和默认份量
-写入 food_catalog / food_aliases / food_portions
+追加或更新 foods.csv / aliases.csv / portions.csv
 标记 source = curated，verified = true
-通过迁移脚本或管理后台发布
+运行测试确认 CSV 可被导入
+发布后由后端启动导入器写入 food_catalog / food_aliases / food_portions
 ```
 
 这类数据是最高可信来源，应优先展示在搜索结果前面。
@@ -557,6 +587,8 @@ DELETE /v1/user-foods/{foodId}
 ## 环境和配置
 
 - V1.1 本地食物库不需要新增外部 API Key。
+- 基础食物库 CSV 默认启动自动导入：`FOOD_CATALOG_SEED_ENABLED=true`。
+- 如需从外部路径加载 CSV，可设置 `FOOD_CATALOG_SEED_LOCATION`。
 - 后续接 Open Food Facts 可先无 Key 使用公开 API，但需要遵守使用政策和请求频率。
 - 后续接商业 API 时再新增环境变量。
 
@@ -578,6 +610,7 @@ DELETE /v1/user-foods/{foodId}
 
 ## 测试要点
 
+- CSV 文件可以被解析，并能导入当前基础食物、别名和份量。
 - 搜索标准名称和别名都能命中。
 - 默认份量能返回占位营养值。
 - 按重量计算营养值正确，保留合理小数位。
@@ -587,10 +620,10 @@ DELETE /v1/user-foods/{foodId}
 
 ## 上线和兼容
 
-- 需要新增 Flyway 迁移和种子数据。
+- 需要新增 Flyway 迁移、CSV 种子数据和启动导入器。
 - 已有饮食记录不需要回填 `food_catalog_id`。
 - `food_items.food_catalog_id` 可为空，保证兼容历史记录和用户自定义食物。
-- 如果种子数据质量有问题，可通过后续迁移或管理脚本修正，不影响历史饮食记录原始值。
+- 如果种子数据质量有问题，优先修正 CSV 后重新发布；这不会改写历史饮食记录中已经保存的原始营养值。
 
 ## 待确认问题
 
