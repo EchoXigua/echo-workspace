@@ -209,16 +209,19 @@ private extension HomeView {
     }
 
     func foodEntryRow(_ row: HomeMealRow) -> some View {
-        HStack(spacing: 12) {
+        let iconIsHighlighted = mealIconIsHighlighted(row)
+
+        return HStack(spacing: 12) {
             ZStack {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(row.isRecorded ? LMColors.primarySoft : LMColors.warmMuted)
+                    .fill(iconIsHighlighted ? LMColors.primarySoft : LMColors.warmMuted)
                     .frame(width: 42, height: 42)
 
-                Text(row.mealType.shortTitle)
-                    .font(LMTypography.badge)
-                    .foregroundStyle(row.isRecorded ? LMColors.primary : Color(hex: 0x7A746A))
+                Image(systemName: "fork.knife")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(iconIsHighlighted ? LMColors.primary : Color(hex: 0x7A746A))
             }
+            .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(row.mealType.title)
@@ -491,6 +494,10 @@ private extension HomeView {
     func hasRecordedMeal(_ mealType: MealType, in home: TodayHome) -> Bool {
         home.foodEntries.contains { $0.mealType == mealType }
     }
+
+    func mealIconIsHighlighted(_ row: HomeMealRow) -> Bool {
+        row.isRecorded || row.mealType == .breakfast || row.mealType == .lunch
+    }
 }
 
 private struct HomeMealRow: Identifiable {
@@ -513,19 +520,6 @@ private extension MealType {
             "晚餐"
         case .snack:
             "加餐"
-        }
-    }
-
-    var shortTitle: String {
-        switch self {
-        case .breakfast:
-            "早"
-        case .lunch:
-            "午"
-        case .dinner:
-            "晚"
-        case .snack:
-            "加"
         }
     }
 
