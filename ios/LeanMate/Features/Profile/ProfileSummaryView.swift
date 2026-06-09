@@ -9,6 +9,10 @@ struct ProfileSummaryView: View {
 
     let onLoginRequired: () -> Void
     let onProfileRequired: () -> Void
+    let onOpenDataPlan: (ProfileRoutePayload) -> Void
+    let onOpenProfileEdit: () -> Void
+    let onOpenWeightTrend: (ProfileRoutePayload) -> Void
+    let onOpenDataSync: () -> Void
     let onDebugClearLocalData: (() async throws -> Void)?
 
     init(
@@ -16,12 +20,20 @@ struct ProfileSummaryView: View {
         selectedTab: Binding<AppTab>,
         onLoginRequired: @escaping () -> Void,
         onProfileRequired: @escaping () -> Void,
+        onOpenDataPlan: @escaping (ProfileRoutePayload) -> Void = { _ in },
+        onOpenProfileEdit: @escaping () -> Void = {},
+        onOpenWeightTrend: @escaping (ProfileRoutePayload) -> Void = { _ in },
+        onOpenDataSync: @escaping () -> Void = {},
         onDebugClearLocalData: (() async throws -> Void)? = nil
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         _selectedTab = selectedTab
         self.onLoginRequired = onLoginRequired
         self.onProfileRequired = onProfileRequired
+        self.onOpenDataPlan = onOpenDataPlan
+        self.onOpenProfileEdit = onOpenProfileEdit
+        self.onOpenWeightTrend = onOpenWeightTrend
+        self.onOpenDataSync = onOpenDataSync
         self.onDebugClearLocalData = onDebugClearLocalData
     }
 
@@ -92,10 +104,7 @@ private extension ProfileSummaryView {
                 action: onProfileRequired
             )
         case .loaded(let snapshot):
-            profileCard(snapshot)
-            bodyStats(snapshot.profile)
-            streakCard(snapshot.streak)
-            planDetails(snapshot.profile)
+            loadedContent(snapshot)
         case .error(let message, let recovery):
             LMStateView(
                 kind: .error,
@@ -109,6 +118,17 @@ private extension ProfileSummaryView {
         #if DEBUG
         debugLocalDataResetCard
         #endif
+    }
+
+    @ViewBuilder
+    func loadedContent(_ snapshot: ProfileSummarySnapshot) -> some View {
+        let payload = routePayload(from: snapshot)
+
+        profileCard(snapshot)
+        bodyStats(snapshot.profile)
+        streakCard(snapshot.streak)
+        planDetails(snapshot.profile, payload: payload)
+        profileActions(payload)
     }
 
     var navHeader: some View {
@@ -241,17 +261,110 @@ private extension ProfileSummaryView {
         }
     }
 
-    func planDetails(_ profile: UserProfile) -> some View {
-        LMCard(cornerRadius: 16, padding: 14) {
-            Text("数据与计划")
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(LMColors.textBody)
+    func planDetails(_ profile: UserProfile, payload: ProfileRoutePayload) -> some View {
+        Button {
+            onOpenDataPlan(payload)
+        } label: {
+            LMCard(cornerRadius: 16, padding: 14) {
+                HStack {
+                    Text("数据与计划")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(LMColors.textBody)
 
-            profileRow(title: "BMI", value: display(profile.bmi), systemImage: "figure")
-            profileRow(title: "基础代谢", value: "\(profile.bmrKcal) kcal", systemImage: "flame")
-            profileRow(title: "身高", value: "\(display(profile.heightCm)) cm", systemImage: "ruler")
-            profileRow(title: "时区", value: profile.timezone, systemImage: "clock")
+                    Spacer()
+
+                    Text("查看全部")
+                        .font(LMTypography.badge)
+                        .foregroundStyle(LMColors.primaryDeep)
+                }
+
+                HStack(spacing: LMSpacing.small) {
+                    profileMetric(title: "BMI", value: display(profile.bmi), unit: nil)
+                    profileMetric(title: "基础代谢", value: "\(profile.bmrKcal)", unit: "kcal")
+                    profileMetric(title: "身高", value: display(profile.heightCm), unit: "cm")
+                }
+
+                Text("由身体档案估算，后续可在档案中微调。")
+                    .font(LMTypography.caption)
+                    .foregroundStyle(LMColors.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
+        .buttonStyle(.plain)
+        .accessibilityLabel("查看数据与计划详情")
+    }
+
+    func profileMetric(title: String, value: String, unit: String?) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(LMTypography.caption)
+                .foregroundStyle(LMColors.textSecondary)
+
+            HStack(alignment: .firstTextBaseline, spacing: 3) {
+                Text(value)
+                    .font(.system(size: 19, weight: .semibold))
+                    .foregroundStyle(LMColors.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.72)
+
+                if let unit {
+                    Text(unit)
+                        .font(LMTypography.caption)
+                        .foregroundStyle(LMColors.textSecondary)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(LMColors.warmSurface)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(LMColors.inputBorder, lineWidth: 1)
+        }
+    }
+
+    func profileActions(_ payload: ProfileRoutePayload) -> some View {
+        HStack(spacing: LMSpacing.small) {
+            profileActionButton(title: "档案", systemImage: "person.text.rectangle", action: onOpenProfileEdit)
+            profileActionButton(title: "趋势", systemImage: "chart.line.uptrend.xyaxis") {
+                onOpenWeightTrend(payload)
+            }
+            profileActionButton(title: "同步", systemImage: "arrow.triangle.2.circlepath", action: onOpenDataSync)
+        }
+    }
+
+    func profileActionButton(title: String, systemImage: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 8) {
+                ZStack {
+                    Circle()
+                        .fill(LMColors.primarySoft)
+                        .frame(width: 34, height: 34)
+
+                    Image(systemName: systemImage)
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(LMColors.primary)
+                }
+
+                Text(title)
+                    .font(LMTypography.bodyStrong)
+                    .foregroundStyle(LMColors.textBody)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.78)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 86)
+            .background(LMColors.card)
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(LMColors.border, lineWidth: 1)
+            }
+            .shadow(color: Color(hex: 0x143B23, alpha: 0.04), radius: 8, x: 0, y: 2)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(title)
     }
 
     // TODO: 上线前删除这个 Debug 清空入口。
@@ -427,6 +540,22 @@ private extension ProfileSummaryView {
             return "暂无"
         }
         return APICoding.dateString(from: date)
+    }
+
+    func routePayload(from snapshot: ProfileSummarySnapshot) -> ProfileRoutePayload {
+        let profile = snapshot.profile
+
+        return ProfileRoutePayload(
+            displayName: snapshot.displayName,
+            summary: "\(profile.age) 岁 · \(profile.gender.title) · \(profile.activityLevel.title)",
+            currentWeight: "\(display(profile.currentWeightKg)) kg",
+            targetWeight: "\(display(profile.targetWeightKg)) kg",
+            height: "\(display(profile.heightCm)) cm",
+            bmi: display(profile.bmi),
+            bmr: "\(profile.bmrKcal) kcal",
+            dailyTarget: "\(profile.dailyCalorieTargetKcal) kcal",
+            activityLevel: profile.activityLevel.title
+        )
     }
 
     func display(_ value: Double) -> String {

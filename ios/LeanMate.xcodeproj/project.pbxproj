@@ -56,6 +56,7 @@
 		000000000000000000001046 /* DailyReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002046 /* DailyReportView.swift */; };
 		000000000000000000001047 /* ProfileSummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002047 /* ProfileSummaryViewModel.swift */; };
 		000000000000000000001048 /* ProfileSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002048 /* ProfileSummaryView.swift */; };
+		000000000000000000001049 /* ProfileSubpages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002049 /* ProfileSubpages.swift */; };
 		00000000000000000000A001 /* APICodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B001 /* APICodingTests.swift */; };
 		00000000000000000000A002 /* MockAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B002 /* MockAPIClientTests.swift */; };
 		00000000000000000000A003 /* FileLocalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000B003 /* FileLocalStoreTests.swift */; };
@@ -129,6 +130,7 @@
 		000000000000000000002046 /* DailyReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyReportView.swift; sourceTree = "<group>"; };
 		000000000000000000002047 /* ProfileSummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSummaryViewModel.swift; sourceTree = "<group>"; };
 		000000000000000000002048 /* ProfileSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSummaryView.swift; sourceTree = "<group>"; };
+		000000000000000000002049 /* ProfileSubpages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSubpages.swift; sourceTree = "<group>"; };
 		00000000000000000000B000 /* LeanMateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeanMateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00000000000000000000B001 /* APICodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICodingTests.swift; sourceTree = "<group>"; };
 		00000000000000000000B002 /* MockAPIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAPIClientTests.swift; sourceTree = "<group>"; };
@@ -330,6 +332,7 @@
 				000000000000000000002035 /* ProfileSetupView.swift */,
 				000000000000000000002047 /* ProfileSummaryViewModel.swift */,
 				000000000000000000002048 /* ProfileSummaryView.swift */,
+				000000000000000000002049 /* ProfileSubpages.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -553,6 +556,7 @@
 				000000000000000000001046 /* DailyReportView.swift in Sources */,
 				000000000000000000001047 /* ProfileSummaryViewModel.swift in Sources */,
 				000000000000000000001048 /* ProfileSummaryView.swift in Sources */,
+				000000000000000000001049 /* ProfileSubpages.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

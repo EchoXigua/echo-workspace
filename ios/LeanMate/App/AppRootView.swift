@@ -8,6 +8,10 @@ struct AppRootView: View {
         NavigationStack(path: $router.path) {
             rootContent
                 .navigationBarBackButtonHidden()
+                .navigationDestination(for: AppRoute.self) { route in
+                    routeDestination(route)
+                        .navigationBarBackButtonHidden()
+                }
         }
         .environment(\.appEnvironment, environment)
         .task {
@@ -52,8 +56,12 @@ private extension AppRootView {
                 pendingDietEntryMode: $router.pendingDietEntryMode,
                 pendingDietEntryMealType: $router.pendingDietEntryMealType,
                 isVisitor: true,
+                reloadKey: router.contentReloadKey,
                 onLoginRequired: router.showOnboarding,
-                onProfileRequired: router.showVisitorProfileSetup
+                onProfileRequired: router.showProfileSetupRoute,
+                onOpenProfileDataPlan: router.showProfileDataPlan,
+                onOpenProfileWeightTrend: router.showProfileWeightTrend,
+                onOpenProfileDataSync: router.showProfileDataSync
             )
         case .home:
             MainTabContainerView(
@@ -62,8 +70,40 @@ private extension AppRootView {
                 pendingDietEntryMode: $router.pendingDietEntryMode,
                 pendingDietEntryMealType: $router.pendingDietEntryMealType,
                 isVisitor: false,
+                reloadKey: router.contentReloadKey,
                 onLoginRequired: router.showOnboarding,
-                onProfileRequired: router.showProfileSetup
+                onProfileRequired: router.showProfileSetupRoute,
+                onOpenProfileDataPlan: router.showProfileDataPlan,
+                onOpenProfileWeightTrend: router.showProfileWeightTrend,
+                onOpenProfileDataSync: router.showProfileDataSync
+            )
+        }
+    }
+
+    @ViewBuilder
+    func routeDestination(_ route: AppRoute) -> some View {
+        switch route {
+        case .profileSetup:
+            ProfileSetupView(
+                viewModel: ProfileSetupViewModel(
+                    apiClient: environment.apiClient,
+                    tokenStore: environment.tokenStore,
+                    localStore: environment.localStore,
+                    savesLocally: router.rootState == .visitorHome
+                ),
+                onCompleted: router.completeProfileSetupRoute,
+                onAuthExpired: router.showOnboarding,
+                onSkipped: router.popRoute,
+                usesBackButtonIcon: true
+            )
+        case .profileDataPlan(let payload):
+            ProfileDataPlanDetailView(payload: payload)
+        case .profileWeightTrend(let payload):
+            ProfileWeightTrendView(payload: payload)
+        case .profileDataSync:
+            ProfileDataSyncView(
+                isVisitor: router.rootState == .visitorHome,
+                onLoginRequired: router.showOnboarding
             )
         }
     }
@@ -113,8 +153,12 @@ private struct MainTabContainerView: View {
     @Binding var pendingDietEntryMode: DietEntryLaunchMode?
     @Binding var pendingDietEntryMealType: MealType?
     let isVisitor: Bool
+    let reloadKey: Int
     let onLoginRequired: () -> Void
     let onProfileRequired: () -> Void
+    let onOpenProfileDataPlan: (ProfileRoutePayload) -> Void
+    let onOpenProfileWeightTrend: (ProfileRoutePayload) -> Void
+    let onOpenProfileDataSync: () -> Void
 
     var body: some View {
         switch selectedTab {
@@ -131,6 +175,7 @@ private struct MainTabContainerView: View {
                 onLoginRequired: onLoginRequired,
                 onProfileRequired: onProfileRequired
             )
+            .id(reloadKey)
         case .record:
             DietEntryView(
                 viewModel: DietEntryViewModel(
@@ -165,8 +210,13 @@ private struct MainTabContainerView: View {
                 selectedTab: $selectedTab,
                 onLoginRequired: onLoginRequired,
                 onProfileRequired: onProfileRequired,
+                onOpenDataPlan: onOpenProfileDataPlan,
+                onOpenProfileEdit: onProfileRequired,
+                onOpenWeightTrend: onOpenProfileWeightTrend,
+                onOpenDataSync: onOpenProfileDataSync,
                 onDebugClearLocalData: debugClearLocalData
             )
+            .id(reloadKey)
         }
     }
 

@@ -47,17 +47,20 @@ struct ProfileSetupView: View {
     let onCompleted: () -> Void
     let onAuthExpired: () -> Void
     let onSkipped: () -> Void
+    let usesBackButtonIcon: Bool
 
     init(
         viewModel: ProfileSetupViewModel,
         onCompleted: @escaping () -> Void,
         onAuthExpired: @escaping () -> Void,
-        onSkipped: @escaping () -> Void = {}
+        onSkipped: @escaping () -> Void = {},
+        usesBackButtonIcon: Bool = false
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.onCompleted = onCompleted
         self.onAuthExpired = onAuthExpired
         self.onSkipped = onSkipped
+        self.usesBackButtonIcon = usesBackButtonIcon
     }
 
     var body: some View {
@@ -99,7 +102,7 @@ private extension ProfileSetupView {
         ZStack {
             HStack {
                 Button(action: onSkipped) {
-                    Image(systemName: "xmark")
+                    Image(systemName: usesBackButtonIcon ? "chevron.left" : "xmark")
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundStyle(Color(hex: 0x33483A))
                         .frame(width: 42, height: 42)
@@ -111,7 +114,7 @@ private extension ProfileSetupView {
                         }
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("稍后再说")
+                .accessibilityLabel(usesBackButtonIcon ? "返回" : "稍后再说")
 
                 Spacer()
 
