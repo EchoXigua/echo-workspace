@@ -75,4 +75,52 @@ final class HomeViewModelTests: XCTestCase {
             XCTFail("Expected login recovery")
         }
     }
+
+    func testMealHeaderTitleShowsStartWhenNoMealRecorded() {
+        XCTAssertEqual(
+            HomeMealSummaryFormatter.headerActionTitle(foodEntries: []),
+            "开始记录"
+        )
+    }
+
+    func testMealHeaderTitleShowsMissingMealCountWhenOnlyLunchRecorded() {
+        XCTAssertEqual(
+            HomeMealSummaryFormatter.headerActionTitle(foodEntries: [makeFoodEntrySummary(.lunch)]),
+            "2餐可补录"
+        )
+    }
+
+    func testMealHeaderTitleShowsSingleMissingMealName() {
+        XCTAssertEqual(
+            HomeMealSummaryFormatter.headerActionTitle(
+                foodEntries: [
+                    makeFoodEntrySummary(.breakfast),
+                    makeFoodEntrySummary(.lunch)
+                ]
+            ),
+            "晚餐可补录"
+        )
+    }
+
+    func testMealHeaderTitleShowsRecordedWhenBaseMealsComplete() {
+        XCTAssertEqual(
+            HomeMealSummaryFormatter.headerActionTitle(
+                foodEntries: [
+                    makeFoodEntrySummary(.breakfast),
+                    makeFoodEntrySummary(.lunch),
+                    makeFoodEntrySummary(.dinner)
+                ]
+            ),
+            "今日已记录"
+        )
+    }
+
+    private func makeFoodEntrySummary(_ mealType: MealType) -> FoodEntrySummary {
+        FoodEntrySummary(
+            id: UUID(),
+            mealType: mealType,
+            totalCaloriesKcal: 235,
+            itemNames: ["鸡蛋", "豆浆"]
+        )
+    }
 }

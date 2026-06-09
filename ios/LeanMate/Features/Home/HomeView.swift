@@ -461,13 +461,7 @@ private extension HomeView {
     }
 
     func mealHeaderActionTitle(_ home: TodayHome) -> String {
-        if !hasRecordedMeal(.dinner, in: home) {
-            return "晚餐可补录"
-        }
-        if home.foodEntries.isEmpty {
-            return "开始记录"
-        }
-        return "今日已记录"
+        HomeMealSummaryFormatter.headerActionTitle(foodEntries: home.foodEntries)
     }
 
     func mealRows(_ home: TodayHome) -> [HomeMealRow] {
@@ -507,6 +501,28 @@ private struct HomeMealRow: Identifiable {
     let totalCaloriesKcal: Int
     let description: String
     let isRecorded: Bool
+}
+
+enum HomeMealSummaryFormatter {
+    private static let baseMealTypes: [MealType] = [.breakfast, .lunch, .dinner]
+
+    static func headerActionTitle(foodEntries: [FoodEntrySummary]) -> String {
+        guard !foodEntries.isEmpty else {
+            return "开始记录"
+        }
+
+        let recordedMealTypes = foodEntries.map(\.mealType)
+        let missingMealTypes = baseMealTypes.filter { !recordedMealTypes.contains($0) }
+
+        switch missingMealTypes.count {
+        case 0:
+            return "今日已记录"
+        case 1:
+            return "\(missingMealTypes[0].title)可补录"
+        default:
+            return "\(missingMealTypes.count)餐可补录"
+        }
+    }
 }
 
 private extension MealType {
