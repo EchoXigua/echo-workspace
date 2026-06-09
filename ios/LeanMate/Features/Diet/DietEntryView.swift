@@ -6,6 +6,7 @@ struct DietEntryView: View {
     @StateObject private var weightViewModel: WeightViewModel
     @Binding private var selectedTab: AppTab
     @Binding private var pendingLaunchMode: DietEntryLaunchMode?
+    @Binding private var pendingLaunchMealType: MealType?
     @State private var showsWeightSheet = false
     @State private var showsDeleteConfirmation = false
     @State private var showsCameraPicker = false
@@ -20,6 +21,7 @@ struct DietEntryView: View {
         weightViewModel: WeightViewModel,
         selectedTab: Binding<AppTab>,
         pendingLaunchMode: Binding<DietEntryLaunchMode?> = .constant(nil),
+        pendingLaunchMealType: Binding<MealType?> = .constant(nil),
         isVisitor: Bool = false,
         onLoginRequired: @escaping () -> Void
     ) {
@@ -27,6 +29,7 @@ struct DietEntryView: View {
         _weightViewModel = StateObject(wrappedValue: weightViewModel)
         _selectedTab = selectedTab
         _pendingLaunchMode = pendingLaunchMode
+        _pendingLaunchMealType = pendingLaunchMealType
         self.isVisitor = isVisitor
         self.onLoginRequired = onLoginRequired
     }
@@ -70,8 +73,13 @@ struct DietEntryView: View {
         .onChange(of: photoPickerItem) { _, newItem in
             loadSelectedPhoto(newItem)
         }
-        .onAppear(perform: applyPendingLaunchMode)
+        .onAppear {
+            applyPendingLaunchMode(allowDefaultWhenNoPending: true)
+        }
         .onChange(of: pendingLaunchMode) { _, _ in
+            applyPendingLaunchMode()
+        }
+        .onChange(of: pendingLaunchMealType) { _, _ in
             applyPendingLaunchMode()
         }
     }
@@ -1083,6 +1091,7 @@ private extension DietEntryView {
     func goHomeAfterResult() {
         viewModel.selectSelectionMode()
         pendingLaunchMode = nil
+        pendingLaunchMealType = nil
         selectedTab = .home
     }
 
@@ -1160,21 +1169,32 @@ private extension DietEntryView {
         }
     }
 
-    func applyPendingLaunchMode() {
-        guard let pendingLaunchMode else {
+    func applyPendingLaunchMode(allowDefaultWhenNoPending: Bool = false) {
+        let launchMode = pendingLaunchMode
+        let launchMealType = pendingLaunchMealType
+        let hasPendingLaunch = launchMode != nil || launchMealType != nil
+
+        guard hasPendingLaunch || allowDefaultWhenNoPending else {
             return
         }
 
-        switch pendingLaunchMode {
-        case .photo:
-            viewModel.selectPhotoMode()
-        case .text:
-            viewModel.selectTextMode()
-        case .manual:
-            viewModel.selectManualMode()
+        viewModel.applyLaunchMealType(launchMealType)
+
+        if let launchMode {
+            switch launchMode {
+            case .photo:
+                viewModel.selectPhotoMode()
+            case .text:
+                viewModel.selectTextMode()
+            case .manual:
+                viewModel.selectManualMode()
+            }
         }
 
-        self.pendingLaunchMode = nil
+        if hasPendingLaunch {
+            self.pendingLaunchMode = nil
+            self.pendingLaunchMealType = nil
+        }
     }
 }
 

@@ -33,6 +33,7 @@ struct ProfileSummarySnapshot: Sendable {
 final class ProfileSummaryViewModel: ObservableObject {
     private let apiClient: (any APIClient)?
     private let tokenStore: (any TokenStore)?
+    private let localStore: (any LocalStore)?
     private let startsAsVisitor: Bool
     private var shownMilestoneDays: Set<Int> = []
 
@@ -53,17 +54,19 @@ final class ProfileSummaryViewModel: ObservableObject {
     ) {
         self.apiClient = apiClient
         self.tokenStore = tokenStore
+        self.localStore = nil
         self.startsAsVisitor = startsAsVisitor
     }
 
-    private init() {
+    private init(localStore: any LocalStore) {
         self.apiClient = nil
         self.tokenStore = nil
+        self.localStore = localStore
         self.startsAsVisitor = true
     }
 
-    static func visitor() -> ProfileSummaryViewModel {
-        ProfileSummaryViewModel()
+    static func visitor(localStore: any LocalStore) -> ProfileSummaryViewModel {
+        ProfileSummaryViewModel(localStore: localStore)
     }
 
     func load() async {
@@ -79,8 +82,7 @@ final class ProfileSummaryViewModel: ObservableObject {
         }
 
         if startsAsVisitor {
-            state = .visitor
-            milestoneToPresent = nil
+            await refreshVisitorProfile()
             return
         }
 
@@ -129,6 +131,44 @@ final class ProfileSummaryViewModel: ObservableObject {
 }
 
 private extension ProfileSummaryViewModel {
+    func refreshVisitorProfile() async {
+        guard let localStore else {
+            state = .visitor
+            milestoneToPresent = nil
+            return
+        }
+
+        state = .loading
+
+        do {
+            guard let profile = try await localStore.localProfile() else {
+                state = .profileIncomplete
+                milestoneToPresent = nil
+                return
+            }
+
+            let user = CurrentUser(
+                id: UUID(),
+                nickname: "本地游客",
+                avatarUrl: nil,
+                status: .active,
+                profileCompleted: true,
+                createdAt: Date()
+            )
+            state = .loaded(
+                ProfileSummarySnapshot(
+                    user: user,
+                    profile: profile,
+                    streak: Streak(currentDays: 0, longestDays: 0, lastActiveDate: nil, milestones: [])
+                )
+            )
+            milestoneToPresent = nil
+        } catch {
+            state = .error(AppError(error).localizedDescription, .retry)
+            milestoneToPresent = nil
+        }
+    }
+
     func presentMilestoneIfNeeded(from streak: Streak) {
         guard milestoneToPresent == nil else {
             return

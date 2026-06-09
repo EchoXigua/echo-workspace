@@ -89,7 +89,11 @@ private extension OnboardingView {
                 }
             }
 
-            Button(action: onVisitorPreview) {
+            Button {
+                Task {
+                    await handleLogin()
+                }
+            } label: {
                 Text("随便看看")
                     .font(LMTypography.bodyStrong)
                     .foregroundStyle(LMColors.primaryDeep)
@@ -157,7 +161,7 @@ private extension OnboardingView {
     }
 
     func handleLogin() async {
-        guard let destination = await viewModel.mockLogin() else {
+        guard let destination = await viewModel.startGuestSession() else {
             return
         }
 
@@ -166,6 +170,8 @@ private extension OnboardingView {
             onProfileRequired()
         case .home:
             onCompleted()
+        case .visitorHome:
+            onVisitorPreview()
         }
     }
 }
@@ -175,7 +181,8 @@ struct OnboardingView_Previews: PreviewProvider {
         OnboardingView(
             viewModel: OnboardingViewModel(
                 apiClient: MockAPIClient(scenario: .profileIncomplete, delayNanoseconds: 0),
-                tokenStore: InMemoryTokenStore()
+                tokenStore: InMemoryTokenStore(),
+                localStore: InMemoryLocalStore()
             ),
             onProfileRequired: {},
             onCompleted: {}

@@ -3,20 +3,26 @@ import SwiftUI
 struct ProfileSummaryView: View {
     @StateObject private var viewModel: ProfileSummaryViewModel
     @Binding private var selectedTab: AppTab
+    @State private var showsDebugResetConfirmation = false
+    @State private var debugResetErrorMessage: String?
+    @State private var isDebugResetting = false
 
     let onLoginRequired: () -> Void
     let onProfileRequired: () -> Void
+    let onDebugClearLocalData: (() async throws -> Void)?
 
     init(
         viewModel: ProfileSummaryViewModel,
         selectedTab: Binding<AppTab>,
         onLoginRequired: @escaping () -> Void,
-        onProfileRequired: @escaping () -> Void
+        onProfileRequired: @escaping () -> Void,
+        onDebugClearLocalData: (() async throws -> Void)? = nil
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         _selectedTab = selectedTab
         self.onLoginRequired = onLoginRequired
         self.onProfileRequired = onProfileRequired
+        self.onDebugClearLocalData = onDebugClearLocalData
     }
 
     var body: some View {
@@ -37,22 +43,39 @@ struct ProfileSummaryView: View {
         .task {
             await viewModel.load()
         }
+        .alert("清空本地数据？", isPresented: $showsDebugResetConfirmation) {
+            Button("取消", role: .cancel) {}
+            Button("清空", role: .destructive) {
+                Task {
+                    await debugClearLocalData()
+                }
+            }
+        } message: {
+            Text("会清除游客会话、身体档案、饮食和体重本地记录、草稿与待同步数据。")
+        }
+        .alert("清理失败", isPresented: debugResetErrorBinding) {
+            Button("知道了", role: .cancel) {
+                debugResetErrorMessage = nil
+            }
+        } message: {
+            Text(debugResetErrorMessage ?? "请稍后再试。")
+        }
     }
 }
 
 private extension ProfileSummaryView {
     @ViewBuilder
     var content: some View {
+        navHeader
+
         switch viewModel.state {
         case .idle, .loading:
-            navHeader
             LMStateView(
                 kind: .loading,
                 title: "正在读取我的计划",
                 message: "档案、目标和连续打卡会以后端返回为准。"
             )
         case .visitor:
-            navHeader
             LMStateView(
                 kind: .empty,
                 title: "登录后查看我的计划",
@@ -61,7 +84,6 @@ private extension ProfileSummaryView {
                 action: onLoginRequired
             )
         case .profileIncomplete:
-            navHeader
             LMStateView(
                 kind: .empty,
                 title: "先完成档案",
@@ -70,13 +92,11 @@ private extension ProfileSummaryView {
                 action: onProfileRequired
             )
         case .loaded(let snapshot):
-            navHeader
             profileCard(snapshot)
             bodyStats(snapshot.profile)
             streakCard(snapshot.streak)
             planDetails(snapshot.profile)
         case .error(let message, let recovery):
-            navHeader
             LMStateView(
                 kind: .error,
                 title: "我的页加载失败",
@@ -85,6 +105,10 @@ private extension ProfileSummaryView {
                 action: recovery == .login ? onLoginRequired : retry
             )
         }
+
+        #if DEBUG
+        debugLocalDataResetCard
+        #endif
     }
 
     var navHeader: some View {
@@ -230,6 +254,60 @@ private extension ProfileSummaryView {
         }
     }
 
+    // TODO: 上线前删除这个 Debug 清空入口。
+    @ViewBuilder
+    var debugLocalDataResetCard: some View {
+        if onDebugClearLocalData != nil {
+            LMCard(cornerRadius: 16, padding: 14) {
+                HStack(spacing: 12) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(LMColors.dangerSoft)
+                            .frame(width: 38, height: 38)
+
+                        Image(systemName: "trash")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(LMColors.danger)
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Debug 本地数据")
+                            .font(LMTypography.bodyStrong)
+                            .foregroundStyle(LMColors.textBody)
+
+                        Text("清空游客会话、本地档案、饮食和体重记录。")
+                            .font(LMTypography.caption)
+                            .foregroundStyle(LMColors.textSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+
+                    Spacer()
+
+                    Button {
+                        showsDebugResetConfirmation = true
+                    } label: {
+                        Group {
+                            if isDebugResetting {
+                                ProgressView()
+                                    .tint(LMColors.danger)
+                            } else {
+                                Text("清空")
+                                    .font(LMTypography.badge)
+                            }
+                        }
+                        .foregroundStyle(LMColors.danger)
+                        .frame(width: 62, height: 34)
+                        .background(LMColors.dangerSoft)
+                        .clipShape(RoundedRectangle(cornerRadius: 17, style: .continuous))
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(isDebugResetting)
+                    .accessibilityLabel("清空本地数据")
+                }
+            }
+        }
+    }
+
     func profileRow(title: String, value: String, systemImage: String) -> some View {
         HStack(spacing: 12) {
             ZStack {
@@ -302,6 +380,34 @@ private extension ProfileSummaryView {
     func retry() {
         Task {
             await viewModel.refresh()
+        }
+    }
+
+    var debugResetErrorBinding: Binding<Bool> {
+        Binding(
+            get: { debugResetErrorMessage != nil },
+            set: { isPresented in
+                if !isPresented {
+                    debugResetErrorMessage = nil
+                }
+            }
+        )
+    }
+
+    func debugClearLocalData() async {
+        guard let onDebugClearLocalData else {
+            return
+        }
+
+        isDebugResetting = true
+        defer {
+            isDebugResetting = false
+        }
+
+        do {
+            try await onDebugClearLocalData()
+        } catch {
+            debugResetErrorMessage = AppError(error).errorDescription ?? "请稍后再试。"
         }
     }
 

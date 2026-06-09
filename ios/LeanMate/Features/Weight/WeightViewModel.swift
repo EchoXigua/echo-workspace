@@ -17,14 +17,20 @@ final class WeightViewModel: ObservableObject {
     @Published private(set) var savedEntry: WeightEntry?
 
     private let apiClient: APIClient
+    private let localStore: (any LocalStore)?
+    private let savesLocally: Bool
 
     init(
         apiClient: APIClient,
+        localStore: (any LocalStore)? = nil,
+        savesLocally: Bool = false,
         recordDate: Date = Date(),
         weightText: String = "",
         noteText: String = ""
     ) {
         self.apiClient = apiClient
+        self.localStore = localStore
+        self.savesLocally = savesLocally
         self.recordDate = recordDate
         self.weightText = weightText
         self.noteText = noteText
@@ -44,14 +50,25 @@ final class WeightViewModel: ObservableObject {
 
         state = .saving
         do {
-            let result = try await apiClient.saveWeight(
-                SaveWeightEntryRequest(
-                    recordDate: recordDate,
-                    weightKg: weight,
-                    note: noteText.trimmed.nilIfEmpty
-                )
+            let request = SaveWeightEntryRequest(
+                recordDate: recordDate,
+                weightKg: weight,
+                note: noteText.trimmed.nilIfEmpty
             )
-            savedEntry = result.entry
+            if savesLocally, let localStore {
+                let entry = WeightEntry(
+                    recordDate: request.recordDate,
+                    weightKg: request.weightKg,
+                    note: request.note,
+                    id: UUID(),
+                    createdAt: Date()
+                )
+                try await localStore.saveLocalWeightEntry(entry)
+                savedEntry = entry
+            } else {
+                let result = try await apiClient.saveWeight(request)
+                savedEntry = result.entry
+            }
             state = .saved
             return true
         } catch {

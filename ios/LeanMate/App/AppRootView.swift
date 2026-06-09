@@ -26,7 +26,8 @@ private extension AppRootView {
             OnboardingView(
                 viewModel: OnboardingViewModel(
                     apiClient: environment.apiClient,
-                    tokenStore: environment.tokenStore
+                    tokenStore: environment.tokenStore,
+                    localStore: environment.localStore
                 ),
                 onProfileRequired: router.showProfileSetup,
                 onCompleted: router.showHome,
@@ -36,25 +37,30 @@ private extension AppRootView {
             ProfileSetupView(
                 viewModel: ProfileSetupViewModel(
                     apiClient: environment.apiClient,
-                    tokenStore: environment.tokenStore
+                    tokenStore: environment.tokenStore,
+                    localStore: environment.localStore,
+                    savesLocally: router.profileSetupIsVisitor
                 ),
-                onCompleted: router.showHome,
-                onAuthExpired: router.showOnboarding
+                onCompleted: router.profileSetupIsVisitor ? router.showVisitorHome : router.showHome,
+                onAuthExpired: router.showOnboarding,
+                onSkipped: router.profileSetupIsVisitor ? router.showVisitorHome : router.showHome
             )
         case .visitorHome:
             MainTabContainerView(
                 environment: environment,
                 selectedTab: $router.selectedTab,
                 pendingDietEntryMode: $router.pendingDietEntryMode,
+                pendingDietEntryMealType: $router.pendingDietEntryMealType,
                 isVisitor: true,
                 onLoginRequired: router.showOnboarding,
-                onProfileRequired: router.showProfileSetup
+                onProfileRequired: router.showVisitorProfileSetup
             )
         case .home:
             MainTabContainerView(
                 environment: environment,
                 selectedTab: $router.selectedTab,
                 pendingDietEntryMode: $router.pendingDietEntryMode,
+                pendingDietEntryMealType: $router.pendingDietEntryMealType,
                 isVisitor: false,
                 onLoginRequired: router.showOnboarding,
                 onProfileRequired: router.showProfileSetup
@@ -82,16 +88,16 @@ private extension AppRootView {
 
         do {
             guard try await environment.tokenStore.loadTokens() != nil else {
-                router.showOnboarding()
+                if try await environment.localStore.guestSession() != nil {
+                    router.showVisitorHome()
+                } else {
+                    router.showOnboarding()
+                }
                 return
             }
 
-            let user = try await environment.apiClient.currentUser()
-            if user.profileCompleted {
-                router.showHome()
-            } else {
-                router.showProfileSetup()
-            }
+            _ = try await environment.apiClient.currentUser()
+            router.showHome()
         } catch {
             if case AppError.unauthorized = AppError(error) {
                 try? await environment.tokenStore.clearTokens()
@@ -105,6 +111,7 @@ private struct MainTabContainerView: View {
     let environment: AppEnvironment
     @Binding var selectedTab: AppTab
     @Binding var pendingDietEntryMode: DietEntryLaunchMode?
+    @Binding var pendingDietEntryMealType: MealType?
     let isVisitor: Bool
     let onLoginRequired: () -> Void
     let onProfileRequired: () -> Void
@@ -119,6 +126,7 @@ private struct MainTabContainerView: View {
                 ),
                 selectedTab: $selectedTab,
                 pendingDietEntryMode: $pendingDietEntryMode,
+                pendingDietEntryMealType: $pendingDietEntryMealType,
                 isVisitor: isVisitor,
                 onLoginRequired: onLoginRequired,
                 onProfileRequired: onProfileRequired
@@ -130,9 +138,14 @@ private struct MainTabContainerView: View {
                     localStore: environment.localStore,
                     savesLocally: isVisitor
                 ),
-                weightViewModel: WeightViewModel(apiClient: environment.apiClient),
+                weightViewModel: WeightViewModel(
+                    apiClient: environment.apiClient,
+                    localStore: environment.localStore,
+                    savesLocally: isVisitor
+                ),
                 selectedTab: $selectedTab,
                 pendingLaunchMode: $pendingDietEntryMode,
+                pendingLaunchMealType: $pendingDietEntryMealType,
                 isVisitor: isVisitor,
                 onLoginRequired: onLoginRequired
             )
@@ -145,14 +158,29 @@ private struct MainTabContainerView: View {
             )
         case .profile:
             ProfileSummaryView(
-                viewModel: isVisitor ? ProfileSummaryViewModel.visitor() : ProfileSummaryViewModel(
+                viewModel: isVisitor ? ProfileSummaryViewModel.visitor(localStore: environment.localStore) : ProfileSummaryViewModel(
                     apiClient: environment.apiClient,
                     tokenStore: environment.tokenStore
                 ),
                 selectedTab: $selectedTab,
                 onLoginRequired: onLoginRequired,
-                onProfileRequired: onProfileRequired
+                onProfileRequired: onProfileRequired,
+                onDebugClearLocalData: debugClearLocalData
             )
         }
     }
+
+    #if DEBUG
+    func debugClearLocalData() async throws {
+        try await environment.localStore.clearAllLocalData()
+        try await environment.tokenStore.clearTokens()
+        await MainActor.run {
+            onLoginRequired()
+        }
+    }
+    #else
+    var debugClearLocalData: (() async throws -> Void)? {
+        nil
+    }
+    #endif
 }

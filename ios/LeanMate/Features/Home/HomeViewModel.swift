@@ -5,7 +5,7 @@ enum HomeState {
     case idle
     case loading
     case visitor
-    case profileIncomplete
+    case profileIncomplete(TodayHome)
     case empty(TodayHome)
     case loaded(TodayHome)
     case error(String, HomeErrorRecovery)
@@ -78,7 +78,7 @@ final class HomeViewModel: ObservableObject {
         do {
             let home = try await apiClient.todayHome(date: nil)
             guard home.profileCompleted else {
-                state = .profileIncomplete
+                state = .profileIncomplete(home)
                 return
             }
 
@@ -106,35 +106,43 @@ private extension HomeViewModel {
 
         do {
             let today = Date()
+            let profile = try await localStore.localProfile()
             let entries = try await localStore.localDietEntries(date: today)
-            guard !entries.isEmpty else {
-                state = .visitor
+            let weights = try await localStore.localWeightEntries()
+            let home = makeVisitorHome(date: today, profile: profile, entries: entries, weights: weights)
+
+            guard profile != nil else {
+                state = .profileIncomplete(home)
                 return
             }
 
-            state = .loaded(makeVisitorHome(date: today, entries: entries))
+            state = .loaded(home)
         } catch {
             state = .error(AppError(error).localizedDescription, .retry)
         }
     }
 
-    func makeVisitorHome(date: Date, entries: [FoodEntry]) -> TodayHome {
-        let calorieTarget = 1500
+    func makeVisitorHome(date: Date, profile: UserProfile?, entries: [FoodEntry], weights: [WeightEntry]) -> TodayHome {
+        let calorieTarget = profile?.dailyCalorieTargetKcal ?? 0
         let caloriesIn = entries.map(\.totalCaloriesKcal).reduce(0, +)
         let protein = entries.map(\.totalProteinG).reduce(0, +)
         let fat = entries.map(\.totalFatG).reduce(0, +)
         let carbs = entries.map(\.totalCarbsG).reduce(0, +)
+        let latestWeight = weights
+            .filter { $0.recordDate <= date || Calendar.current.isDate($0.recordDate, inSameDayAs: date) }
+            .sorted { $0.recordDate > $1.recordDate }
+            .first
 
         return TodayHome(
             date: date,
-            profileCompleted: true,
+            profileCompleted: profile != nil,
             calorieTargetKcal: calorieTarget,
             caloriesInKcal: caloriesIn,
             remainingCaloriesKcal: max(calorieTarget - caloriesIn, 0),
-            proteinG: protein,
-            fatG: fat,
-            carbsG: carbs,
-            currentWeightKg: nil,
+            proteinG: entries.isEmpty ? nil : protein,
+            fatG: entries.isEmpty ? nil : fat,
+            carbsG: entries.isEmpty ? nil : carbs,
+            currentWeightKg: latestWeight?.weightKg ?? profile?.currentWeightKg,
             streakDays: 1,
             reportSummary: nil,
             foodEntries: entries.map { entry in

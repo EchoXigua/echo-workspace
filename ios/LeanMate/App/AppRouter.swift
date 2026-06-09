@@ -54,27 +54,39 @@ final class AppRouter: ObservableObject {
     @Published var rootState: AppRootState = .coldStart
     @Published var selectedTab: AppTab = .home
     @Published var pendingDietEntryMode: DietEntryLaunchMode?
+    @Published var pendingDietEntryMealType: MealType?
     @Published var path = NavigationPath()
+    @Published var profileSetupIsVisitor = false
 
     func showOnboarding() {
         path = NavigationPath()
+        profileSetupIsVisitor = false
         rootState = .onboarding
     }
 
     func showProfileSetup() {
         path = NavigationPath()
+        profileSetupIsVisitor = false
+        rootState = .profileSetup
+    }
+
+    func showVisitorProfileSetup() {
+        path = NavigationPath()
+        profileSetupIsVisitor = true
         rootState = .profileSetup
     }
 
     func showVisitorHome() {
         path = NavigationPath()
         selectedTab = .home
+        profileSetupIsVisitor = false
         rootState = .visitorHome
     }
 
     func showHome() {
         path = NavigationPath()
         selectedTab = .home
+        profileSetupIsVisitor = false
         rootState = .home
     }
 }

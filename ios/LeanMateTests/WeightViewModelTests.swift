@@ -37,6 +37,29 @@ final class WeightViewModelTests: XCTestCase {
         XCTAssertEqual(request?.note, "晨起空腹")
     }
 
+    func testVisitorWeightSavePersistsLocally() async throws {
+        let apiClient = WeightAPIClientStub()
+        let localStore = InMemoryLocalStore()
+        let viewModel = WeightViewModel(
+            apiClient: apiClient,
+            localStore: localStore,
+            savesLocally: true,
+            recordDate: MockData.today,
+            weightText: "56.2",
+            noteText: "本地"
+        )
+
+        let succeeded = await viewModel.save()
+        let saveCallCount = await apiClient.saveWeightCallCount
+        let entries = try await localStore.localWeightEntries()
+
+        XCTAssertTrue(succeeded)
+        XCTAssertEqual(saveCallCount, 0)
+        XCTAssertEqual(entries.count, 1)
+        XCTAssertEqual(entries[0].weightKg, 56.2)
+        XCTAssertEqual(entries[0].note, "本地")
+    }
+
     func testWeightSaveFailureKeepsInput() async {
         let apiClient = WeightAPIClientStub(saveWeightResult: .failure(.networkUnavailable))
         let viewModel = WeightViewModel(

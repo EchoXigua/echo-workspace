@@ -17,13 +17,14 @@ enum ProfileField: Hashable {
     case height
     case currentWeight
     case targetWeight
-    case timezone
 }
 
 @MainActor
 final class ProfileSetupViewModel: ObservableObject {
     private let apiClient: any APIClient
     private let tokenStore: (any TokenStore)?
+    private let localStore: (any LocalStore)?
+    private let savesLocally: Bool
 
     @Published private(set) var state: ProfileSetupState = .idle
     @Published private(set) var fieldErrors: [ProfileField: String] = [:]
@@ -54,10 +55,14 @@ final class ProfileSetupViewModel: ObservableObject {
     init(
         apiClient: any APIClient,
         tokenStore: (any TokenStore)? = nil,
+        localStore: (any LocalStore)? = nil,
+        savesLocally: Bool = false,
         timezoneIdentifier: String = TimeZone.current.identifier
     ) {
         self.apiClient = apiClient
         self.tokenStore = tokenStore
+        self.localStore = localStore
+        self.savesLocally = savesLocally
         self.timezoneIdentifier = timezoneIdentifier
     }
 
@@ -69,9 +74,15 @@ final class ProfileSetupViewModel: ObservableObject {
         state = .loadingProfile
 
         do {
-            let payload = try await apiClient.profile()
-            if let profile = payload.profile {
-                apply(profile)
+            if savesLocally, let localStore {
+                if let profile = try await localStore.localProfile() {
+                    apply(profile)
+                }
+            } else {
+                let payload = try await apiClient.profile()
+                if let profile = payload.profile {
+                    apply(profile)
+                }
             }
             state = .editing
         } catch {
@@ -93,11 +104,20 @@ final class ProfileSetupViewModel: ObservableObject {
         state = .saving
 
         do {
-            let payload = try await apiClient.saveProfile(request)
-            guard let profile = payload.profile else {
-                state = .saveFailed("目标生成失败，请稍后重试")
-                return false
+            let profile: UserProfile
+            if savesLocally, let localStore {
+                profile = ProfileGoalCalculator.profile(from: request)
+                try await localStore.saveLocalProfile(profile)
+                try await localStore.saveGuestSession(GuestSession(startedAt: Date(), updatedAt: Date()))
+            } else {
+                let payload = try await apiClient.saveProfile(request)
+                guard let saved = payload.profile else {
+                    state = .saveFailed("目标生成失败，请稍后重试")
+                    return false
+                }
+                profile = saved
             }
+
             savedProfile = profile
             state = .saveSucceeded
             return true
@@ -124,9 +144,7 @@ private extension ProfileSetupViewModel {
         fieldErrors.removeAll()
 
         let trimmedTimezone = timezoneIdentifier.trimmingCharacters(in: .whitespacesAndNewlines)
-        if trimmedTimezone.isEmpty {
-            fieldErrors[.timezone] = "需要读取设备时区"
-        }
+        let resolvedTimezone = trimmedTimezone.isEmpty ? TimeZone.current.identifier : trimmedTimezone
 
         let age = validatedInt(
             text: ageText,
@@ -164,7 +182,7 @@ private extension ProfileSetupViewModel {
             currentWeightKg: currentWeight,
             targetWeightKg: targetWeight,
             activityLevel: activityLevel,
-            timezone: trimmedTimezone,
+            timezone: resolvedTimezone,
             targetDate: nil
         )
     }

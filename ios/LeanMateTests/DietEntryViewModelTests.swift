@@ -149,6 +149,36 @@ final class DietEntryViewModelTests: XCTestCase {
         XCTAssertEqual(mealType, .snack)
     }
 
+    func testLaunchWithoutPendingMealUsesCurrentTimeDefault() throws {
+        let apiClient = DietAPIClientStub()
+        let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: try localDate(hour: 22))
+
+        viewModel.applyLaunchMealType(nil, date: try localDate(hour: 8))
+
+        XCTAssertEqual(viewModel.mealType, .breakfast)
+    }
+
+    func testLaunchPendingMealOverridesCurrentTimeDefault() throws {
+        let apiClient = DietAPIClientStub()
+        let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: try localDate(hour: 12))
+
+        viewModel.applyLaunchMealType(.breakfast, date: try localDate(hour: 12))
+
+        XCTAssertEqual(viewModel.mealType, .breakfast)
+    }
+
+    func testLaunchDefaultDoesNotOverrideActiveDraftMealSelection() throws {
+        let apiClient = DietAPIClientStub()
+        let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: try localDate(hour: 12))
+        viewModel.selectTextMode()
+        viewModel.mealType = .dinner
+        viewModel.textInput = "两个鸡蛋"
+
+        viewModel.applyLaunchMealType(nil, date: try localDate(hour: 8))
+
+        XCTAssertEqual(viewModel.mealType, .dinner)
+    }
+
     func testPhotoRecognitionRunningCanRefresh() async {
         let apiClient = DietAPIClientStub(
             recognitionTaskResult: .success(DietAPIClientStub.runningRecognitionTask)
@@ -241,6 +271,21 @@ final class DietEntryViewModelTests: XCTestCase {
         } else {
             XCTFail("Expected deleteFailed state")
         }
+    }
+
+    private func localDate(hour: Int) throws -> Date {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = .current
+
+        var components = DateComponents()
+        components.calendar = calendar
+        components.timeZone = calendar.timeZone
+        components.year = 2026
+        components.month = 6
+        components.day = 9
+        components.hour = hour
+
+        return try XCTUnwrap(calendar.date(from: components))
     }
 }
 

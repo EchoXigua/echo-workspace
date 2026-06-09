@@ -168,6 +168,15 @@ final class DietEntryViewModel: ObservableObject {
         validationMessage = nil
     }
 
+    func applyLaunchMealType(_ launchMealType: MealType?, date: Date = Date()) {
+        if let launchMealType {
+            mealDate = date
+            mealType = launchMealType
+        } else {
+            applyDefaultMealTypeForNewEntry(date: date)
+        }
+    }
+
     func closeConfirmation() {
         switch currentDraftSource {
         case .photo:
@@ -381,6 +390,26 @@ final class DietEntryViewModel: ObservableObject {
 }
 
 private extension DietEntryViewModel {
+    var canApplyDefaultMealTypeForNewEntry: Bool {
+        mode == .selection
+            && state == .idle
+            && textInput.trimmed.isEmpty
+            && manualItem.isEmpty
+            && confirmationItems.isEmpty
+            && selectedImageName == nil
+            && savedEntry == nil
+            && currentRecognitionTaskId == nil
+    }
+
+    func applyDefaultMealTypeForNewEntry(date: Date) {
+        guard canApplyDefaultMealTypeForNewEntry else {
+            return
+        }
+
+        mealDate = date
+        mealType = MealType.defaultMealType(for: date)
+    }
+
     func resetDraft() {
         textInput = ""
         manualItem = EditableFoodItem()
@@ -570,6 +599,18 @@ private extension String {
 
     var nilIfEmpty: String? {
         isEmpty ? nil : self
+    }
+}
+
+private extension DietEntryViewModel.EditableFoodItem {
+    var isEmpty: Bool {
+        name.trimmed.isEmpty
+            && quantityText.trimmed.isEmpty
+            && weightGText.trimmed.isEmpty
+            && caloriesText.trimmed.isEmpty
+            && proteinText.trimmed.isEmpty
+            && fatText.trimmed.isEmpty
+            && carbsText.trimmed.isEmpty
     }
 }
 

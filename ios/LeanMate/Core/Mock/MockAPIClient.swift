@@ -58,19 +58,7 @@ final class MockAPIClient: APIClient, @unchecked Sendable {
 
     func saveProfile(_ request: SaveUserProfileRequest) async throws -> ProfilePayload {
         try await prepare()
-        let profile = UserProfile(
-            gender: request.gender,
-            age: request.age,
-            heightCm: request.heightCm,
-            currentWeightKg: request.currentWeightKg,
-            targetWeightKg: request.targetWeightKg,
-            activityLevel: request.activityLevel,
-            timezone: request.timezone,
-            targetDate: request.targetDate,
-            bmi: 19.8,
-            bmrKcal: 1320,
-            dailyCalorieTargetKcal: 1800
-        )
+        let profile = ProfileGoalCalculator.profile(from: request)
         completedProfile = profile
         return ProfilePayload(profileCompleted: true, profile: profile)
     }

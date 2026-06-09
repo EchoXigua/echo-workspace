@@ -3,28 +3,34 @@ import XCTest
 
 @MainActor
 final class FirstBatchViewModelTests: XCTestCase {
-    func testMockLoginRoutesToProfileSetupWhenProfileIsIncomplete() async throws {
+    func testStartGuestSessionPersistsLocalGuestState() async throws {
         let tokenStore = InMemoryTokenStore()
+        let localStore = InMemoryLocalStore()
         let viewModel = OnboardingViewModel(
             apiClient: MockAPIClient(scenario: .profileIncomplete, delayNanoseconds: 0),
-            tokenStore: tokenStore
+            tokenStore: tokenStore,
+            localStore: localStore
         )
 
-        let destination = await viewModel.mockLogin()
+        let destination = await viewModel.startGuestSession()
         let tokens = try await tokenStore.loadTokens()
+        let session = try await localStore.guestSession()
 
-        XCTAssertEqual(destination, .profileSetup)
-        XCTAssertNotNil(tokens)
+        XCTAssertEqual(destination, .visitorHome)
+        XCTAssertNil(tokens)
+        XCTAssertNotNil(session)
     }
 
-    func testMockLoginRoutesToHomeWhenProfileIsCompleted() async throws {
+    func testMockLoginSyncRoutesToHomeWhenProfileIsCompleted() async throws {
         let tokenStore = InMemoryTokenStore()
+        let localStore = InMemoryLocalStore()
         let viewModel = OnboardingViewModel(
             apiClient: MockAPIClient(delayNanoseconds: 0),
-            tokenStore: tokenStore
+            tokenStore: tokenStore,
+            localStore: localStore
         )
 
-        let destination = await viewModel.mockLogin()
+        let destination = await viewModel.mockLoginAndSyncGuestData()
 
         XCTAssertEqual(destination, .home)
     }
@@ -58,6 +64,28 @@ final class FirstBatchViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.savedProfile?.bmi, 19.8)
         XCTAssertEqual(viewModel.savedProfile?.bmrKcal, 1320)
         XCTAssertEqual(viewModel.savedProfile?.dailyCalorieTargetKcal, 1800)
+    }
+
+    func testVisitorProfileSavePersistsLocallyWithoutCallingAPI() async throws {
+        let apiClient = ProfileAPIClientStub()
+        let localStore = InMemoryLocalStore()
+        let viewModel = ProfileSetupViewModel(
+            apiClient: apiClient,
+            localStore: localStore,
+            savesLocally: true,
+            timezoneIdentifier: "Asia/Shanghai"
+        )
+        fillValidProfile(on: viewModel)
+
+        let succeeded = await viewModel.save()
+        let saveCallCount = await apiClient.saveProfileCallCount
+        let profile = try await localStore.localProfile()
+        let session = try await localStore.guestSession()
+
+        XCTAssertTrue(succeeded)
+        XCTAssertEqual(saveCallCount, 0)
+        XCTAssertEqual(profile?.currentWeightKg, 55.8)
+        XCTAssertNotNil(session)
     }
 
     func testProfileSaveFailureKeepsUserInput() async throws {

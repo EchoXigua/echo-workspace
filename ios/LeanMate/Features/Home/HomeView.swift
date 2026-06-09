@@ -4,7 +4,9 @@ struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @Binding private var selectedTab: AppTab
     @Binding private var pendingDietEntryMode: DietEntryLaunchMode?
+    @Binding private var pendingDietEntryMealType: MealType?
     @State private var isVisitorBannerVisible = true
+    @State private var isTargetCalibrationPromptVisible = true
 
     let isVisitor: Bool
     let onLoginRequired: () -> Void
@@ -14,6 +16,7 @@ struct HomeView: View {
         viewModel: HomeViewModel,
         selectedTab: Binding<AppTab>,
         pendingDietEntryMode: Binding<DietEntryLaunchMode?> = .constant(nil),
+        pendingDietEntryMealType: Binding<MealType?> = .constant(nil),
         isVisitor: Bool = false,
         onLoginRequired: @escaping () -> Void,
         onProfileRequired: @escaping () -> Void
@@ -21,6 +24,7 @@ struct HomeView: View {
         _viewModel = StateObject(wrappedValue: viewModel)
         _selectedTab = selectedTab
         _pendingDietEntryMode = pendingDietEntryMode
+        _pendingDietEntryMealType = pendingDietEntryMealType
         self.isVisitor = isVisitor
         self.onLoginRequired = onLoginRequired
         self.onProfileRequired = onProfileRequired
@@ -62,15 +66,9 @@ private extension HomeView {
                     onClose: { isVisitorBannerVisible = false }
                 )
             }
-        case .profileIncomplete:
-            navHeader
-            LMStateView(
-                kind: .empty,
-                title: "先完成档案",
-                message: "生成目标后再展示今日热量和连续打卡。",
-                actionTitle: "去填写档案",
-                action: onProfileRequired
-            )
+        case .profileIncomplete(let home):
+            navHeader(date: home.date)
+            profileIncompleteContent(home)
         case .empty(let home):
             navHeader(date: home.date)
             HomeEmptyView(onRecordRequested: openRecordTab)
@@ -134,6 +132,18 @@ private extension HomeView {
         }
     }
 
+    func profileIncompleteContent(_ home: TodayHome) -> some View {
+        VStack(alignment: .leading, spacing: LMSpacing.regular) {
+            profileIncompleteCalorieCard(home)
+
+            if isTargetCalibrationPromptVisible {
+                targetCalibrationPromptCard
+            }
+
+            todaySummary(home)
+        }
+    }
+
     func remainingCaloriesCard(_ home: TodayHome) -> some View {
         LMCard(cornerRadius: 16, padding: 14) {
             HStack {
@@ -170,6 +180,108 @@ private extension HomeView {
         }
     }
 
+    @ViewBuilder
+    func profileIncompleteCalorieCard(_ home: TodayHome) -> some View {
+        if home.calorieTargetKcal > 0 {
+            remainingCaloriesCard(home)
+        } else {
+            profileIncompleteTargetPlaceholder(home)
+        }
+    }
+
+    func profileIncompleteTargetPlaceholder(_ home: TodayHome) -> some View {
+        LMCard(cornerRadius: 16, padding: 14) {
+            HStack {
+                Text("热量目标待校准")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(LMColors.textSecondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.78)
+
+                Spacer()
+
+                LMTag(title: monthDayText(home.date))
+            }
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("补充身体信息后生成目标")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(LMColors.textPrimary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Text("年龄、身高、当前体重和活动水平会用于估算每日推荐热量。")
+                    .font(LMTypography.caption)
+                    .foregroundStyle(LMColors.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
+    var targetCalibrationPromptCard: some View {
+        HStack(alignment: .center, spacing: 12) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(LMColors.primarySoft)
+                    .frame(width: 38, height: 38)
+
+                Image(systemName: "target")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(LMColors.primary)
+            }
+            .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text("让热量目标更贴近你")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(LMColors.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.82)
+
+                Text("补充年龄、身高和活动水平，首页目标会更准。")
+                    .font(LMTypography.caption)
+                    .foregroundStyle(LMColors.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Spacer(minLength: 8)
+
+            VStack(alignment: .trailing, spacing: 8) {
+                Button(action: onProfileRequired) {
+                    Text("校准目标")
+                        .font(LMTypography.badge)
+                        .foregroundStyle(LMColors.primaryDeep)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(LMColors.card)
+                        .clipShape(Capsule())
+                        .overlay {
+                            Capsule()
+                                .stroke(LMColors.primaryBorder, lineWidth: 1)
+                        }
+                }
+                .buttonStyle(.plain)
+
+                Button {
+                    isTargetCalibrationPromptVisible = false
+                } label: {
+                    Text("稍后")
+                        .font(LMTypography.badge)
+                        .foregroundStyle(LMColors.textSecondary)
+                        .frame(width: 54, height: 22)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(LMColors.primarySoft.opacity(0.5))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(LMColors.primaryBorder, lineWidth: 1)
+        }
+    }
+
     func calorieProgress(_ home: TodayHome) -> some View {
         GeometryReader { proxy in
             ZStack(alignment: .leading) {
@@ -193,11 +305,7 @@ private extension HomeView {
 
                 Spacer()
 
-                Text(mealHeaderActionTitle(home))
-                    .font(LMTypography.badge)
-                    .foregroundStyle(LMColors.primary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.75)
+                mealHeaderAction(home)
             }
 
             VStack(spacing: 10) {
@@ -242,7 +350,9 @@ private extension HomeView {
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(LMColors.primaryDeep)
             } else {
-                Button(action: openRecordTab) {
+                Button {
+                    openRecordTab(mealType: row.mealType)
+                } label: {
                     Text("补录")
                         .font(LMTypography.badge)
                         .foregroundStyle(LMColors.primary)
@@ -304,6 +414,30 @@ private extension HomeView {
         }
         .frame(height: 12)
         .clipShape(Capsule())
+    }
+
+    @ViewBuilder
+    func mealHeaderAction(_ home: TodayHome) -> some View {
+        let title = mealHeaderActionTitle(home)
+        if HomeMealSummaryFormatter.hasRecordAction(foodEntries: home.foodEntries) {
+            Button {
+                openRecordTab(mealType: HomeMealSummaryFormatter.singleMissingMealType(foodEntries: home.foodEntries))
+            } label: {
+                Text(title)
+                    .font(LMTypography.badge)
+                    .foregroundStyle(LMColors.primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(title)
+        } else {
+            Text(title)
+                .font(LMTypography.badge)
+                .foregroundStyle(LMColors.primary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
+        }
     }
 
     var visitorRecordPreview: some View {
@@ -414,11 +548,19 @@ private extension HomeView {
 
     func openRecordTab() {
         pendingDietEntryMode = nil
+        pendingDietEntryMealType = nil
         selectedTab = .record
     }
 
     func openRecordTab(mode: DietEntryLaunchMode) {
         pendingDietEntryMode = mode
+        pendingDietEntryMealType = nil
+        selectedTab = .record
+    }
+
+    func openRecordTab(mealType: MealType?) {
+        pendingDietEntryMode = nil
+        pendingDietEntryMealType = mealType
         selectedTab = .record
     }
 
@@ -435,14 +577,11 @@ private extension HomeView {
     }
 
     func gramValue(_ value: Double?) -> String {
-        guard let value else {
-            return "暂无"
-        }
-        return display(value)
+        display(value ?? 0)
     }
 
-    func gramUnit(_ value: Double?) -> String? {
-        value == nil ? nil : "g"
+    func gramUnit(_: Double?) -> String? {
+        "g"
     }
 
     func display(_ value: Double) -> String {
@@ -522,6 +661,20 @@ enum HomeMealSummaryFormatter {
         default:
             return "\(missingMealTypes.count)餐可补录"
         }
+    }
+
+    static func hasRecordAction(foodEntries: [FoodEntrySummary]) -> Bool {
+        !missingBaseMealTypes(foodEntries: foodEntries).isEmpty
+    }
+
+    static func singleMissingMealType(foodEntries: [FoodEntrySummary]) -> MealType? {
+        let missingMealTypes = missingBaseMealTypes(foodEntries: foodEntries)
+        return missingMealTypes.count == 1 ? missingMealTypes[0] : nil
+    }
+
+    private static func missingBaseMealTypes(foodEntries: [FoodEntrySummary]) -> [MealType] {
+        let recordedMealTypes = foodEntries.map(\.mealType)
+        return baseMealTypes.filter { !recordedMealTypes.contains($0) }
     }
 }
 

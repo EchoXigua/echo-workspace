@@ -49,14 +49,29 @@ final class ProfileSummaryViewModelTests: XCTestCase {
     }
 
     func testVisitorStateDoesNotCallAPI() async {
-        let viewModel = ProfileSummaryViewModel.visitor()
+        let viewModel = ProfileSummaryViewModel.visitor(localStore: InMemoryLocalStore())
 
         await viewModel.load()
 
-        if case .visitor = viewModel.state {
+        if case .profileIncomplete = viewModel.state {
             XCTAssertNil(viewModel.milestoneToPresent)
         } else {
-            XCTFail("Expected visitor state")
+            XCTFail("Expected profileIncomplete state")
+        }
+    }
+
+    func testVisitorLoadsLocalProfileWhenAvailable() async throws {
+        let localStore = InMemoryLocalStore()
+        try await localStore.saveLocalProfile(MockData.profile)
+        let viewModel = ProfileSummaryViewModel.visitor(localStore: localStore)
+
+        await viewModel.load()
+
+        if case .loaded(let snapshot) = viewModel.state {
+            XCTAssertEqual(snapshot.profile.currentWeightKg, 55.8)
+            XCTAssertEqual(snapshot.displayName, "本地游客")
+        } else {
+            XCTFail("Expected loaded state")
         }
     }
 

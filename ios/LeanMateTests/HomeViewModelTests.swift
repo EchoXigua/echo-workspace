@@ -38,8 +38,9 @@ final class HomeViewModelTests: XCTestCase {
 
         await viewModel.load()
 
-        if case .profileIncomplete = viewModel.state {
-            XCTAssertTrue(true)
+        if case .profileIncomplete(let home) = viewModel.state {
+            XCTAssertFalse(home.profileCompleted)
+            XCTAssertEqual(home.calorieTargetKcal, 0)
         } else {
             XCTFail("Expected profileIncomplete state")
         }
@@ -54,6 +55,35 @@ final class HomeViewModelTests: XCTestCase {
             XCTAssertTrue(true)
         } else {
             XCTFail("Expected visitor state")
+        }
+    }
+
+    func testVisitorWithoutLocalProfileShowsCalibrationState() async {
+        let viewModel = HomeViewModel.visitor(localStore: InMemoryLocalStore())
+
+        await viewModel.load()
+
+        if case .profileIncomplete(let home) = viewModel.state {
+            XCTAssertFalse(home.profileCompleted)
+            XCTAssertEqual(home.calorieTargetKcal, 0)
+        } else {
+            XCTFail("Expected profileIncomplete state")
+        }
+    }
+
+    func testVisitorHomeUsesLocalProfileGoal() async throws {
+        let localStore = InMemoryLocalStore()
+        try await localStore.saveLocalProfile(MockData.profile)
+        let viewModel = HomeViewModel.visitor(localStore: localStore)
+
+        await viewModel.load()
+
+        if case .loaded(let home) = viewModel.state {
+            XCTAssertTrue(home.profileCompleted)
+            XCTAssertEqual(home.calorieTargetKcal, 1800)
+            XCTAssertEqual(home.currentWeightKg, 55.8)
+        } else {
+            XCTFail("Expected loaded state")
         }
     }
 
@@ -81,6 +111,8 @@ final class HomeViewModelTests: XCTestCase {
             HomeMealSummaryFormatter.headerActionTitle(foodEntries: []),
             "开始记录"
         )
+        XCTAssertTrue(HomeMealSummaryFormatter.hasRecordAction(foodEntries: []))
+        XCTAssertNil(HomeMealSummaryFormatter.singleMissingMealType(foodEntries: []))
     }
 
     func testMealHeaderTitleShowsMissingMealCountWhenOnlyLunchRecorded() {
@@ -88,31 +120,37 @@ final class HomeViewModelTests: XCTestCase {
             HomeMealSummaryFormatter.headerActionTitle(foodEntries: [makeFoodEntrySummary(.lunch)]),
             "2餐可补录"
         )
+        XCTAssertTrue(HomeMealSummaryFormatter.hasRecordAction(foodEntries: [makeFoodEntrySummary(.lunch)]))
+        XCTAssertNil(HomeMealSummaryFormatter.singleMissingMealType(foodEntries: [makeFoodEntrySummary(.lunch)]))
     }
 
     func testMealHeaderTitleShowsSingleMissingMealName() {
+        let entries = [
+            makeFoodEntrySummary(.breakfast),
+            makeFoodEntrySummary(.lunch)
+        ]
+
         XCTAssertEqual(
-            HomeMealSummaryFormatter.headerActionTitle(
-                foodEntries: [
-                    makeFoodEntrySummary(.breakfast),
-                    makeFoodEntrySummary(.lunch)
-                ]
-            ),
+            HomeMealSummaryFormatter.headerActionTitle(foodEntries: entries),
             "晚餐可补录"
         )
+        XCTAssertTrue(HomeMealSummaryFormatter.hasRecordAction(foodEntries: entries))
+        XCTAssertEqual(HomeMealSummaryFormatter.singleMissingMealType(foodEntries: entries), .dinner)
     }
 
     func testMealHeaderTitleShowsRecordedWhenBaseMealsComplete() {
+        let entries = [
+            makeFoodEntrySummary(.breakfast),
+            makeFoodEntrySummary(.lunch),
+            makeFoodEntrySummary(.dinner)
+        ]
+
         XCTAssertEqual(
-            HomeMealSummaryFormatter.headerActionTitle(
-                foodEntries: [
-                    makeFoodEntrySummary(.breakfast),
-                    makeFoodEntrySummary(.lunch),
-                    makeFoodEntrySummary(.dinner)
-                ]
-            ),
+            HomeMealSummaryFormatter.headerActionTitle(foodEntries: entries),
             "今日已记录"
         )
+        XCTAssertFalse(HomeMealSummaryFormatter.hasRecordAction(foodEntries: entries))
+        XCTAssertNil(HomeMealSummaryFormatter.singleMissingMealType(foodEntries: entries))
     }
 
     private func makeFoodEntrySummary(_ mealType: MealType) -> FoodEntrySummary {

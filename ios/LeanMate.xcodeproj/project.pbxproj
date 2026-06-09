@@ -27,6 +27,7 @@
 		000000000000000000001018 /* LMSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002018 /* LMSpacing.swift */; };
 		000000000000000000001019 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002019 /* AppError.swift */; };
 		000000000000000000001020 /* Loadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002020 /* Loadable.swift */; };
+		00000000000000000000104B /* ProfileGoalCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000204B /* ProfileGoalCalculator.swift */; };
 		000000000000000000001021 /* LMButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002021 /* LMButton.swift */; };
 		000000000000000000001022 /* LMCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002022 /* LMCard.swift */; };
 		000000000000000000001023 /* LMBottomTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002023 /* LMBottomTabs.swift */; };
@@ -99,6 +100,7 @@
 		000000000000000000002018 /* LMSpacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMSpacing.swift; sourceTree = "<group>"; };
 		000000000000000000002019 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		000000000000000000002020 /* Loadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loadable.swift; sourceTree = "<group>"; };
+		00000000000000000000204B /* ProfileGoalCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileGoalCalculator.swift; sourceTree = "<group>"; };
 		000000000000000000002021 /* LMButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMButton.swift; sourceTree = "<group>"; };
 		000000000000000000002022 /* LMCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMCard.swift; sourceTree = "<group>"; };
 		000000000000000000002023 /* LMBottomTabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMBottomTabs.swift; sourceTree = "<group>"; };
@@ -277,6 +279,7 @@
 			children = (
 				000000000000000000002019 /* AppError.swift */,
 				000000000000000000002020 /* Loadable.swift */,
+				00000000000000000000204B /* ProfileGoalCalculator.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -521,6 +524,7 @@
 				000000000000000000001018 /* LMSpacing.swift in Sources */,
 				000000000000000000001019 /* AppError.swift in Sources */,
 				000000000000000000001020 /* Loadable.swift in Sources */,
+				00000000000000000000104B /* ProfileGoalCalculator.swift in Sources */,
 				000000000000000000001021 /* LMButton.swift in Sources */,
 				000000000000000000001022 /* LMCard.swift in Sources */,
 				000000000000000000001023 /* LMBottomTabs.swift in Sources */,
