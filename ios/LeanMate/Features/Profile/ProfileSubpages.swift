@@ -155,7 +155,7 @@ struct ProfileWeightTrendView: View {
     }
 
     private func openWeightSheet() {
-        weightViewModel.resetForNewEntry()
+        weightViewModel.resetForNewEntry(defaultWeightKg: payload.currentWeightKg)
         showsWeightSheet = true
     }
 }

@@ -40,13 +40,13 @@ final class WeightViewModel: ObservableObject {
         state == .saving
     }
 
-    func resetForNewEntry(recordDate: Date = Date()) {
+    func resetForNewEntry(recordDate: Date = Date(), defaultWeightKg: Double? = nil) {
         guard !isSaving else {
             return
         }
         state = .editing
         self.recordDate = recordDate
-        weightText = ""
+        weightText = defaultWeightKg.map(display) ?? ""
         noteText = ""
         savedEntry = nil
     }
@@ -90,6 +90,13 @@ final class WeightViewModel: ObservableObject {
 }
 
 private extension WeightViewModel {
+    func display(_ value: Double) -> String {
+        if value.rounded() == value {
+            return String(Int(value))
+        }
+        return String(format: "%.1f", value)
+    }
+
     func validatedWeight() -> Double? {
         let text = weightText.trimmed
         guard let value = Double(text) else {

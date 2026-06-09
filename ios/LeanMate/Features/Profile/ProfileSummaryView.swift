@@ -221,7 +221,9 @@ private extension ProfileSummaryView {
 
                 Spacer()
 
-                Button(action: recordWeight) {
+                Button {
+                    recordWeight(defaultWeightKg: profile.currentWeightKg)
+                } label: {
                     Text("记录体重")
                         .font(LMTypography.badge)
                         .foregroundStyle(LMColors.primaryDeep)
@@ -580,8 +582,8 @@ private extension ProfileSummaryView {
         }
     }
 
-    func recordWeight() {
-        weightViewModel.resetForNewEntry()
+    func recordWeight(defaultWeightKg: Double) {
+        weightViewModel.resetForNewEntry(defaultWeightKg: defaultWeightKg)
         showsWeightSheet = true
     }
 

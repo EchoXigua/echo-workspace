@@ -81,6 +81,23 @@ final class WeightViewModelTests: XCTestCase {
         }
     }
 
+    func testResetForNewEntryUsesDefaultWeight() {
+        let apiClient = WeightAPIClientStub()
+        let viewModel = WeightViewModel(
+            apiClient: apiClient,
+            recordDate: MockData.today,
+            weightText: "55.8",
+            noteText: "旧备注"
+        )
+
+        viewModel.resetForNewEntry(recordDate: MockData.today, defaultWeightKg: 75)
+
+        XCTAssertEqual(viewModel.state, .editing)
+        XCTAssertEqual(viewModel.weightText, "75")
+        XCTAssertEqual(viewModel.noteText, "")
+        XCTAssertNil(viewModel.savedEntry)
+    }
+
     func testRepeatedWeightSaveOnlyCallsAPIOnce() async {
         let apiClient = WeightAPIClientStub(delayNanoseconds: 50_000_000)
         let viewModel = WeightViewModel(
