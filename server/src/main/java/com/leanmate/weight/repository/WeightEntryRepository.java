@@ -12,6 +12,8 @@ public interface WeightEntryRepository extends JpaRepository<WeightEntryEntity, 
 
     Optional<WeightEntryEntity> findByUserIdAndRecordDate(UUID userId, LocalDate recordDate);
 
+    Optional<WeightEntryEntity> findByUserIdAndClientLocalId(UUID userId, UUID clientLocalId);
+
     List<WeightEntryEntity> findByUserIdAndRecordDateBetweenOrderByRecordDateAsc(
             UUID userId,
             LocalDate startDate,

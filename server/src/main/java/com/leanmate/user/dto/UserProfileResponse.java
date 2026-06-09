@@ -2,6 +2,7 @@ package com.leanmate.user.dto;
 
 import com.leanmate.user.domain.ActivityLevel;
 import com.leanmate.user.domain.Gender;
+import com.leanmate.user.domain.GoalType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -11,11 +12,13 @@ public record UserProfileResponse(
         BigDecimal heightCm,
         BigDecimal currentWeightKg,
         BigDecimal targetWeightKg,
+        GoalType goalType,
         ActivityLevel activityLevel,
         String timezone,
         LocalDate targetDate,
         BigDecimal bmi,
         int bmrKcal,
-        int dailyCalorieTargetKcal
+        int dailyCalorieTargetKcal,
+        BigDecimal weeklyTargetWeightChangeKg
 ) {
 }

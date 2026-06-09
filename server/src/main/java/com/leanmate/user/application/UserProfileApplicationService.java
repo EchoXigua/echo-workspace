@@ -4,17 +4,25 @@ import com.leanmate.common.error.ErrorCode;
 import com.leanmate.common.exception.BusinessException;
 import com.leanmate.user.domain.ActivityLevel;
 import com.leanmate.user.domain.Gender;
+import com.leanmate.user.domain.GoalType;
 import com.leanmate.user.domain.ProfileCalculationResult;
 import com.leanmate.user.domain.ProfileCalculator;
 import com.leanmate.user.domain.WeightGoalStatus;
 import com.leanmate.user.dto.CalorieTargetSuggestionResponse;
+import com.leanmate.user.dto.PlanOverviewCalorieAdjustmentResponse;
+import com.leanmate.user.dto.PlanOverviewGoalResponse;
+import com.leanmate.user.dto.PlanOverviewProfileResponse;
+import com.leanmate.user.dto.PlanOverviewResponse;
+import com.leanmate.user.dto.PlanOverviewWeightTrendResponse;
 import com.leanmate.user.dto.ProfilePayload;
 import com.leanmate.user.dto.SaveUserProfileRequest;
 import com.leanmate.user.dto.UserProfileResponse;
+import com.leanmate.user.repository.UserEntity;
 import com.leanmate.user.repository.UserProfileEntity;
 import com.leanmate.user.repository.UserProfileRepository;
 import com.leanmate.user.repository.WeightGoalEntity;
 import com.leanmate.user.repository.WeightGoalRepository;
+import com.leanmate.weight.domain.WeightTrendDirection;
 import com.leanmate.weight.repository.WeightEntryEntity;
 import com.leanmate.weight.repository.WeightEntryRepository;
 import java.math.BigDecimal;
@@ -38,6 +46,7 @@ public class UserProfileApplicationService {
     private static final BigDecimal KCAL_PER_KG = new BigDecimal("7700");
     private static final BigDecimal SLOW_LOSS_TOLERANCE_KG = new BigDecimal("0.20");
     private static final BigDecimal FAST_LOSS_TOLERANCE_KG = new BigDecimal("0.35");
+    private static final long PLAN_OVERVIEW_TREND_DAYS = 30;
 
     private final CurrentUserApplicationService currentUserApplicationService;
     private final UserProfileRepository userProfileRepository;
@@ -102,6 +111,7 @@ public class UserProfileApplicationService {
                 request.heightCm(),
                 request.currentWeightKg(),
                 request.targetWeightKg(),
+                goalType(request),
                 request.activityLevel(),
                 request.targetDate(),
                 today);
@@ -121,8 +131,8 @@ public class UserProfileApplicationService {
         profile.setDailyCalorieTargetKcal(calculation.dailyCalorieTargetKcal());
         UserProfileEntity savedProfile = userProfileRepository.save(profile);
 
-        saveActiveWeightGoal(userId, request, calculation);
-        return new ProfilePayload(true, toResponse(savedProfile, request.targetDate()));
+        WeightGoalEntity savedGoal = saveActiveWeightGoal(userId, request, calculation);
+        return new ProfilePayload(true, toResponse(savedProfile, savedGoal, request.targetDate()));
     }
 
     @Transactional(readOnly = true)
@@ -208,7 +218,15 @@ public class UserProfileApplicationService {
                 weeklyWeightChange);
     }
 
-    private void saveActiveWeightGoal(
+    @Transactional(readOnly = true)
+    public PlanOverviewResponse getPlanOverview(UUID userId) {
+        UserEntity user = currentUserApplicationService.requireActiveUser(userId);
+        return userProfileRepository.findByUserId(userId)
+                .map(profile -> toPlanOverview(user, profile))
+                .orElseGet(() -> new PlanOverviewResponse(false, user.getNickname(), null, null, null, null));
+    }
+
+    private WeightGoalEntity saveActiveWeightGoal(
             UUID userId,
             SaveUserProfileRequest request,
             ProfileCalculationResult calculation
@@ -221,31 +239,154 @@ public class UserProfileApplicationService {
         goal.setTargetWeightKg(scaleWeightOrHeight(request.targetWeightKg()));
         goal.setTargetDate(request.targetDate());
         goal.setDailyCalorieTargetKcal(calculation.dailyCalorieTargetKcal());
+        goal.setGoalType(goalType(request).value());
+        goal.setWeeklyTargetWeightChangeKg(calculation.weeklyTargetWeightChangeKg());
         goal.setStatus(WeightGoalStatus.ACTIVE.value());
-        weightGoalRepository.save(goal);
+        return weightGoalRepository.save(goal);
     }
 
     private UserProfileResponse toResponse(UserProfileEntity profile) {
-        LocalDate targetDate = weightGoalRepository
-                .findFirstByUserIdAndStatusOrderByCreatedAtDesc(profile.getUserId(), WeightGoalStatus.ACTIVE.value())
-                .map(WeightGoalEntity::getTargetDate)
-                .orElse(null);
-        return toResponse(profile, targetDate);
+        WeightGoalEntity goal = activeGoal(profile.getUserId());
+        return toResponse(profile, goal);
     }
 
     private UserProfileResponse toResponse(UserProfileEntity profile, LocalDate targetDate) {
+        WeightGoalEntity goal = activeGoal(profile.getUserId());
+        return toResponse(profile, goal, targetDate);
+    }
+
+    private UserProfileResponse toResponse(UserProfileEntity profile, WeightGoalEntity goal) {
+        return toResponse(profile, goal, goal == null ? null : goal.getTargetDate());
+    }
+
+    private UserProfileResponse toResponse(UserProfileEntity profile, WeightGoalEntity goal, LocalDate targetDate) {
         return new UserProfileResponse(
                 Gender.fromValue(profile.getGender()),
                 profile.getAge(),
                 profile.getHeightCm(),
                 profile.getCurrentWeightKg(),
                 profile.getTargetWeightKg(),
+                goalType(profile, goal),
                 ActivityLevel.fromValue(profile.getActivityLevel()),
                 profile.getTimezone(),
                 targetDate,
                 profile.getBmi(),
                 profile.getBmrKcal(),
-                profile.getDailyCalorieTargetKcal());
+                profile.getDailyCalorieTargetKcal(),
+                goal == null ? null : goal.getWeeklyTargetWeightChangeKg());
+    }
+
+    private PlanOverviewResponse toPlanOverview(UserEntity user, UserProfileEntity profile) {
+        WeightGoalEntity goal = activeGoal(profile.getUserId());
+        return new PlanOverviewResponse(
+                true,
+                user.getNickname(),
+                toPlanOverviewProfile(profile),
+                toPlanOverviewGoal(profile, goal),
+                toPlanOverviewWeightTrend(profile),
+                toPlanOverviewCalorieAdjustment(profile.getUserId()));
+    }
+
+    private PlanOverviewProfileResponse toPlanOverviewProfile(UserProfileEntity profile) {
+        ActivityLevel activityLevel = ActivityLevel.fromValue(profile.getActivityLevel());
+        return new PlanOverviewProfileResponse(
+                Gender.fromValue(profile.getGender()),
+                profile.getAge(),
+                profile.getHeightCm(),
+                profile.getCurrentWeightKg(),
+                profile.getTargetWeightKg(),
+                activityLevel,
+                activityLevelLabel(activityLevel),
+                profile.getBmi(),
+                profile.getBmrKcal());
+    }
+
+    private PlanOverviewGoalResponse toPlanOverviewGoal(UserProfileEntity profile, WeightGoalEntity goal) {
+        GoalType goalType = goalType(profile, goal);
+        BigDecimal startWeightKg = goal == null ? profile.getCurrentWeightKg() : goal.getStartWeightKg();
+        BigDecimal targetWeightKg = goal == null ? profile.getTargetWeightKg() : goal.getTargetWeightKg();
+        return new PlanOverviewGoalResponse(
+                goalType,
+                startWeightKg,
+                targetWeightKg,
+                targetWeightKg.subtract(profile.getCurrentWeightKg()).abs().setScale(2, RoundingMode.HALF_UP),
+                goal == null ? null : goal.getTargetDate(),
+                goal == null ? profile.getDailyCalorieTargetKcal() : goal.getDailyCalorieTargetKcal(),
+                estimatedActivityEnergyKcal(profile),
+                goal == null ? null : goal.getWeeklyTargetWeightChangeKg(),
+                goal == null ? WeightGoalStatus.ACTIVE.value() : goal.getStatus());
+    }
+
+    private PlanOverviewWeightTrendResponse toPlanOverviewWeightTrend(UserProfileEntity profile) {
+        UUID userId = profile.getUserId();
+        LocalDate today = LocalDate.now(clock.withZone(zoneId(profile)));
+        LocalDate startDate = today.minusDays(PLAN_OVERVIEW_TREND_DAYS - 1);
+        List<WeightEntryEntity> weights = weightEntryRepository
+                .findByUserIdAndRecordDateBetweenOrderByRecordDateAsc(userId, startDate, today);
+        if (weights.isEmpty()) {
+            return new PlanOverviewWeightTrendResponse((int) PLAN_OVERVIEW_TREND_DAYS, null, null, null, WeightTrendDirection.FLAT);
+        }
+        BigDecimal startWeightKg = weights.get(0).getWeightKg();
+        BigDecimal latestWeightKg = weights.get(weights.size() - 1).getWeightKg();
+        BigDecimal changeKg = latestWeightKg.subtract(startWeightKg).setScale(2, RoundingMode.HALF_UP);
+        return new PlanOverviewWeightTrendResponse(
+                (int) PLAN_OVERVIEW_TREND_DAYS,
+                startWeightKg,
+                latestWeightKg,
+                changeKg,
+                trendDirection(changeKg));
+    }
+
+    private PlanOverviewCalorieAdjustmentResponse toPlanOverviewCalorieAdjustment(UUID userId) {
+        CalorieTargetSuggestionResponse suggestion = getCalorieTargetSuggestion(userId);
+        return new PlanOverviewCalorieAdjustmentResponse(
+                suggestion.status(),
+                suggestion.suggestedTargetKcal(),
+                suggestion.reason());
+    }
+
+    private int estimatedActivityEnergyKcal(UserProfileEntity profile) {
+        double tdee = profile.getBmrKcal() * ActivityLevel.fromValue(profile.getActivityLevel()).multiplier();
+        return (int) Math.round(tdee - profile.getBmrKcal());
+    }
+
+    private WeightTrendDirection trendDirection(BigDecimal changeKg) {
+        if (changeKg.compareTo(new BigDecimal("0.05")) > 0) {
+            return WeightTrendDirection.INCREASING;
+        }
+        if (changeKg.compareTo(new BigDecimal("-0.05")) < 0) {
+            return WeightTrendDirection.DECREASING;
+        }
+        return WeightTrendDirection.FLAT;
+    }
+
+    private WeightGoalEntity activeGoal(UUID userId) {
+        return weightGoalRepository
+                .findFirstByUserIdAndStatusOrderByCreatedAtDesc(userId, WeightGoalStatus.ACTIVE.value())
+                .orElse(null);
+    }
+
+    private GoalType goalType(SaveUserProfileRequest request) {
+        return request.goalType() == null
+                ? GoalType.infer(request.currentWeightKg(), request.targetWeightKg())
+                : request.goalType();
+    }
+
+    private GoalType goalType(UserProfileEntity profile, WeightGoalEntity goal) {
+        if (goal != null && goal.getGoalType() != null) {
+            return GoalType.fromValue(goal.getGoalType());
+        }
+        return GoalType.infer(profile.getCurrentWeightKg(), profile.getTargetWeightKg());
+    }
+
+    private String activityLevelLabel(ActivityLevel activityLevel) {
+        return switch (activityLevel) {
+            case SEDENTARY -> "久坐少动";
+            case LIGHT -> "轻度活动";
+            case MODERATE -> "中等活动";
+            case ACTIVE -> "高度活动";
+            case VERY_ACTIVE -> "高强度活动";
+        };
     }
 
     private ZoneId parseTimezone(String timezone) {

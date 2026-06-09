@@ -14,8 +14,11 @@ public class ProfileCalculator {
     private static final BigDecimal MIN_TARGET_BMI = new BigDecimal("18.5");
     private static final double KCAL_PER_KG = 7700.0;
     private static final double DEFAULT_DEFICIT_RATE = 0.15;
+    private static final double DEFAULT_SURPLUS_RATE = 0.10;
     private static final double MIN_DAILY_DEFICIT_KCAL = 300.0;
     private static final double MAX_DAILY_DEFICIT_KCAL = 750.0;
+    private static final double MIN_DAILY_SURPLUS_KCAL = 150.0;
+    private static final double MAX_DAILY_SURPLUS_KCAL = 500.0;
 
     public ProfileCalculationResult calculate(
             Gender gender,
@@ -23,6 +26,29 @@ public class ProfileCalculator {
             BigDecimal heightCm,
             BigDecimal currentWeightKg,
             BigDecimal targetWeightKg,
+            ActivityLevel activityLevel,
+            LocalDate targetDate,
+            LocalDate today
+    ) {
+        return calculate(
+                gender,
+                age,
+                heightCm,
+                currentWeightKg,
+                targetWeightKg,
+                GoalType.infer(currentWeightKg, targetWeightKg),
+                activityLevel,
+                targetDate,
+                today);
+    }
+
+    public ProfileCalculationResult calculate(
+            Gender gender,
+            int age,
+            BigDecimal heightCm,
+            BigDecimal currentWeightKg,
+            BigDecimal targetWeightKg,
+            GoalType goalType,
             ActivityLevel activityLevel,
             LocalDate targetDate,
             LocalDate today
@@ -36,11 +62,18 @@ public class ProfileCalculator {
                 bmrKcal,
                 currentWeightKg,
                 targetWeightKg,
+                goalType,
                 activityLevel,
                 targetDate,
                 today);
+        BigDecimal weeklyTargetWeightChangeKg = calculateWeeklyTargetWeightChangeKg(
+                currentWeightKg,
+                targetWeightKg,
+                goalType,
+                targetDate,
+                today);
 
-        return new ProfileCalculationResult(bmi, bmrKcal, dailyCalorieTargetKcal);
+        return new ProfileCalculationResult(bmi, bmrKcal, dailyCalorieTargetKcal, weeklyTargetWeightChangeKg);
     }
 
     private BigDecimal calculateBmi(BigDecimal heightCm, BigDecimal currentWeightKg) {
@@ -62,13 +95,18 @@ public class ProfileCalculator {
             int bmrKcal,
             BigDecimal currentWeightKg,
             BigDecimal targetWeightKg,
+            GoalType goalType,
             ActivityLevel activityLevel,
             LocalDate targetDate,
             LocalDate today
     ) {
         double tdee = bmrKcal * activityLevel.multiplier();
-        double deficit = calculateDeficit(tdee, currentWeightKg, targetWeightKg, targetDate, today);
-        long roundedTarget = Math.round((tdee - deficit) / 10.0) * 10;
+        double adjustment = switch (goalType) {
+            case LOSE_WEIGHT -> -calculateDeficit(tdee, currentWeightKg, targetWeightKg, targetDate, today);
+            case GAIN_WEIGHT -> calculateSurplus(tdee, currentWeightKg, targetWeightKg, targetDate, today);
+            case MAINTAIN -> 0;
+        };
+        long roundedTarget = Math.round((tdee + adjustment) / 10.0) * 10;
         return (int) Math.max(roundedTarget, gender.calorieFloorKcal());
     }
 
@@ -92,6 +130,52 @@ public class ProfileCalculator {
             }
         }
         return Math.min(Math.max(deficit, MIN_DAILY_DEFICIT_KCAL), MAX_DAILY_DEFICIT_KCAL);
+    }
+
+    private double calculateSurplus(
+            double tdee,
+            BigDecimal currentWeightKg,
+            BigDecimal targetWeightKg,
+            LocalDate targetDate,
+            LocalDate today
+    ) {
+        double weightGainKg = targetWeightKg.subtract(currentWeightKg).doubleValue();
+        if (weightGainKg <= 0) {
+            return 0;
+        }
+
+        double surplus = tdee * DEFAULT_SURPLUS_RATE;
+        if (targetDate != null) {
+            long days = ChronoUnit.DAYS.between(today, targetDate);
+            if (days > 0) {
+                surplus = weightGainKg * KCAL_PER_KG / days;
+            }
+        }
+        return Math.min(Math.max(surplus, MIN_DAILY_SURPLUS_KCAL), MAX_DAILY_SURPLUS_KCAL);
+    }
+
+    private BigDecimal calculateWeeklyTargetWeightChangeKg(
+            BigDecimal currentWeightKg,
+            BigDecimal targetWeightKg,
+            GoalType goalType,
+            LocalDate targetDate,
+            LocalDate today
+    ) {
+        if (goalType == GoalType.MAINTAIN) {
+            return BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        }
+        BigDecimal totalChangeKg = targetWeightKg.subtract(currentWeightKg);
+        if (targetDate != null) {
+            long days = ChronoUnit.DAYS.between(today, targetDate);
+            if (days > 0) {
+                return totalChangeKg
+                        .multiply(new BigDecimal("7"))
+                        .divide(new BigDecimal(days), 2, RoundingMode.HALF_UP);
+            }
+        }
+        return goalType == GoalType.GAIN_WEIGHT
+                ? new BigDecimal("0.25")
+                : new BigDecimal("-0.40");
     }
 
     private void validateTargetWeight(BigDecimal heightCm, BigDecimal targetWeightKg) {

@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public record ProfileCalculationResult(
         BigDecimal bmi,
         int bmrKcal,
-        int dailyCalorieTargetKcal
+        int dailyCalorieTargetKcal,
+        BigDecimal weeklyTargetWeightChangeKg
 ) {
 }

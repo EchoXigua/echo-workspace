@@ -24,6 +24,9 @@ public class WeightEntryEntity {
     @Column(name = "record_date", nullable = false)
     private LocalDate recordDate;
 
+    @Column(name = "client_local_id")
+    private UUID clientLocalId;
+
     @Column(name = "weight_kg", nullable = false, precision = 5, scale = 2)
     private BigDecimal weightKg;
 
@@ -71,6 +74,14 @@ public class WeightEntryEntity {
         this.recordDate = recordDate;
     }
 
+    public UUID getClientLocalId() {
+        return clientLocalId;
+    }
+
+    public void setClientLocalId(UUID clientLocalId) {
+        this.clientLocalId = clientLocalId;
+    }
+
     public BigDecimal getWeightKg() {
         return weightKg;
     }
@@ -89,5 +100,9 @@ public class WeightEntryEntity {
 
     public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 }

@@ -162,4 +162,8 @@ public class UserProfileEntity {
     public void setDailyCalorieTargetKcal(Integer dailyCalorieTargetKcal) {
         this.dailyCalorieTargetKcal = dailyCalorieTargetKcal;
     }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
 }

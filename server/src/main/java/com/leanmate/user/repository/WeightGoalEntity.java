@@ -33,6 +33,12 @@ public class WeightGoalEntity {
     @Column(name = "daily_calorie_target_kcal", nullable = false)
     private Integer dailyCalorieTargetKcal;
 
+    @Column(name = "goal_type", nullable = false, length = 32)
+    private String goalType;
+
+    @Column(name = "weekly_target_weight_change_kg", precision = 5, scale = 2)
+    private BigDecimal weeklyTargetWeightChangeKg;
+
     @Column(name = "status", nullable = false, length = 32)
     private String status;
 
@@ -99,6 +105,22 @@ public class WeightGoalEntity {
 
     public void setDailyCalorieTargetKcal(Integer dailyCalorieTargetKcal) {
         this.dailyCalorieTargetKcal = dailyCalorieTargetKcal;
+    }
+
+    public String getGoalType() {
+        return goalType;
+    }
+
+    public void setGoalType(String goalType) {
+        this.goalType = goalType;
+    }
+
+    public BigDecimal getWeeklyTargetWeightChangeKg() {
+        return weeklyTargetWeightChangeKg;
+    }
+
+    public void setWeeklyTargetWeightChangeKg(BigDecimal weeklyTargetWeightChangeKg) {
+        this.weeklyTargetWeightChangeKg = weeklyTargetWeightChangeKg;
     }
 
     public String getStatus() {

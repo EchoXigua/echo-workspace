@@ -11,9 +11,12 @@ import static org.mockito.Mockito.when;
 
 import com.leanmate.diet.domain.FoodEntryStatus;
 import com.leanmate.diet.repository.FoodEntryRepository;
+import com.leanmate.retention.dto.RetentionNoticeResponse;
 import com.leanmate.retention.dto.StreakResponse;
 import com.leanmate.retention.repository.AchievementEntity;
 import com.leanmate.retention.repository.AchievementRepository;
+import com.leanmate.retention.repository.RetentionNoticeEntity;
+import com.leanmate.retention.repository.RetentionNoticeRepository;
 import com.leanmate.stats.repository.StreakEntity;
 import com.leanmate.stats.repository.StreakRepository;
 import com.leanmate.user.application.CurrentUserApplicationService;
@@ -45,6 +48,7 @@ class RetentionApplicationServiceTests {
     private WeightEntryRepository weightEntryRepository;
     private StreakRepository streakRepository;
     private AchievementRepository achievementRepository;
+    private RetentionNoticeRepository retentionNoticeRepository;
     private RetentionApplicationService retentionApplicationService;
 
     @BeforeEach
@@ -55,6 +59,7 @@ class RetentionApplicationServiceTests {
         weightEntryRepository = mock(WeightEntryRepository.class);
         streakRepository = mock(StreakRepository.class);
         achievementRepository = mock(AchievementRepository.class);
+        retentionNoticeRepository = mock(RetentionNoticeRepository.class);
         retentionApplicationService = new RetentionApplicationService(
                 currentUserApplicationService,
                 userProfileRepository,
@@ -62,6 +67,7 @@ class RetentionApplicationServiceTests {
                 weightEntryRepository,
                 streakRepository,
                 achievementRepository,
+                retentionNoticeRepository,
                 Clock.fixed(NOW, ZoneOffset.UTC));
 
         when(currentUserApplicationService.requireActiveUser(USER_ID)).thenReturn(new UserEntity());
@@ -81,6 +87,9 @@ class RetentionApplicationServiceTests {
             achievements.forEach(saved::add);
             return saved;
         });
+        when(retentionNoticeRepository.findByUserIdAndTypeAndMilestoneValue(eq(USER_ID), eq("streak"), any()))
+                .thenReturn(Optional.empty());
+        when(retentionNoticeRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
     @Test
@@ -95,6 +104,7 @@ class RetentionApplicationServiceTests {
                 .containsExactly(
                         org.assertj.core.groups.Tuple.tuple(3, false, null),
                         org.assertj.core.groups.Tuple.tuple(7, false, null),
+                        org.assertj.core.groups.Tuple.tuple(12, false, null),
                         org.assertj.core.groups.Tuple.tuple(30, false, null),
                         org.assertj.core.groups.Tuple.tuple(100, false, null));
 
@@ -197,6 +207,36 @@ class RetentionApplicationServiceTests {
         assertThat(response.milestones().get(1).achievedAt())
                 .isEqualTo(Instant.parse("2026-05-01T00:00:00Z"));
         verify(achievementRepository, never()).saveAll(any());
+    }
+
+    @Test
+    void listPendingNoticesRefreshesStreakBeforeQuery() {
+        when(foodEntryRepository.findDistinctMealDatesOnOrBefore(
+                USER_ID,
+                FoodEntryStatus.CONFIRMED.value(),
+                TODAY))
+                .thenReturn(List.of(
+                        LocalDate.parse("2026-06-05"),
+                        LocalDate.parse("2026-06-06"),
+                        LocalDate.parse("2026-06-07")));
+
+        RetentionNoticeEntity pendingNotice = new RetentionNoticeEntity();
+        pendingNotice.setUserId(USER_ID);
+        pendingNotice.setType("streak");
+        pendingNotice.setMilestoneValue(3);
+        pendingNotice.setTitle("连续记录 3 天");
+        pendingNotice.setMessage("今天也完成记录，继续保持现在的节奏。");
+        pendingNotice.setTriggeredAt(NOW);
+        when(retentionNoticeRepository.findByUserIdAndStatusOrderByTriggeredAtAsc(USER_ID, "pending"))
+                .thenReturn(List.of(pendingNotice));
+
+        List<RetentionNoticeResponse> responses = retentionApplicationService.listPendingNotices(USER_ID);
+
+        assertThat(responses).hasSize(1);
+        assertThat(responses.get(0).currentValue()).isEqualTo(3);
+        assertThat(responses.get(0).previousValue()).isNull();
+        assertThat(responses.get(0).nextValue()).isEqualTo(7);
+        verify(retentionNoticeRepository).save(any(RetentionNoticeEntity.class));
     }
 
     private UserProfileEntity profile() {

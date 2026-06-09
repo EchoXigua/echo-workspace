@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public record WeightEntryResponse(
         UUID id,
+        UUID clientLocalId,
         LocalDate recordDate,
         BigDecimal weightKg,
         String note,

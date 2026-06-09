@@ -6,6 +6,7 @@ import com.leanmate.weight.application.WeightApplicationService;
 import com.leanmate.weight.dto.SaveWeightEntryRequest;
 import com.leanmate.weight.dto.WeightEntryResponse;
 import com.leanmate.weight.dto.WeightEntrySaveResultResponse;
+import com.leanmate.weight.dto.WeightTrendResponse;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
@@ -35,6 +36,13 @@ public class WeightController {
                 CurrentUserContext.getRequired().userId(),
                 startDate,
                 endDate));
+    }
+
+    @GetMapping("/trend")
+    public ApiResponse<WeightTrendResponse> getTrend(@RequestParam(required = false) Integer days) {
+        return ApiResponse.success(weightApplicationService.getTrend(
+                CurrentUserContext.getRequired().userId(),
+                days));
     }
 
     @PostMapping

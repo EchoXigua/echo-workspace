@@ -23,6 +23,7 @@ import com.leanmate.diet.repository.FoodEntryRepository;
 import com.leanmate.diet.repository.FoodItemEntity;
 import com.leanmate.diet.repository.FoodItemRepository;
 import com.leanmate.food.repository.FoodCatalogRepository;
+import com.leanmate.retention.application.RetentionApplicationService;
 import com.leanmate.stats.application.DailyNutritionSnapshotApplicationService;
 import com.leanmate.stats.dto.DailyNutritionSnapshotResponse;
 import com.leanmate.user.application.CurrentUserApplicationService;
@@ -59,6 +60,7 @@ public class DietEntryApplicationService {
     private final FoodEntryCalculator foodEntryCalculator;
     private final NutritionDataValidator nutritionDataValidator;
     private final DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService;
+    private final RetentionApplicationService retentionApplicationService;
     private final Clock clock;
 
     @Autowired
@@ -70,7 +72,8 @@ public class DietEntryApplicationService {
             FoodCatalogRepository foodCatalogRepository,
             FoodEntryCalculator foodEntryCalculator,
             NutritionDataValidator nutritionDataValidator,
-            DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService
+            DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService,
+            RetentionApplicationService retentionApplicationService
     ) {
         this(
                 currentUserApplicationService,
@@ -81,6 +84,7 @@ public class DietEntryApplicationService {
                 foodEntryCalculator,
                 nutritionDataValidator,
                 dailyNutritionSnapshotApplicationService,
+                retentionApplicationService,
                 Clock.systemUTC());
     }
 
@@ -93,6 +97,7 @@ public class DietEntryApplicationService {
             FoodEntryCalculator foodEntryCalculator,
             NutritionDataValidator nutritionDataValidator,
             DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService,
+            RetentionApplicationService retentionApplicationService,
             Clock clock
     ) {
         this.currentUserApplicationService = currentUserApplicationService;
@@ -103,6 +108,7 @@ public class DietEntryApplicationService {
         this.foodEntryCalculator = foodEntryCalculator;
         this.nutritionDataValidator = nutritionDataValidator;
         this.dailyNutritionSnapshotApplicationService = dailyNutritionSnapshotApplicationService;
+        this.retentionApplicationService = retentionApplicationService;
         this.clock = clock;
     }
 
@@ -134,6 +140,7 @@ public class DietEntryApplicationService {
         List<FoodItemEntity> savedItems = replaceItems(savedEntry.getId(), request.items(), Set.of());
 
         DailyNutritionSnapshotResponse snapshot = refreshSnapshot(userId, request.mealDate(), profile);
+        refreshStreak(userId);
         return new FoodEntrySaveResultResponse(toResponse(savedEntry, savedItems), snapshot);
     }
 
@@ -195,6 +202,9 @@ public class DietEntryApplicationService {
         List<DailyNutritionSnapshotResponse> snapshots = affectedDates.stream()
                 .map(date -> refreshSnapshot(userId, date, profile))
                 .toList();
+        if (!affectedDates.isEmpty()) {
+            refreshStreak(userId);
+        }
         return new SyncLocalDietEntriesResultResponse(
                 importedEntries,
                 skippedClientLocalIds,
@@ -224,6 +234,7 @@ public class DietEntryApplicationService {
             refreshSnapshot(userId, oldMealDate, profile);
         }
         DailyNutritionSnapshotResponse snapshot = refreshSnapshot(userId, request.mealDate(), profile);
+        refreshStreak(userId);
         return new FoodEntrySaveResultResponse(toResponse(savedEntry, savedItems), snapshot);
     }
 
@@ -237,6 +248,7 @@ public class DietEntryApplicationService {
         entry.setDeletedAt(Instant.now(clock));
         foodEntryRepository.save(entry);
         refreshSnapshot(userId, entry.getMealDate(), profile);
+        refreshStreak(userId);
     }
 
     private void validateSyncItem(LocalDietEntrySyncItemRequest item, UserProfileEntity profile) {
@@ -381,6 +393,10 @@ public class DietEntryApplicationService {
                 userId,
                 mealDate,
                 profile.getDailyCalorieTargetKcal());
+    }
+
+    private void refreshStreak(UUID userId) {
+        retentionApplicationService.getStreak(userId);
     }
 
     private UserProfileEntity requireProfile(UUID userId) {

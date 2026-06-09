@@ -46,6 +46,25 @@ class ProfileCalculatorTests {
     }
 
     @Test
+    void calculateGainWeightTargetWithSurplus() {
+        ProfileCalculationResult result = profileCalculator.calculate(
+                Gender.MALE,
+                30,
+                new BigDecimal("170"),
+                new BigDecimal("70"),
+                new BigDecimal("80"),
+                GoalType.GAIN_WEIGHT,
+                ActivityLevel.MODERATE,
+                null,
+                LocalDate.parse("2026-06-06"));
+
+        assertThat(result.bmi()).isEqualByComparingTo("24.22");
+        assertThat(result.bmrKcal()).isEqualTo(1618);
+        assertThat(result.dailyCalorieTargetKcal()).isEqualTo(2760);
+        assertThat(result.weeklyTargetWeightChangeKg()).isEqualByComparingTo("0.25");
+    }
+
+    @Test
     void rejectUnsafeTargetWeight() {
         assertThatThrownBy(() -> profileCalculator.calculate(
                 Gender.FEMALE,

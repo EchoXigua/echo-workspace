@@ -7,7 +7,9 @@ import com.leanmate.food.repository.FoodAliasRepository;
 import com.leanmate.food.repository.FoodCatalogRepository;
 import com.leanmate.food.repository.FoodPortionRepository;
 import com.leanmate.retention.repository.AchievementRepository;
+import com.leanmate.retention.repository.RetentionNoticeRepository;
 import com.leanmate.report.repository.DailyAiReportRepository;
+import com.leanmate.settings.repository.UserSettingsRepository;
 import com.leanmate.stats.repository.DailyAiReportSummaryRepository;
 import com.leanmate.stats.repository.DailyNutritionSnapshotRepository;
 import com.leanmate.stats.repository.FoodEntrySummaryRepository;
@@ -67,6 +69,12 @@ class LeanMateApplicationTests {
 
     @MockitoBean
     AchievementRepository achievementRepository;
+
+    @MockitoBean
+    RetentionNoticeRepository retentionNoticeRepository;
+
+    @MockitoBean
+    UserSettingsRepository userSettingsRepository;
 
     @MockitoBean
     FoodNutritionSummaryRepository foodNutritionSummaryRepository;

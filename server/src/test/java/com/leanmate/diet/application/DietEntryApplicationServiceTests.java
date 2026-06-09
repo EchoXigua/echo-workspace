@@ -27,6 +27,7 @@ import com.leanmate.diet.repository.FoodEntryRepository;
 import com.leanmate.diet.repository.FoodItemEntity;
 import com.leanmate.diet.repository.FoodItemRepository;
 import com.leanmate.food.repository.FoodCatalogRepository;
+import com.leanmate.retention.application.RetentionApplicationService;
 import com.leanmate.stats.application.DailyNutritionSnapshotApplicationService;
 import com.leanmate.stats.dto.DailyNutritionSnapshotResponse;
 import com.leanmate.user.application.CurrentUserApplicationService;
@@ -58,6 +59,7 @@ class DietEntryApplicationServiceTests {
     private FoodItemRepository foodItemRepository;
     private FoodCatalogRepository foodCatalogRepository;
     private DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService;
+    private RetentionApplicationService retentionApplicationService;
     private DietEntryApplicationService dietEntryApplicationService;
 
     @BeforeEach
@@ -68,6 +70,7 @@ class DietEntryApplicationServiceTests {
         foodItemRepository = mock(FoodItemRepository.class);
         foodCatalogRepository = mock(FoodCatalogRepository.class);
         dailyNutritionSnapshotApplicationService = mock(DailyNutritionSnapshotApplicationService.class);
+        retentionApplicationService = mock(RetentionApplicationService.class);
         dietEntryApplicationService = new DietEntryApplicationService(
                 currentUserApplicationService,
                 userProfileRepository,
@@ -77,6 +80,7 @@ class DietEntryApplicationServiceTests {
                 new FoodEntryCalculator(),
                 new NutritionDataValidator(),
                 dailyNutritionSnapshotApplicationService,
+                retentionApplicationService,
                 Clock.fixed(Instant.parse("2026-06-07T00:00:00Z"), ZoneOffset.UTC));
 
         when(currentUserApplicationService.requireActiveUser(USER_ID)).thenReturn(new UserEntity());
@@ -107,6 +111,7 @@ class DietEntryApplicationServiceTests {
         assertThat(response.entry().items()).hasSize(2);
         assertThat(response.today()).isEqualTo(snapshot);
         verify(foodItemRepository).deleteByFoodEntryId(ENTRY_ID);
+        verify(retentionApplicationService).getStreak(USER_ID);
     }
 
     @Test
@@ -175,6 +180,7 @@ class DietEntryApplicationServiceTests {
         ArgumentCaptor<FoodEntryEntity> entryCaptor = ArgumentCaptor.forClass(FoodEntryEntity.class);
         verify(foodEntryRepository).save(entryCaptor.capture());
         assertThat(entryCaptor.getValue().getClientLocalId()).isEqualTo(CLIENT_LOCAL_ID);
+        verify(retentionApplicationService).getStreak(USER_ID);
     }
 
     @Test
