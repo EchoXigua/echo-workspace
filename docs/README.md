@@ -21,6 +21,7 @@ docs/
 - [总体架构设计](architecture/overview.md)
 - [后端架构设计](architecture/backend.md)
 - [领域模型设计](architecture/domain-model.md)
+- [热量目标校准和饮食营养数据校验策略](architecture/decisions/0004-calorie-target-and-nutrition-validation.md)
 - [OpenAPI 契约](api/openapi.yaml)
 - [V1.1 后端接口文档](../server/docs/v1.1-api-reference.md)
 - [后端技术选型](../server/docs/technology-selection.md)

@@ -12,7 +12,7 @@ public record SaveFoodItemRequest(
         UUID id,
         @NotBlank @Size(max = 128) String name,
         @Size(max = 128) String quantityText,
-        @DecimalMin("0.0") BigDecimal weightG,
+        @DecimalMin(value = "0.0", inclusive = false) BigDecimal weightG,
         @Min(0) Integer caloriesKcal,
         @DecimalMin("0.0") BigDecimal proteinG,
         @DecimalMin("0.0") BigDecimal fatG,

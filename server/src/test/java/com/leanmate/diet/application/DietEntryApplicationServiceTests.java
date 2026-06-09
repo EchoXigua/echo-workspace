@@ -15,6 +15,7 @@ import com.leanmate.diet.domain.FoodEntryCalculator;
 import com.leanmate.diet.domain.FoodEntrySourceType;
 import com.leanmate.diet.domain.FoodEntryStatus;
 import com.leanmate.diet.domain.MealType;
+import com.leanmate.diet.domain.NutritionDataValidator;
 import com.leanmate.diet.dto.FoodEntrySaveResultResponse;
 import com.leanmate.diet.dto.LocalDietEntrySyncItemRequest;
 import com.leanmate.diet.dto.SaveFoodEntryRequest;
@@ -69,6 +70,7 @@ class DietEntryApplicationServiceTests {
                 foodEntryRepository,
                 foodItemRepository,
                 new FoodEntryCalculator(),
+                new NutritionDataValidator(),
                 dailyNutritionSnapshotApplicationService,
                 Clock.fixed(Instant.parse("2026-06-07T00:00:00Z"), ZoneOffset.UTC));
 
@@ -100,6 +102,18 @@ class DietEntryApplicationServiceTests {
         assertThat(response.entry().items()).hasSize(2);
         assertThat(response.today()).isEqualTo(snapshot);
         verify(foodItemRepository).deleteByFoodEntryId(ENTRY_ID);
+    }
+
+    @Test
+    void rejectEntryWhenNutritionDataIsUnreasonable() {
+        SaveFoodEntryRequest request = invalidNutritionRequest(LocalDate.parse("2026-06-07"));
+
+        assertThatThrownBy(() -> dietEntryApplicationService.createEntry(USER_ID, request))
+                .isInstanceOf(BusinessException.class)
+                .hasMessage("热量与蛋白质、脂肪、碳水估算值偏差过大")
+                .extracting("errorCode")
+                .isEqualTo(ErrorCode.BAD_REQUEST);
+        verifyNoInteractions(dailyNutritionSnapshotApplicationService);
     }
 
     @Test
@@ -273,6 +287,27 @@ class DietEntryApplicationServiceTests {
                 entry,
                 Instant.parse("2026-06-07T01:00:00Z"),
                 Instant.parse("2026-06-07T01:05:00Z"))));
+    }
+
+    private SaveFoodEntryRequest invalidNutritionRequest(LocalDate mealDate) {
+        return new SaveFoodEntryRequest(
+                null,
+                mealDate,
+                MealType.LUNCH,
+                FoodEntrySourceType.MANUAL,
+                null,
+                null,
+                List.of(new SaveFoodItemRequest(
+                        null,
+                        "离谱食物",
+                        "1份",
+                        new BigDecimal("200"),
+                        100,
+                        new BigDecimal("100"),
+                        new BigDecimal("50"),
+                        new BigDecimal("200"),
+                        null,
+                        true)));
     }
 
     private FoodEntryEntity existingEntry(UUID userId, LocalDate mealDate) {

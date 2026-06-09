@@ -120,6 +120,40 @@ sequenceDiagram
   - 最终目标四舍五入到 10 kcal，并应用安全下限：男性 1500 kcal，女性 1200 kcal，未知性别 1300 kcal。
 - 目标体重安全阈值：按目标 BMI 不低于 18.5 校验，低于阈值返回 `40001` 参数错误。
 
+## 后续热量目标动态校准
+
+当前 V1.1 接口负责根据用户档案生成初始 `dailyCalorieTargetKcal`。基于体重趋势的目标校准作为建议能力提供，不由后端自动修改用户目标。
+
+建议规则：
+
+- 至少基于 7-14 天体重记录，不使用单日体重直接判断。
+- 优先使用 7 日移动平均体重或 14 天趋势，降低水分、盐分、排便等短期波动影响。
+- 体重下降慢于预期时，建议每日目标小幅下调，例如 `-100` 到 `-150` kcal。
+- 体重下降过快时，建议每日目标小幅上调，例如 `+100` 到 `+150` kcal。
+- 建议需要给出原因，并由用户确认后再更新档案或目标快照。
+- 不自动覆盖历史 `daily_nutrition_snapshots.calorie_target_kcal`，避免历史统计口径变化。
+
+已实现接口：
+
+- `GET /v1/profile/calorie-target-suggestion`
+
+建议响应：
+
+```json
+{
+  "status": "suggest_lower",
+  "currentTargetKcal": 1800,
+  "suggestedTargetKcal": 1700,
+  "changeKcal": -100,
+  "reason": "过去 14 天体重下降慢于预期",
+  "requiresUserConfirmation": true,
+  "trendDays": 14,
+  "startAverageWeightKg": 80.0,
+  "endAverageWeightKg": 79.9,
+  "weeklyWeightChangeKg": -0.1
+}
+```
+
 ## 异常和降级
 
 - 档案未完成时，首页接口返回 `profileCompleted = false`，客户端引导补全。

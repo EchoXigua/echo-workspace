@@ -3,6 +3,7 @@ package com.leanmate.user.controller;
 import com.leanmate.common.response.ApiResponse;
 import com.leanmate.common.security.CurrentUserContext;
 import com.leanmate.user.application.UserProfileApplicationService;
+import com.leanmate.user.dto.CalorieTargetSuggestionResponse;
 import com.leanmate.user.dto.ProfilePayload;
 import com.leanmate.user.dto.SaveUserProfileRequest;
 import jakarta.validation.Valid;
@@ -26,6 +27,12 @@ public class ProfileController {
     public ApiResponse<ProfilePayload> getProfile() {
         return ApiResponse.success(
                 userProfileApplicationService.getProfile(CurrentUserContext.getRequired().userId()));
+    }
+
+    @GetMapping("/calorie-target-suggestion")
+    public ApiResponse<CalorieTargetSuggestionResponse> getCalorieTargetSuggestion() {
+        return ApiResponse.success(userProfileApplicationService.getCalorieTargetSuggestion(
+                CurrentUserContext.getRequired().userId()));
     }
 
     @PutMapping

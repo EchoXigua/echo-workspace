@@ -140,6 +140,22 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+  /v1/profile/calorie-target-suggestion:
+    get:
+      tags: [Profile]
+      summary: 获取热量目标调整建议
+      description: 基于最近 14 天体重趋势给出建议，不会自动修改用户当前目标。
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiCalorieTargetSuggestionResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
   /v1/home/today:
     get:
       tags: [Home]
@@ -623,6 +639,14 @@ components:
           properties:
             data:
               $ref: "#/components/schemas/ProfilePayload"
+    ApiCalorieTargetSuggestionResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: "#/components/schemas/CalorieTargetSuggestion"
     ApiTodayHomeResponse:
       allOf:
         - $ref: "#/components/schemas/ApiResponse"
@@ -835,6 +859,42 @@ components:
               type: integer
             dailyCalorieTargetKcal:
               type: integer
+    CalorieTargetSuggestion:
+      type: object
+      required:
+        - status
+        - currentTargetKcal
+        - suggestedTargetKcal
+        - changeKcal
+        - reason
+        - requiresUserConfirmation
+        - trendDays
+      properties:
+        status:
+          type: string
+          enum: [insufficient_data, not_applicable, on_track, suggest_lower, suggest_higher, at_safety_floor]
+        currentTargetKcal:
+          type: integer
+        suggestedTargetKcal:
+          type: integer
+        changeKcal:
+          type: integer
+        reason:
+          type: string
+        requiresUserConfirmation:
+          type: boolean
+        trendDays:
+          type: integer
+          example: 14
+        startAverageWeightKg:
+          type: number
+          nullable: true
+        endAverageWeightKg:
+          type: number
+          nullable: true
+        weeklyWeightChangeKg:
+          type: number
+          nullable: true
     TodayHome:
       type: object
       required:
@@ -1034,18 +1094,29 @@ components:
           nullable: true
         weightG:
           type: number
+          minimum: 0
+          exclusiveMinimum: true
+          maximum: 10000
           nullable: true
         caloriesKcal:
           type: integer
+          minimum: 0
+          maximum: 5000
           nullable: true
         proteinG:
           type: number
+          minimum: 0
+          maximum: 1000
           nullable: true
         fatG:
           type: number
+          minimum: 0
+          maximum: 1000
           nullable: true
         carbsG:
           type: number
+          minimum: 0
+          maximum: 1000
           nullable: true
         confidence:
           type: number

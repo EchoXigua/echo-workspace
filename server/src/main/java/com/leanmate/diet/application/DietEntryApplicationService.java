@@ -7,6 +7,7 @@ import com.leanmate.diet.domain.FoodEntryStatus;
 import com.leanmate.diet.domain.FoodEntryTotals;
 import com.leanmate.diet.domain.FoodEntrySourceType;
 import com.leanmate.diet.domain.MealType;
+import com.leanmate.diet.domain.NutritionDataValidator;
 import com.leanmate.diet.dto.FoodEntryResponse;
 import com.leanmate.diet.dto.FoodEntrySaveResultResponse;
 import com.leanmate.diet.dto.FoodItemResponse;
@@ -53,6 +54,7 @@ public class DietEntryApplicationService {
     private final FoodEntryRepository foodEntryRepository;
     private final FoodItemRepository foodItemRepository;
     private final FoodEntryCalculator foodEntryCalculator;
+    private final NutritionDataValidator nutritionDataValidator;
     private final DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService;
     private final Clock clock;
 
@@ -63,6 +65,7 @@ public class DietEntryApplicationService {
             FoodEntryRepository foodEntryRepository,
             FoodItemRepository foodItemRepository,
             FoodEntryCalculator foodEntryCalculator,
+            NutritionDataValidator nutritionDataValidator,
             DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService
     ) {
         this(
@@ -71,6 +74,7 @@ public class DietEntryApplicationService {
                 foodEntryRepository,
                 foodItemRepository,
                 foodEntryCalculator,
+                nutritionDataValidator,
                 dailyNutritionSnapshotApplicationService,
                 Clock.systemUTC());
     }
@@ -81,6 +85,7 @@ public class DietEntryApplicationService {
             FoodEntryRepository foodEntryRepository,
             FoodItemRepository foodItemRepository,
             FoodEntryCalculator foodEntryCalculator,
+            NutritionDataValidator nutritionDataValidator,
             DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService,
             Clock clock
     ) {
@@ -89,6 +94,7 @@ public class DietEntryApplicationService {
         this.foodEntryRepository = foodEntryRepository;
         this.foodItemRepository = foodItemRepository;
         this.foodEntryCalculator = foodEntryCalculator;
+        this.nutritionDataValidator = nutritionDataValidator;
         this.dailyNutritionSnapshotApplicationService = dailyNutritionSnapshotApplicationService;
         this.clock = clock;
     }
@@ -113,6 +119,7 @@ public class DietEntryApplicationService {
         currentUserApplicationService.requireActiveUser(userId);
         UserProfileEntity profile = requireProfile(userId);
         validateMealDate(request.mealDate(), profile);
+        nutritionDataValidator.validate(request.items());
 
         FoodEntryEntity entry = new FoodEntryEntity();
         applyRequest(entry, userId, request, foodEntryCalculator.calculate(request.items()));
@@ -193,6 +200,7 @@ public class DietEntryApplicationService {
         currentUserApplicationService.requireActiveUser(userId);
         UserProfileEntity profile = requireProfile(userId);
         validateMealDate(request.mealDate(), profile);
+        nutritionDataValidator.validate(request.items());
 
         FoodEntryEntity entry = requireEditableEntry(userId, entryId);
         LocalDate oldMealDate = entry.getMealDate();
@@ -252,41 +260,8 @@ public class DietEntryApplicationService {
             throw invalidSyncItem("items 不能为空");
         }
 
-        request.items().forEach(this::validateSyncFoodItem);
+        nutritionDataValidator.validate(request.items());
         validateMealDate(request.mealDate(), profile);
-    }
-
-    private void validateSyncFoodItem(SaveFoodItemRequest item) {
-        if (item == null) {
-            throw invalidSyncItem("食物项不能为空");
-        }
-        if (!StringUtils.hasText(item.name())) {
-            throw invalidSyncItem("食物名称不能为空");
-        }
-        if (item.name().trim().length() > 128) {
-            throw invalidSyncItem("食物名称长度不能超过 128");
-        }
-        if (item.quantityText() != null && item.quantityText().length() > 128) {
-            throw invalidSyncItem("quantityText 长度不能超过 128");
-        }
-        if (item.caloriesKcal() != null && item.caloriesKcal() < 0) {
-            throw invalidSyncItem("caloriesKcal 不能小于 0");
-        }
-
-        requireNonNegative(item.weightG(), "weightG");
-        requireNonNegative(item.proteinG(), "proteinG");
-        requireNonNegative(item.fatG(), "fatG");
-        requireNonNegative(item.carbsG(), "carbsG");
-        if (item.confidence() != null
-                && (item.confidence().signum() < 0 || item.confidence().compareTo(BigDecimal.ONE) > 0)) {
-            throw invalidSyncItem("confidence 必须在 0 到 1 之间");
-        }
-    }
-
-    private void requireNonNegative(BigDecimal value, String fieldName) {
-        if (value != null && value.signum() < 0) {
-            throw invalidSyncItem(fieldName + " 不能小于 0");
-        }
     }
 
     private BusinessException invalidSyncItem(String message) {
