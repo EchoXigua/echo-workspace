@@ -2,6 +2,7 @@ package com.leanmate.diet.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +14,8 @@ public interface FoodEntryRepository extends JpaRepository<FoodEntryEntity, UUID
             UUID userId,
             LocalDate mealDate,
             String status);
+
+    Optional<FoodEntryEntity> findByUserIdAndClientLocalId(UUID userId, UUID clientLocalId);
 
     @Query("""
             select distinct entry.mealDate

@@ -4,7 +4,7 @@
 
 - 版本：V1.1
 - 对应 PRD：8.3 饮食记录
-- 状态：手动记录和 AI 识别任务接口已实现
+- 状态：手动记录、AI 识别任务和游客本地记录同步接口已实现
 
 ## 业务目标
 
@@ -103,7 +103,7 @@ sequenceDiagram
 - `food_items.is_user_edited`
 - `ai_recognition_tasks.status`：pending/running/succeeded/failed
 - `ai_recognition_tasks.raw_output`
-- 后续支持游客登录后同步时，`food_entries` 需要增加或关联保存客户端 `client_local_id`，并在 `(user_id, client_local_id)` 上建立唯一约束。
+- 游客登录后同步时，`food_entries.client_local_id` 保存客户端本地记录 ID，并在 `(user_id, client_local_id)` 上建立唯一约束。
 
 索引建议：
 
@@ -130,7 +130,7 @@ sequenceDiagram
 
 - `POST /v1/diet/recognitions/photo`、`POST /v1/diet/recognitions/text`、`GET /v1/diet/recognitions/{taskId}` 已实现。
 - 保存饮食记录后返回 `entry` 和刷新后的 `today` 统计快照。
-- `POST /v1/diet/entries/sync-local` 用于登录后批量导入游客本地记录；该接口需要后端补实现。
+- `POST /v1/diet/entries/sync-local` 用于登录后批量导入游客本地记录；后端已实现按当前用户和 `clientLocalId` 幂等导入。
 
 最终接口契约以 `../../../../docs/api/openapi.yaml` 为准。
 

@@ -193,6 +193,7 @@ create table food_entries (
     id uuid primary key default gen_random_uuid(),
     user_id uuid not null references users(id),
     recognition_task_id uuid references ai_recognition_tasks(id),
+    client_local_id uuid,
     meal_date date not null,
     meal_type varchar(16) not null,
     source_type varchar(16) not null,
@@ -215,6 +216,9 @@ create table food_entries (
 
 create index idx_food_entries_user_date on food_entries(user_id, meal_date, status);
 create index idx_food_entries_recognition_task on food_entries(recognition_task_id);
+create unique index uq_food_entries_user_client_local_id
+    on food_entries(user_id, client_local_id)
+    where client_local_id is not null;
 ```
 
 ### food_items

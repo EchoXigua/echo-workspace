@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -15,8 +16,11 @@ import com.leanmate.diet.domain.FoodEntrySourceType;
 import com.leanmate.diet.domain.FoodEntryStatus;
 import com.leanmate.diet.domain.MealType;
 import com.leanmate.diet.dto.FoodEntrySaveResultResponse;
+import com.leanmate.diet.dto.LocalDietEntrySyncItemRequest;
 import com.leanmate.diet.dto.SaveFoodEntryRequest;
 import com.leanmate.diet.dto.SaveFoodItemRequest;
+import com.leanmate.diet.dto.SyncLocalDietEntriesRequest;
+import com.leanmate.diet.dto.SyncLocalDietEntriesResultResponse;
 import com.leanmate.diet.repository.FoodEntryEntity;
 import com.leanmate.diet.repository.FoodEntryRepository;
 import com.leanmate.diet.repository.FoodItemEntity;
@@ -35,6 +39,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.mockito.ArgumentCaptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,6 +47,7 @@ class DietEntryApplicationServiceTests {
 
     private static final UUID USER_ID = UUID.fromString("11111111-2222-3333-4444-555555555555");
     private static final UUID ENTRY_ID = UUID.fromString("aaaaaaaa-1111-2222-3333-444444444444");
+    private static final UUID CLIENT_LOCAL_ID = UUID.fromString("cccccccc-1111-2222-3333-444444444444");
 
     private CurrentUserApplicationService currentUserApplicationService;
     private UserProfileRepository userProfileRepository;
@@ -94,6 +100,95 @@ class DietEntryApplicationServiceTests {
         assertThat(response.entry().items()).hasSize(2);
         assertThat(response.today()).isEqualTo(snapshot);
         verify(foodItemRepository).deleteByFoodEntryId(ENTRY_ID);
+    }
+
+    @Test
+    void syncLocalEntriesImportsNewEntryAndRefreshesSnapshots() {
+        SaveFoodEntryRequest entryRequest = request(LocalDate.parse("2026-06-07"));
+        SyncLocalDietEntriesRequest request = syncRequest(CLIENT_LOCAL_ID, entryRequest);
+        DailyNutritionSnapshotResponse snapshot = snapshot(LocalDate.parse("2026-06-07"));
+
+        when(foodEntryRepository.findByUserIdAndClientLocalId(USER_ID, CLIENT_LOCAL_ID))
+                .thenReturn(Optional.empty());
+        when(foodEntryRepository.save(any(FoodEntryEntity.class))).thenAnswer(invocation -> {
+            FoodEntryEntity entry = invocation.getArgument(0);
+            entry.setId(ENTRY_ID);
+            return entry;
+        });
+        when(foodItemRepository.saveAll(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(dailyNutritionSnapshotApplicationService.recalculateDietTotals(
+                USER_ID,
+                entryRequest.mealDate(),
+                1800))
+                .thenReturn(snapshot);
+
+        SyncLocalDietEntriesResultResponse response = dietEntryApplicationService.syncLocalEntries(USER_ID, request);
+
+        assertThat(response.importedEntries()).hasSize(1);
+        assertThat(response.importedEntries().get(0).totalCaloriesKcal()).isEqualTo(450);
+        assertThat(response.skippedClientLocalIds()).isEmpty();
+        assertThat(response.failedItems()).isEmpty();
+        assertThat(response.snapshots()).containsExactly(snapshot);
+
+        ArgumentCaptor<FoodEntryEntity> entryCaptor = ArgumentCaptor.forClass(FoodEntryEntity.class);
+        verify(foodEntryRepository).save(entryCaptor.capture());
+        assertThat(entryCaptor.getValue().getClientLocalId()).isEqualTo(CLIENT_LOCAL_ID);
+    }
+
+    @Test
+    void syncLocalEntriesSkipsExistingClientLocalId() {
+        FoodEntryEntity existingEntry = existingEntry(USER_ID, LocalDate.parse("2026-06-07"));
+        existingEntry.setClientLocalId(CLIENT_LOCAL_ID);
+        FoodItemEntity existingItem = existingItem();
+        DailyNutritionSnapshotResponse snapshot = snapshot(LocalDate.parse("2026-06-07"));
+
+        when(foodEntryRepository.findByUserIdAndClientLocalId(USER_ID, CLIENT_LOCAL_ID))
+                .thenReturn(Optional.of(existingEntry));
+        when(foodItemRepository.findByFoodEntryIdOrderBySortOrderAsc(ENTRY_ID))
+                .thenReturn(List.of(existingItem));
+        when(dailyNutritionSnapshotApplicationService.recalculateDietTotals(
+                USER_ID,
+                LocalDate.parse("2026-06-07"),
+                1800))
+                .thenReturn(snapshot);
+
+        SyncLocalDietEntriesResultResponse response = dietEntryApplicationService.syncLocalEntries(
+                USER_ID,
+                syncRequest(CLIENT_LOCAL_ID, request(LocalDate.parse("2026-06-07"))));
+
+        assertThat(response.importedEntries()).hasSize(1);
+        assertThat(response.skippedClientLocalIds()).containsExactly(CLIENT_LOCAL_ID);
+        assertThat(response.failedItems()).isEmpty();
+        assertThat(response.snapshots()).containsExactly(snapshot);
+        verify(foodEntryRepository, never()).save(any(FoodEntryEntity.class));
+    }
+
+    @Test
+    void syncLocalEntriesReturnsFailedItemWhenEntryIsInvalid() {
+        SaveFoodEntryRequest invalidEntry = new SaveFoodEntryRequest(
+                null,
+                LocalDate.parse("2026-06-07"),
+                MealType.LUNCH,
+                FoodEntrySourceType.MANUAL,
+                null,
+                null,
+                List.of());
+
+        when(foodEntryRepository.findByUserIdAndClientLocalId(USER_ID, CLIENT_LOCAL_ID))
+                .thenReturn(Optional.empty());
+
+        SyncLocalDietEntriesResultResponse response = dietEntryApplicationService.syncLocalEntries(
+                USER_ID,
+                syncRequest(CLIENT_LOCAL_ID, invalidEntry));
+
+        assertThat(response.importedEntries()).isEmpty();
+        assertThat(response.skippedClientLocalIds()).isEmpty();
+        assertThat(response.failedItems()).hasSize(1);
+        assertThat(response.failedItems().get(0).clientLocalId()).isEqualTo(CLIENT_LOCAL_ID);
+        assertThat(response.failedItems().get(0).code()).isEqualTo("invalid_food_entry");
+        assertThat(response.snapshots()).isEmpty();
+        verify(foodEntryRepository, never()).save(any(FoodEntryEntity.class));
+        verifyNoInteractions(dailyNutritionSnapshotApplicationService);
     }
 
     @Test
@@ -172,6 +267,14 @@ class DietEntryApplicationServiceTests {
                                 false)));
     }
 
+    private SyncLocalDietEntriesRequest syncRequest(UUID clientLocalId, SaveFoodEntryRequest entry) {
+        return new SyncLocalDietEntriesRequest(List.of(new LocalDietEntrySyncItemRequest(
+                clientLocalId,
+                entry,
+                Instant.parse("2026-06-07T01:00:00Z"),
+                Instant.parse("2026-06-07T01:05:00Z"))));
+    }
+
     private FoodEntryEntity existingEntry(UUID userId, LocalDate mealDate) {
         FoodEntryEntity entry = new FoodEntryEntity();
         entry.setId(ENTRY_ID);
@@ -180,7 +283,20 @@ class DietEntryApplicationServiceTests {
         entry.setMealType(MealType.LUNCH.value());
         entry.setSourceType(FoodEntrySourceType.MANUAL.value());
         entry.setStatus(FoodEntryStatus.CONFIRMED.value());
+        entry.setTotalCaloriesKcal(450);
+        entry.setTotalProteinG(new BigDecimal("33.50"));
+        entry.setTotalFatG(new BigDecimal("5.50"));
+        entry.setTotalCarbsG(new BigDecimal("45.00"));
         return entry;
+    }
+
+    private FoodItemEntity existingItem() {
+        FoodItemEntity item = new FoodItemEntity();
+        item.setId(UUID.fromString("bbbbbbbb-1111-2222-3333-444444444444"));
+        item.setFoodEntryId(ENTRY_ID);
+        item.setName("鸡胸肉");
+        item.setCaloriesKcal(250);
+        return item;
     }
 
     private UserProfileEntity profile() {

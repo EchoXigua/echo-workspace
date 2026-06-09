@@ -24,6 +24,9 @@ public class FoodEntryEntity {
     @Column(name = "recognition_task_id")
     private UUID recognitionTaskId;
 
+    @Column(name = "client_local_id")
+    private UUID clientLocalId;
+
     @Column(name = "meal_date", nullable = false)
     private LocalDate mealDate;
 
@@ -106,6 +109,14 @@ public class FoodEntryEntity {
 
     public void setRecognitionTaskId(UUID recognitionTaskId) {
         this.recognitionTaskId = recognitionTaskId;
+    }
+
+    public UUID getClientLocalId() {
+        return clientLocalId;
+    }
+
+    public void setClientLocalId(UUID clientLocalId) {
+        this.clientLocalId = clientLocalId;
     }
 
     public LocalDate getMealDate() {

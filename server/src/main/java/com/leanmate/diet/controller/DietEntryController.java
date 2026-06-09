@@ -6,6 +6,8 @@ import com.leanmate.diet.application.DietEntryApplicationService;
 import com.leanmate.diet.dto.FoodEntryResponse;
 import com.leanmate.diet.dto.FoodEntrySaveResultResponse;
 import com.leanmate.diet.dto.SaveFoodEntryRequest;
+import com.leanmate.diet.dto.SyncLocalDietEntriesRequest;
+import com.leanmate.diet.dto.SyncLocalDietEntriesResultResponse;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
@@ -42,6 +44,15 @@ public class DietEntryController {
             @Valid @RequestBody SaveFoodEntryRequest request
     ) {
         return ApiResponse.success(dietEntryApplicationService.createEntry(
+                CurrentUserContext.getRequired().userId(),
+                request));
+    }
+
+    @PostMapping("/sync-local")
+    public ApiResponse<SyncLocalDietEntriesResultResponse> syncLocalEntries(
+            @Valid @RequestBody SyncLocalDietEntriesRequest request
+    ) {
+        return ApiResponse.success(dietEntryApplicationService.syncLocalEntries(
                 CurrentUserContext.getRequired().userId(),
                 request));
     }

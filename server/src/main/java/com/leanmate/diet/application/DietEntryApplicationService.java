@@ -10,8 +10,12 @@ import com.leanmate.diet.domain.MealType;
 import com.leanmate.diet.dto.FoodEntryResponse;
 import com.leanmate.diet.dto.FoodEntrySaveResultResponse;
 import com.leanmate.diet.dto.FoodItemResponse;
+import com.leanmate.diet.dto.LocalDietEntrySyncFailureResponse;
+import com.leanmate.diet.dto.LocalDietEntrySyncItemRequest;
 import com.leanmate.diet.dto.SaveFoodEntryRequest;
 import com.leanmate.diet.dto.SaveFoodItemRequest;
+import com.leanmate.diet.dto.SyncLocalDietEntriesRequest;
+import com.leanmate.diet.dto.SyncLocalDietEntriesResultResponse;
 import com.leanmate.diet.repository.FoodEntryEntity;
 import com.leanmate.diet.repository.FoodEntryRepository;
 import com.leanmate.diet.repository.FoodItemEntity;
@@ -28,8 +32,11 @@ import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -117,6 +124,71 @@ public class DietEntryApplicationService {
     }
 
     @Transactional
+    public SyncLocalDietEntriesResultResponse syncLocalEntries(
+            UUID userId,
+            SyncLocalDietEntriesRequest request
+    ) {
+        currentUserApplicationService.requireActiveUser(userId);
+        UserProfileEntity profile = requireProfile(userId);
+
+        List<FoodEntryResponse> importedEntries = new ArrayList<>();
+        List<UUID> skippedClientLocalIds = new ArrayList<>();
+        List<LocalDietEntrySyncFailureResponse> failedItems = new ArrayList<>();
+        Set<LocalDate> affectedDates = new TreeSet<>();
+        Set<UUID> seenClientLocalIds = new HashSet<>();
+
+        for (LocalDietEntrySyncItemRequest item : request.entries()) {
+            if (item == null || item.clientLocalId() == null) {
+                throw new BusinessException(ErrorCode.BAD_REQUEST, "clientLocalId 不能为空");
+            }
+
+            UUID clientLocalId = item.clientLocalId();
+            if (!seenClientLocalIds.add(clientLocalId)) {
+                skippedClientLocalIds.add(clientLocalId);
+                continue;
+            }
+
+            FoodEntryEntity existingEntry = foodEntryRepository
+                    .findByUserIdAndClientLocalId(userId, clientLocalId)
+                    .orElse(null);
+            if (existingEntry != null) {
+                importedEntries.add(toResponse(existingEntry));
+                skippedClientLocalIds.add(clientLocalId);
+                affectedDates.add(existingEntry.getMealDate());
+                continue;
+            }
+
+            try {
+                validateSyncItem(item, profile);
+
+                SaveFoodEntryRequest entryRequest = item.entry();
+                FoodEntryEntity entry = new FoodEntryEntity();
+                applyRequest(entry, userId, entryRequest, foodEntryCalculator.calculate(entryRequest.items()));
+                entry.setClientLocalId(clientLocalId);
+                FoodEntryEntity savedEntry = foodEntryRepository.save(entry);
+                List<FoodItemEntity> savedItems = replaceItems(savedEntry.getId(), entryRequest.items(), Set.of());
+
+                importedEntries.add(toResponse(savedEntry, savedItems));
+                affectedDates.add(entryRequest.mealDate());
+            } catch (BusinessException exception) {
+                failedItems.add(new LocalDietEntrySyncFailureResponse(
+                        clientLocalId,
+                        "invalid_food_entry",
+                        exception.getMessage()));
+            }
+        }
+
+        List<DailyNutritionSnapshotResponse> snapshots = affectedDates.stream()
+                .map(date -> refreshSnapshot(userId, date, profile))
+                .toList();
+        return new SyncLocalDietEntriesResultResponse(
+                importedEntries,
+                skippedClientLocalIds,
+                failedItems,
+                snapshots);
+    }
+
+    @Transactional
     public FoodEntrySaveResultResponse updateEntry(UUID userId, UUID entryId, SaveFoodEntryRequest request) {
         currentUserApplicationService.requireActiveUser(userId);
         UserProfileEntity profile = requireProfile(userId);
@@ -150,6 +222,75 @@ public class DietEntryApplicationService {
         entry.setDeletedAt(Instant.now(clock));
         foodEntryRepository.save(entry);
         refreshSnapshot(userId, entry.getMealDate(), profile);
+    }
+
+    private void validateSyncItem(LocalDietEntrySyncItemRequest item, UserProfileEntity profile) {
+        if (item.createdAt() == null) {
+            throw invalidSyncItem("createdAt 不能为空");
+        }
+        if (item.updatedAt() == null) {
+            throw invalidSyncItem("updatedAt 不能为空");
+        }
+        if (item.entry() == null) {
+            throw invalidSyncItem("entry 不能为空");
+        }
+
+        SaveFoodEntryRequest request = item.entry();
+        if (request.mealDate() == null) {
+            throw invalidSyncItem("mealDate 不能为空");
+        }
+        if (request.mealType() == null) {
+            throw invalidSyncItem("mealType 不能为空");
+        }
+        if (request.sourceType() == null) {
+            throw invalidSyncItem("sourceType 不能为空");
+        }
+        if (request.rawText() != null && request.rawText().length() > 1000) {
+            throw invalidSyncItem("rawText 长度不能超过 1000");
+        }
+        if (request.items() == null || request.items().isEmpty()) {
+            throw invalidSyncItem("items 不能为空");
+        }
+
+        request.items().forEach(this::validateSyncFoodItem);
+        validateMealDate(request.mealDate(), profile);
+    }
+
+    private void validateSyncFoodItem(SaveFoodItemRequest item) {
+        if (item == null) {
+            throw invalidSyncItem("食物项不能为空");
+        }
+        if (!StringUtils.hasText(item.name())) {
+            throw invalidSyncItem("食物名称不能为空");
+        }
+        if (item.name().trim().length() > 128) {
+            throw invalidSyncItem("食物名称长度不能超过 128");
+        }
+        if (item.quantityText() != null && item.quantityText().length() > 128) {
+            throw invalidSyncItem("quantityText 长度不能超过 128");
+        }
+        if (item.caloriesKcal() != null && item.caloriesKcal() < 0) {
+            throw invalidSyncItem("caloriesKcal 不能小于 0");
+        }
+
+        requireNonNegative(item.weightG(), "weightG");
+        requireNonNegative(item.proteinG(), "proteinG");
+        requireNonNegative(item.fatG(), "fatG");
+        requireNonNegative(item.carbsG(), "carbsG");
+        if (item.confidence() != null
+                && (item.confidence().signum() < 0 || item.confidence().compareTo(BigDecimal.ONE) > 0)) {
+            throw invalidSyncItem("confidence 必须在 0 到 1 之间");
+        }
+    }
+
+    private void requireNonNegative(BigDecimal value, String fieldName) {
+        if (value != null && value.signum() < 0) {
+            throw invalidSyncItem(fieldName + " 不能小于 0");
+        }
+    }
+
+    private BusinessException invalidSyncItem(String message) {
+        return new BusinessException(ErrorCode.BAD_REQUEST, message);
     }
 
     private void applyRequest(
