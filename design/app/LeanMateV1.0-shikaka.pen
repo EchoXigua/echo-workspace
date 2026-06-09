@@ -476,6 +476,13 @@
                   "width": "fill_container",
                   "fill": "#FAF7F1",
                   "cornerRadius": 12,
+                  "stroke": "#00000000",
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "enabled": false,
+                    "color": "#00000000"
+                  },
                   "layout": "vertical",
                   "gap": 2,
                   "padding": 10,
@@ -528,6 +535,13 @@
                   "width": "fill_container",
                   "fill": "#FAF7F1",
                   "cornerRadius": 12,
+                  "stroke": "#00000000",
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "enabled": false,
+                    "color": "#00000000"
+                  },
                   "layout": "vertical",
                   "gap": 2,
                   "padding": 10,
@@ -580,6 +594,13 @@
                   "width": "fill_container",
                   "fill": "#FAF7F1",
                   "cornerRadius": 12,
+                  "stroke": "#00000000",
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "enabled": false,
+                    "color": "#00000000"
+                  },
                   "layout": "vertical",
                   "gap": 2,
                   "padding": 10,
@@ -813,7 +834,7 @@
                       "id": "Ys7nY",
                       "name": "Hero Label",
                       "fill": "#6F8074",
-                      "content": "还能吃 · 当前55.8kg · 连续12天",
+                      "content": "已摄入937 / 目标1800",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "500"
@@ -868,7 +889,7 @@
                       "id": "IOmbI",
                       "name": "Kcal Unit",
                       "fill": "#6F8074",
-                      "content": "千卡",
+                      "content": "千卡还能吃",
                       "fontFamily": "Inter",
                       "fontSize": 14,
                       "fontWeight": "600"
@@ -903,220 +924,164 @@
                   "id": "O49KY",
                   "name": "Nutrition Chips",
                   "width": "fill_container",
-                  "height": 58,
+                  "height": 60,
                   "gap": 8,
                   "children": [
                     {
-                      "id": "mDZT5",
-                      "type": "ref",
-                      "ref": "nRD9I",
+                      "type": "frame",
+                      "id": "Hn77X",
                       "name": "碳水 Chip",
                       "width": "fill_container",
-                      "descendants": {
-                        "PWEBk": {
-                          "content": "碳水"
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": 10,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "W2jX1",
+                          "name": "Label / 碳水",
+                          "fill": "#7A746A",
+                          "content": "碳水",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
                         },
-                        "L5A7y": {
-                          "content": "116g"
+                        {
+                          "type": "frame",
+                          "id": "mPdxQ",
+                          "name": "Value Row / 碳水",
+                          "gap": 3,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "WOwBU",
+                              "name": "Value / 碳水",
+                              "fill": "#1F241F",
+                              "content": "116",
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "GAKml",
+                              "name": "Unit / 碳水",
+                              "fill": "#6F8074",
+                              "content": "g",
+                              "fontFamily": "Geist",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
                         }
-                      }
+                      ]
                     },
                     {
-                      "id": "T2Be1",
-                      "type": "ref",
-                      "ref": "nRD9I",
+                      "type": "frame",
+                      "id": "o53LlG",
                       "name": "蛋白质 Chip",
                       "width": "fill_container",
-                      "descendants": {
-                        "PWEBk": {
-                          "content": "蛋白质"
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": 10,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Jq9rM",
+                          "name": "Label / 蛋白质",
+                          "fill": "#7A746A",
+                          "content": "蛋白质",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
                         },
-                        "L5A7y": {
-                          "content": "42g"
+                        {
+                          "type": "frame",
+                          "id": "x2sxG7",
+                          "name": "Value Row / 蛋白质",
+                          "gap": 3,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Q2KFL",
+                              "name": "Value / 蛋白质",
+                              "fill": "#1F241F",
+                              "content": "42",
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "sBFhu",
+                              "name": "Unit / 蛋白质",
+                              "fill": "#6F8074",
+                              "content": "g",
+                              "fontFamily": "Geist",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
                         }
-                      }
+                      ]
                     },
                     {
-                      "id": "LakF7",
-                      "type": "ref",
-                      "ref": "nRD9I",
+                      "type": "frame",
+                      "id": "eaKq1",
                       "name": "脂肪 Chip",
                       "width": "fill_container",
-                      "height": 58,
-                      "descendants": {
-                        "PWEBk": {
-                          "content": "脂肪"
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": 10,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "L3l2Fa",
+                          "name": "Label / 脂肪",
+                          "fill": "#7A746A",
+                          "content": "脂肪",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
                         },
-                        "L5A7y": {
-                          "content": "28g"
-                        }
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "NWUoU",
-              "name": "Quick Actions",
-              "width": "fill_container",
-              "gap": 8,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "y8Iqd7",
-                  "name": "Quick / 拍照",
-                  "width": "fill_container",
-                  "fill": "#FFFFFF",
-                  "cornerRadius": 16,
-                  "stroke": "#E9E2D6",
-                  "strokeWidth": 1,
-                  "layout": "vertical",
-                  "gap": 6,
-                  "padding": [
-                    12,
-                    10
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "PREXy",
-                      "name": "Quick Icon",
-                      "width": 42,
-                      "height": 42,
-                      "fill": "#EAF8EF",
-                      "cornerRadius": 14,
-                      "stroke": "#BEE6CC",
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
                         {
-                          "type": "icon",
-                          "id": "jUDDS",
-                          "name": "Quick Icon Icon",
-                          "width": 21,
-                          "height": 21,
-                          "icon": "camera",
-                          "library": "lucide",
-                          "fill": "#48B878"
+                          "type": "frame",
+                          "id": "pHcp4",
+                          "name": "Value Row / 脂肪",
+                          "gap": 3,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "TPQKi",
+                              "name": "Value / 脂肪",
+                              "fill": "#1F241F",
+                              "content": "28",
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "f1k7L",
+                              "name": "Unit / 脂肪",
+                              "fill": "#6F8074",
+                              "content": "g",
+                              "fontFamily": "Geist",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
                         }
                       ]
-                    },
-                    {
-                      "type": "text",
-                      "id": "l9rM4t",
-                      "name": "Quick Label",
-                      "fill": "#1F241F",
-                      "content": "拍照",
-                      "fontFamily": "Inter",
-                      "fontSize": 11,
-                      "fontWeight": "600"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "G6hpyN",
-                  "name": "Quick / 扫码",
-                  "width": "fill_container",
-                  "fill": "#FFFFFF",
-                  "cornerRadius": 16,
-                  "stroke": "#E9E2D6",
-                  "strokeWidth": 1,
-                  "layout": "vertical",
-                  "gap": 6,
-                  "padding": [
-                    12,
-                    10
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "hcWFS",
-                      "name": "Quick Icon",
-                      "width": 42,
-                      "height": 42,
-                      "fill": "#EAF8EF",
-                      "cornerRadius": 14,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "CTfTq",
-                          "name": "Quick Icon Icon",
-                          "width": 21,
-                          "height": 21,
-                          "icon": "message-square",
-                          "library": "lucide",
-                          "fill": "#23965B"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "text",
-                      "id": "sTPke",
-                      "name": "Quick Label",
-                      "fill": "#1F241F",
-                      "content": "文本",
-                      "fontFamily": "Inter",
-                      "fontSize": 11,
-                      "fontWeight": "600"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "CAdnp",
-                  "name": "Quick / 搜索",
-                  "width": "fill_container",
-                  "fill": "#FFFFFF",
-                  "cornerRadius": 16,
-                  "stroke": "#E9E2D6",
-                  "strokeWidth": 1,
-                  "layout": "vertical",
-                  "gap": 6,
-                  "padding": [
-                    12,
-                    10
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "l0jWB",
-                      "name": "Quick Icon",
-                      "width": 42,
-                      "height": 42,
-                      "fill": "#F4F1EA",
-                      "cornerRadius": 14,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "LjJ0d",
-                          "name": "Quick Icon Icon",
-                          "width": 21,
-                          "height": 21,
-                          "icon": "pencil-line",
-                          "library": "lucide",
-                          "fill": "#1F241F"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "text",
-                      "id": "e2Fxb",
-                      "name": "Quick Label",
-                      "fill": "#1F241F",
-                      "content": "手动",
-                      "fontFamily": "Inter",
-                      "fontSize": 11,
-                      "fontWeight": "600"
                     }
                   ]
                 }
@@ -1158,7 +1123,7 @@
                       "id": "z9ERpz",
                       "name": "Meal Title",
                       "fill": "#1F241F",
-                      "content": "今日饮食 · AI摘要",
+                      "content": "今日饮食",
                       "fontFamily": "Inter",
                       "fontSize": 13,
                       "fontWeight": "600"
@@ -1168,7 +1133,7 @@
                       "id": "maJzZ",
                       "name": "Meal Sum",
                       "fill": "#48B878",
-                      "content": "晚餐建议：补蔬菜",
+                      "content": "晚餐可补录",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "600"
@@ -1383,7 +1348,7 @@
                           "fill": "#6F8074",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "AI建议：低油蔬菜",
+                          "content": "还没记录，点补录添加这一餐",
                           "lineHeight": 1.2,
                           "fontFamily": "Inter",
                           "fontSize": 12,
@@ -1396,9 +1361,9 @@
                       "id": "Tt3Kw",
                       "name": "Meal Kcal",
                       "fill": "#48B878",
-                      "content": "+",
+                      "content": "补录",
                       "fontFamily": "Inter",
-                      "fontSize": 13,
+                      "fontSize": 11,
                       "fontWeight": "600"
                     }
                   ]
@@ -1568,7 +1533,8 @@
                   "fill": "#6F8074",
                   "content": "选你顺手的方式开始记录。",
                   "fontFamily": "Geist",
-                  "fontSize": 12
+                  "fontSize": 12,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -3297,6 +3263,161 @@
             },
             {
               "type": "frame",
+              "id": "f4z7u",
+              "name": "Meal Type Selector / 午餐",
+              "width": 362,
+              "fill": "#FFFFFF",
+              "cornerRadius": 16,
+              "stroke": "#DDEBDD",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "L6O33h",
+                  "name": "Meal Selector Header",
+                  "width": 338,
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "t7wCM",
+                      "name": "Meal Selector Title",
+                      "fill": "#1F241F",
+                      "content": "餐次",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "EjnfP",
+                      "name": "Meal Selector Current",
+                      "fill": "#48B878",
+                      "content": "当前：午餐",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "V3nhMs",
+                  "name": "Meal Options",
+                  "width": 338,
+                  "height": 38,
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "RRsOo",
+                      "name": "Meal Option / 早餐",
+                      "width": "fill_container",
+                      "height": 38,
+                      "fill": "#F7FBF6",
+                      "cornerRadius": 13,
+                      "stroke": "#E9E2D6",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Sc2ss",
+                          "name": "Meal Option Text / 早餐",
+                          "fill": "#6F8074",
+                          "content": "早餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "sYwDt",
+                      "name": "Meal Option / 午餐",
+                      "width": "fill_container",
+                      "height": 38,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 13,
+                      "stroke": "#BEE6CC",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "aI9FL",
+                          "name": "Meal Option Text / 午餐",
+                          "fill": "#23965B",
+                          "content": "午餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "L51nJ",
+                      "name": "Meal Option / 晚餐",
+                      "width": "fill_container",
+                      "height": 38,
+                      "fill": "#F7FBF6",
+                      "cornerRadius": 13,
+                      "stroke": "#E9E2D6",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "YRI5Q",
+                          "name": "Meal Option Text / 晚餐",
+                          "fill": "#6F8074",
+                          "content": "晚餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "cKZ3Q",
+                      "name": "Meal Option / 加餐",
+                      "width": "fill_container",
+                      "height": 38,
+                      "fill": "#F7FBF6",
+                      "cornerRadius": 13,
+                      "stroke": "#E9E2D6",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "GPXB6",
+                          "name": "Meal Option Text / 加餐",
+                          "fill": "#6F8074",
+                          "content": "加餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
               "id": "ghJu2",
               "name": "Detected / 番茄牛肉饭",
               "width": "fill_container",
@@ -4023,6 +4144,161 @@
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "F6kRPn",
+              "name": "Meal Type Selector / 早餐",
+              "width": 370,
+              "fill": "#FFFFFF",
+              "cornerRadius": 16,
+              "stroke": "#DDEBDD",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "J8hFy",
+                  "name": "Meal Selector Header",
+                  "width": 346,
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "e8Zi3p",
+                      "name": "Meal Selector Title",
+                      "fill": "#1F241F",
+                      "content": "餐次",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "yAPCz",
+                      "name": "Meal Selector Current",
+                      "fill": "#48B878",
+                      "content": "当前：早餐",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "fkTSm",
+                  "name": "Meal Options",
+                  "width": 346,
+                  "height": 38,
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Cwzy5",
+                      "name": "Meal Option / 早餐",
+                      "width": "fill_container",
+                      "height": 38,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 13,
+                      "stroke": "#BEE6CC",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "JsbSE",
+                          "name": "Meal Option Text / 早餐",
+                          "fill": "#23965B",
+                          "content": "早餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "EEUrd",
+                      "name": "Meal Option / 午餐",
+                      "width": "fill_container",
+                      "height": 38,
+                      "fill": "#F7FBF6",
+                      "cornerRadius": 13,
+                      "stroke": "#E9E2D6",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "d3CPK",
+                          "name": "Meal Option Text / 午餐",
+                          "fill": "#6F8074",
+                          "content": "午餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "VT4JJ",
+                      "name": "Meal Option / 晚餐",
+                      "width": "fill_container",
+                      "height": 38,
+                      "fill": "#F7FBF6",
+                      "cornerRadius": 13,
+                      "stroke": "#E9E2D6",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "HeIy1",
+                          "name": "Meal Option Text / 晚餐",
+                          "fill": "#6F8074",
+                          "content": "晚餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "mg7Cm",
+                      "name": "Meal Option / 加餐",
+                      "width": "fill_container",
+                      "height": 38,
+                      "fill": "#F7FBF6",
+                      "cornerRadius": 13,
+                      "stroke": "#E9E2D6",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "PCqmv",
+                          "name": "Meal Option Text / 加餐",
+                          "fill": "#6F8074",
+                          "content": "加餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -5856,6 +6132,13 @@
                       "width": "fill_container",
                       "fill": "#FAF7F1",
                       "cornerRadius": 14,
+                      "stroke": "#00000000",
+                      "effect": {
+                        "type": "shadow",
+                        "shadowType": "outer",
+                        "enabled": false,
+                        "color": "#00000000"
+                      },
                       "layout": "vertical",
                       "gap": 3,
                       "padding": 12,
@@ -5908,6 +6191,13 @@
                       "width": "fill_container",
                       "fill": "#FAF7F1",
                       "cornerRadius": 14,
+                      "stroke": "#00000000",
+                      "effect": {
+                        "type": "shadow",
+                        "shadowType": "outer",
+                        "enabled": false,
+                        "color": "#00000000"
+                      },
                       "layout": "vertical",
                       "gap": 3,
                       "padding": 12,
@@ -5960,6 +6250,13 @@
                       "width": "fill_container",
                       "fill": "#FAF7F1",
                       "cornerRadius": 14,
+                      "stroke": "#00000000",
+                      "effect": {
+                        "type": "shadow",
+                        "shadowType": "outer",
+                        "enabled": false,
+                        "color": "#00000000"
+                      },
                       "layout": "vertical",
                       "gap": 3,
                       "padding": 12,
@@ -6513,6 +6810,166 @@
             },
             {
               "type": "frame",
+              "id": "vdk0G",
+              "name": "Meal Type Selector Compact / 午餐",
+              "width": 370,
+              "height": 58,
+              "fill": "#FFFFFF",
+              "cornerRadius": 16,
+              "stroke": "#DDEEE2",
+              "strokeWidth": 1,
+              "gap": 10,
+              "padding": [
+                10,
+                12
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "KPJrP",
+                  "name": "Meal Selector Copy",
+                  "width": 84,
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "U7h5o",
+                      "name": "Meal Selector Label",
+                      "fill": "#1F2A22",
+                      "content": "餐次",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "FChWW",
+                      "name": "Meal Selector Hint",
+                      "fill": "#48B878",
+                      "content": "当前：午餐",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "BH3WG",
+                  "name": "Meal Options Compact",
+                  "width": 244,
+                  "height": 36,
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "YCnH5",
+                      "name": "Meal Option Compact / 早餐",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 12,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "MGpWH",
+                          "name": "Meal Option Compact Text / 早餐",
+                          "fill": "#6F8074",
+                          "content": "早餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g2Deqc",
+                      "name": "Meal Option Compact / 午餐",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 12,
+                      "stroke": "#B9EBCB",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "x2fa4",
+                          "name": "Meal Option Compact Text / 午餐",
+                          "fill": "#23965B",
+                          "content": "午餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "VQyDq",
+                      "name": "Meal Option Compact / 晚餐",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 12,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "K1VEaV",
+                          "name": "Meal Option Compact Text / 晚餐",
+                          "fill": "#6F8074",
+                          "content": "晚餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "C875a8",
+                      "name": "Meal Option Compact / 加餐",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 12,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "kVIem",
+                          "name": "Meal Option Compact Text / 加餐",
+                          "fill": "#6F8074",
+                          "content": "加餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
               "id": "MQHjv",
               "name": "Photo Flow Card",
               "width": "fill_container",
@@ -7016,6 +7473,166 @@
                   "fontFamily": "Inter",
                   "fontSize": 14,
                   "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "X2sjD",
+              "name": "Meal Type Selector Compact / 早餐",
+              "width": 370,
+              "height": 58,
+              "fill": "#FFFFFF",
+              "cornerRadius": 16,
+              "stroke": "#DDEEE2",
+              "strokeWidth": 1,
+              "gap": 10,
+              "padding": [
+                10,
+                12
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "VdcuI",
+                  "name": "Meal Selector Copy",
+                  "width": 84,
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "MWnaI",
+                      "name": "Meal Selector Label",
+                      "fill": "#1F2A22",
+                      "content": "餐次",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qdcxg",
+                      "name": "Meal Selector Hint",
+                      "fill": "#48B878",
+                      "content": "当前：早餐",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "tQ8Hb",
+                  "name": "Meal Options Compact",
+                  "width": 244,
+                  "height": 36,
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "TClMO",
+                      "name": "Meal Option Compact / 早餐",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 12,
+                      "stroke": "#B9EBCB",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ZZ9AZ",
+                          "name": "Meal Option Compact Text / 早餐",
+                          "fill": "#23965B",
+                          "content": "早餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "dch2X",
+                      "name": "Meal Option Compact / 午餐",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 12,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "p9BvVa",
+                          "name": "Meal Option Compact Text / 午餐",
+                          "fill": "#6F8074",
+                          "content": "午餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ViOLj",
+                      "name": "Meal Option Compact / 晚餐",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 12,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "E5LR13",
+                          "name": "Meal Option Compact Text / 晚餐",
+                          "fill": "#6F8074",
+                          "content": "晚餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Q5vNAq",
+                      "name": "Meal Option Compact / 加餐",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 12,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "R7R5O4",
+                          "name": "Meal Option Compact Text / 加餐",
+                          "fill": "#6F8074",
+                          "content": "加餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -7609,6 +8226,166 @@
             },
             {
               "type": "frame",
+              "id": "Os05v",
+              "name": "Meal Type Selector Compact / 午餐",
+              "width": 370,
+              "height": 58,
+              "fill": "#FFFFFF",
+              "cornerRadius": 16,
+              "stroke": "#DDEEE2",
+              "strokeWidth": 1,
+              "gap": 10,
+              "padding": [
+                10,
+                12
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "XDV65",
+                  "name": "Meal Selector Copy",
+                  "width": 84,
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "MZghP",
+                      "name": "Meal Selector Label",
+                      "fill": "#1F2A22",
+                      "content": "餐次",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qw829",
+                      "name": "Meal Selector Hint",
+                      "fill": "#48B878",
+                      "content": "当前：午餐",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "hZrHZ",
+                  "name": "Meal Options Compact",
+                  "width": 244,
+                  "height": 36,
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "klfC8",
+                      "name": "Meal Option Compact / 早餐",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 12,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "bwyey",
+                          "name": "Meal Option Compact Text / 早餐",
+                          "fill": "#6F8074",
+                          "content": "早餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "zHBBa",
+                      "name": "Meal Option Compact / 午餐",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 12,
+                      "stroke": "#B9EBCB",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "iOJTX",
+                          "name": "Meal Option Compact Text / 午餐",
+                          "fill": "#23965B",
+                          "content": "午餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "FlOTt",
+                      "name": "Meal Option Compact / 晚餐",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 12,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "DUoy9",
+                          "name": "Meal Option Compact Text / 晚餐",
+                          "fill": "#6F8074",
+                          "content": "晚餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "e8Z6W0",
+                      "name": "Meal Option Compact / 加餐",
+                      "width": "fill_container",
+                      "height": 36,
+                      "fill": "#FBFAF7",
+                      "cornerRadius": 12,
+                      "stroke": "#E7DCCB",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "r5cZ7w",
+                          "name": "Meal Option Compact Text / 加餐",
+                          "fill": "#6F8074",
+                          "content": "加餐",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
               "id": "yXDPv",
               "name": "Manual Flow Card",
               "width": "fill_container",
@@ -8101,221 +8878,6 @@
                   ]
                 }
               ]
-            },
-            {
-              "type": "frame",
-              "id": "tQmIi",
-              "name": "Common Units Card",
-              "width": "fill_container",
-              "height": 130,
-              "fill": "#FFFFFF",
-              "cornerRadius": 16,
-              "stroke": "#DDEEE2",
-              "strokeWidth": 1,
-              "layout": "vertical",
-              "gap": 8,
-              "padding": 14,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "kc1ZW",
-                  "name": "Common Units Header",
-                  "width": "fill_container",
-                  "height": 24,
-                  "justifyContent": "space_between",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "hHYzt",
-                      "name": "Common Units Title",
-                      "fill": "#1F2A22",
-                      "content": "常用单位",
-                      "fontFamily": "Inter",
-                      "fontSize": 16,
-                      "fontWeight": "800"
-                    },
-                    {
-                      "type": "text",
-                      "id": "J2l4a",
-                      "name": "Common Units Badge",
-                      "fill": "#87958A",
-                      "content": "点选填入",
-                      "fontFamily": "Inter",
-                      "fontSize": 14,
-                      "fontWeight": "800"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "tzDnO",
-                  "name": "Units Row 1",
-                  "width": "fill_container",
-                  "height": 34,
-                  "gap": 8,
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "cgn6j",
-                      "name": "一碗米饭 Unit",
-                      "width": "fill_container",
-                      "height": 34,
-                      "fill": "#F7F2EA",
-                      "cornerRadius": 12,
-                      "padding": [
-                        0,
-                        12
-                      ],
-                      "justifyContent": "space_between",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "Fk60c",
-                          "name": "一碗米饭 Text",
-                          "fill": "#1F2A22",
-                          "content": "一碗米饭",
-                          "fontFamily": "Inter",
-                          "fontSize": 13,
-                          "fontWeight": "800"
-                        },
-                        {
-                          "type": "text",
-                          "id": "NifWr",
-                          "name": "约180g Text",
-                          "fill": "#4CC17C",
-                          "content": "约180g",
-                          "fontFamily": "Inter",
-                          "fontSize": 13,
-                          "fontWeight": "800"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "vqGA6",
-                      "name": "一杯豆浆 Unit",
-                      "width": "fill_container",
-                      "height": 34,
-                      "fill": "#F7F2EA",
-                      "cornerRadius": 12,
-                      "padding": [
-                        0,
-                        12
-                      ],
-                      "justifyContent": "space_between",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "B33Uu",
-                          "name": "一杯豆浆 Text",
-                          "fill": "#1F2A22",
-                          "content": "一杯豆浆",
-                          "fontFamily": "Inter",
-                          "fontSize": 13,
-                          "fontWeight": "800"
-                        },
-                        {
-                          "type": "text",
-                          "id": "t68X40",
-                          "name": "约250ml Text",
-                          "fill": "#4CC17C",
-                          "content": "约250ml",
-                          "fontFamily": "Inter",
-                          "fontSize": 13,
-                          "fontWeight": "800"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "azUjV",
-                  "name": "Units Row 2",
-                  "width": "fill_container",
-                  "height": 34,
-                  "gap": 8,
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "Elbrj",
-                      "name": "一个鸡蛋 Unit",
-                      "width": "fill_container",
-                      "height": 34,
-                      "fill": "#F7F2EA",
-                      "cornerRadius": 12,
-                      "padding": [
-                        0,
-                        12
-                      ],
-                      "justifyContent": "space_between",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "Ehtgw",
-                          "name": "一个鸡蛋 Text",
-                          "fill": "#1F2A22",
-                          "content": "一个鸡蛋",
-                          "fontFamily": "Inter",
-                          "fontSize": 13,
-                          "fontWeight": "800"
-                        },
-                        {
-                          "type": "text",
-                          "id": "F5AAS",
-                          "name": "约55g Text",
-                          "fill": "#4CC17C",
-                          "content": "约55g",
-                          "fontFamily": "Inter",
-                          "fontSize": 13,
-                          "fontWeight": "800"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "J8nQ9",
-                      "name": "一勺坚果 Unit",
-                      "width": "fill_container",
-                      "height": 34,
-                      "fill": "#F7F2EA",
-                      "cornerRadius": 12,
-                      "padding": [
-                        0,
-                        12
-                      ],
-                      "justifyContent": "space_between",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "YrqLJ",
-                          "name": "一勺坚果 Text",
-                          "fill": "#1F2A22",
-                          "content": "一勺坚果",
-                          "fontFamily": "Inter",
-                          "fontSize": 13,
-                          "fontWeight": "800"
-                        },
-                        {
-                          "type": "text",
-                          "id": "yQM6q",
-                          "name": "约15g Text",
-                          "fill": "#4CC17C",
-                          "content": "约15g",
-                          "fontFamily": "Inter",
-                          "fontSize": 13,
-                          "fontWeight": "800"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
             }
           ]
         },
@@ -8350,6 +8912,2218 @@
             },
             "h4zuVF": {
               "fill": "#48B878"
+            },
+            "v7NzI": {
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "strokeWidth": 0
+            },
+            "rbbWS": {
+              "fill": "#9AA79D"
+            },
+            "fBoRM": {
+              "fill": "#9AA79D"
+            },
+            "NIi3D": {
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "strokeWidth": 0
+            },
+            "d9Fv3": {
+              "fill": "#9AA79D"
+            },
+            "E8p9u": {
+              "fill": "#9AA79D"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "n2wxR",
+      "x": 13652,
+      "y": 142,
+      "name": "首页 / 目标校准提示",
+      "clip": true,
+      "width": 402,
+      "height": 874,
+      "fill": "#F7FBF6",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "f9TBE",
+          "type": "ref",
+          "ref": "Nt6Zm",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "type": "frame",
+          "id": "YYsAc",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 14,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "IkCEn",
+              "name": "Nav / 今天吃得怎么样",
+              "width": "fill_container",
+              "height": 52,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "HHvsg",
+                  "name": "Title / 今天吃得怎么样",
+                  "fill": "#183326",
+                  "content": "今天吃得怎么样",
+                  "fontFamily": "Geist",
+                  "fontSize": 15,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "PMEZU",
+                  "name": "Pill / 补记录",
+                  "fill": "#EAF8EF",
+                  "cornerRadius": 999,
+                  "stroke": "#BEE6CC",
+                  "strokeWidth": 1,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "VykI8",
+                      "name": "Text / 补记录",
+                      "fill": "#23965B",
+                      "content": "补记录",
+                      "fontFamily": "Geist",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "fvfKx",
+              "name": "Card / 今日热量",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 16,
+              "stroke": "#DDEBDD",
+              "strokeWidth": 1,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#143B230A",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 8
+              },
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "K8JNk",
+                  "name": "Row / 热量上下文",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "GKeD8",
+                      "name": "Text / 摄入目标",
+                      "fill": "#6F8074",
+                      "content": "已摄入937 / 目标1800",
+                      "fontFamily": "Geist",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "T44rC",
+                      "name": "Tag / 日期",
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 999,
+                      "stroke": "#00000000",
+                      "strokeWidth": 1,
+                      "padding": [
+                        6,
+                        10
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "g4J0U",
+                          "name": "Text / 6月8日",
+                          "fill": "#23965B",
+                          "content": "6月8日",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "NJVwO",
+                  "name": "Metric / 还能吃",
+                  "width": "fill_container",
+                  "gap": 6,
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "P20KJ",
+                      "name": "Number / 还能吃",
+                      "fill": "#183326",
+                      "content": "863",
+                      "fontFamily": "Geist",
+                      "fontSize": 38,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Mybqd",
+                      "name": "Unit / 千卡还能吃",
+                      "fill": "#6F8074",
+                      "content": "千卡还能吃",
+                      "fontFamily": "Geist",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "nTjD9",
+                  "name": "Progress / 今日热量",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": 12,
+                  "fill": "#EAF8EF",
+                  "cornerRadius": 999,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 999,
+                      "id": "Q9xa0e",
+                      "x": 0,
+                      "y": 0,
+                      "name": "Progress Fill",
+                      "fill": "#48B878",
+                      "width": 220,
+                      "height": 12
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "HfY1G",
+                  "name": "Stats / 营养结构",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "U9fhsJ",
+                      "name": "Chip / 碳水",
+                      "width": "fill_container",
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": 10,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "d1dWj",
+                          "name": "Label / 碳水",
+                          "fill": "#7A746A",
+                          "content": "碳水",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "M0o7U9",
+                          "name": "Value / 碳水",
+                          "gap": 3,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "tJGq9",
+                              "name": "Number / 碳水",
+                              "fill": "#33483A",
+                              "content": "116",
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "DS4D4",
+                              "name": "Unit / 碳水",
+                              "fill": "#6F8074",
+                              "content": "g",
+                              "fontFamily": "Geist",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "NjGwn",
+                      "name": "Chip / 蛋白质",
+                      "width": "fill_container",
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": 10,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "JKhDU",
+                          "name": "Label / 蛋白质",
+                          "fill": "#7A746A",
+                          "content": "蛋白质",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "bIWBp",
+                          "name": "Value / 蛋白质",
+                          "gap": 3,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "C2Myn",
+                              "name": "Number / 蛋白质",
+                              "fill": "#33483A",
+                              "content": "42",
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "ylNlD",
+                              "name": "Unit / 蛋白质",
+                              "fill": "#6F8074",
+                              "content": "g",
+                              "fontFamily": "Geist",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ICr60",
+                      "name": "Chip / 脂肪",
+                      "width": "fill_container",
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": 10,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "H36xbf",
+                          "name": "Label / 脂肪",
+                          "fill": "#7A746A",
+                          "content": "脂肪",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "iozr4",
+                          "name": "Value / 脂肪",
+                          "gap": 3,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "m3CjQZ",
+                              "name": "Number / 脂肪",
+                              "fill": "#33483A",
+                              "content": "28",
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "mi8T9",
+                              "name": "Unit / 脂肪",
+                              "fill": "#6F8074",
+                              "content": "g",
+                              "fontFamily": "Geist",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "aP4gN",
+              "name": "Card / 目标校准提示",
+              "width": "fill_container",
+              "fill": "#F4FBF6",
+              "cornerRadius": 16,
+              "stroke": "#BEE6CC",
+              "strokeWidth": 1,
+              "gap": 12,
+              "padding": 14,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "TfeTX",
+                  "name": "Icon Bg / 目标校准",
+                  "width": 38,
+                  "height": 38,
+                  "fill": "#EAF8EF",
+                  "cornerRadius": 14,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "g5ebT",
+                      "name": "Icon / Icon Bg / 目标校准",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "target",
+                      "library": "lucide",
+                      "fill": "#48B878"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "pRLNr",
+                  "name": "Copy / 目标校准",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "m39Uul",
+                      "name": "Title / 目标校准",
+                      "fill": "#183326",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "让热量目标更贴近你",
+                      "fontFamily": "Geist",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "G0u7R",
+                      "name": "Desc / 目标校准",
+                      "fill": "#6F8074",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "补充年龄、身高和活动水平，首页目标会更准。",
+                      "fontFamily": "Geist",
+                      "fontSize": 12,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "dECb0",
+                  "name": "Actions / 目标校准",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "rkrtk",
+                      "name": "Button / 校准目标",
+                      "fill": "#FFFFFF",
+                      "cornerRadius": 999,
+                      "stroke": "#BEE6CC",
+                      "strokeWidth": 1,
+                      "padding": [
+                        6,
+                        10
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "LZp1J",
+                          "name": "Text / 校准目标",
+                          "fill": "#23965B",
+                          "content": "校准目标",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "E3Dh8",
+                      "name": "Button / 稍后",
+                      "width": 54,
+                      "height": 22,
+                      "fill": "#FFFFFF00",
+                      "cornerRadius": 999,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "C2bfgh",
+                          "name": "Text / 稍后",
+                          "fill": "#6F8074",
+                          "content": "稍后",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "MOhQY",
+              "name": "Card / 今日饮食",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 16,
+              "stroke": "#DDEBDD",
+              "strokeWidth": 1,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#143B230A",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 8
+              },
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "APxxh",
+                  "name": "Header / 今日饮食",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Jl5R0",
+                      "name": "Title / 今日饮食",
+                      "fill": "#33483A",
+                      "content": "今日饮食",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "NhPE3",
+                      "name": "Action / 晚餐可补录",
+                      "fill": "#23965B",
+                      "content": "晚餐可补录",
+                      "fontFamily": "Geist",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vu0N4",
+                  "name": "Meal / 早餐",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "qU4Nu",
+                      "name": "Meal Icon / 早餐",
+                      "width": 42,
+                      "height": 42,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 14,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "bJ9wv",
+                          "name": "Meal Short / 早餐",
+                          "fill": "#48B878",
+                          "content": "早",
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "IDMwO",
+                      "name": "Meal Copy / 早餐",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "bd1VY",
+                          "name": "Meal Title / 早餐",
+                          "fill": "#33483A",
+                          "content": "早餐",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "fPeMI",
+                          "name": "Meal Desc / 早餐",
+                          "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "鸡蛋 2个 · 豆浆",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "mY6hF",
+                      "name": "Meal Action / 早餐",
+                      "fill": "#23965B",
+                      "content": "268",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "l420P",
+                  "name": "Meal / 午餐",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "u8Mw5N",
+                      "name": "Meal Icon / 午餐",
+                      "width": 42,
+                      "height": 42,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 14,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "J1THe",
+                          "name": "Meal Short / 午餐",
+                          "fill": "#48B878",
+                          "content": "午",
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "uOPgX",
+                      "name": "Meal Copy / 午餐",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "bYdJS",
+                          "name": "Meal Title / 午餐",
+                          "fill": "#33483A",
+                          "content": "午餐",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "bgkbT",
+                          "name": "Meal Desc / 午餐",
+                          "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "牛肉饭 · 青菜",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Tgd34",
+                      "name": "Meal Action / 午餐",
+                      "fill": "#23965B",
+                      "content": "444",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "cY51S",
+                  "name": "Meal / 晚餐",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "j3n40",
+                      "name": "Meal Icon / 晚餐",
+                      "width": 42,
+                      "height": 42,
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 14,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "vUVZh",
+                          "name": "Meal Short / 晚餐",
+                          "fill": "#7A746A",
+                          "content": "晚",
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "HJGIt",
+                      "name": "Meal Copy / 晚餐",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "CUSOs",
+                          "name": "Meal Title / 晚餐",
+                          "fill": "#33483A",
+                          "content": "晚餐",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Hh9l0",
+                          "name": "Meal Desc / 晚餐",
+                          "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "还没记录，点补录添加这一餐",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "yptWo",
+                      "name": "Meal Action / 晚餐",
+                      "fill": "#23965B",
+                      "content": "补录",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "zDsnK",
+          "type": "ref",
+          "ref": "hhYjg",
+          "name": "Bottom Tabs",
+          "width": "fill_container",
+          "height": 68,
+          "x": 0,
+          "y": 806,
+          "descendants": {
+            "Zc9Lr": {
+              "fill": "#EAF8EF",
+              "stroke": "#BEE6CC",
+              "strokeWidth": 1
+            },
+            "QnGsZ": {
+              "fill": "#48B878"
+            },
+            "TuP5q": {
+              "fill": "#48B878"
+            },
+            "NrPJG": {
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "strokeWidth": 0
+            },
+            "w4RUd": {
+              "fill": "#9AA79D"
+            },
+            "h4zuVF": {
+              "fill": "#9AA79D"
+            },
+            "v7NzI": {
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "strokeWidth": 0
+            },
+            "rbbWS": {
+              "fill": "#9AA79D"
+            },
+            "fBoRM": {
+              "fill": "#9AA79D"
+            },
+            "NIi3D": {
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "strokeWidth": 0
+            },
+            "d9Fv3": {
+              "fill": "#9AA79D"
+            },
+            "E8p9u": {
+              "fill": "#9AA79D"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "N79Ww",
+      "x": 14094,
+      "y": 142,
+      "name": "目标校准 / 基础状态",
+      "clip": true,
+      "width": 402,
+      "height": 874,
+      "fill": "#F7FBF6",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "XRcF3",
+          "type": "ref",
+          "ref": "Nt6Zm",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "type": "frame",
+          "id": "c1qxut",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 14,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "ozFQp",
+              "name": "Top Bar / 目标校准",
+              "width": "fill_container",
+              "height": 52,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "E4DmvH",
+                  "name": "Button / 关闭",
+                  "width": 42,
+                  "height": 42,
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 21,
+                  "stroke": "#DDEBDD",
+                  "strokeWidth": 1,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "h9nwFd",
+                      "name": "Icon / 关闭",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "x",
+                      "library": "lucide",
+                      "fill": "#33483A"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "t7ESX",
+                  "name": "Title / 目标校准",
+                  "fill": "#183326",
+                  "content": "目标校准",
+                  "fontFamily": "Geist",
+                  "fontSize": 15,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "oBFod",
+                  "name": "Pill / 1 of 3",
+                  "fill": "#EAF8EF",
+                  "cornerRadius": 999,
+                  "stroke": "#BEE6CC",
+                  "strokeWidth": 1,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ODG4W",
+                      "name": "Text / 1/3",
+                      "fill": "#23965B",
+                      "content": "1/3",
+                      "fontFamily": "Geist",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "NjCpk",
+              "name": "Intro / 目标校准",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "QH2Yw",
+                  "name": "Title / 让目标更贴近你",
+                  "fill": "#183326",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "让目标更贴近你",
+                  "fontFamily": "Geist",
+                  "fontSize": 22,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "FZuqN",
+                  "name": "Desc / 这些信息只用于估算",
+                  "fill": "#6F8074",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "这些信息只用于估算热量目标，之后可以随时改。",
+                  "fontFamily": "Geist",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "KkCyP",
+              "name": "Progress / 校准步骤",
+              "width": "fill_container",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 999,
+                  "id": "f517o",
+                  "name": "Step Bar / 1",
+                  "fill": "#48B878",
+                  "width": "fill_container",
+                  "height": 6
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 999,
+                  "id": "iuIBK",
+                  "name": "Step Bar / 2",
+                  "fill": "#EAF8EF",
+                  "width": "fill_container",
+                  "height": 6
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 999,
+                  "id": "AaxvT",
+                  "name": "Step Bar / 3",
+                  "fill": "#EAF8EF",
+                  "width": "fill_container",
+                  "height": 6
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "dJHa2",
+              "name": "Card / 基础状态表单",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 16,
+              "stroke": "#DDEBDD",
+              "strokeWidth": 1,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#143B230A",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 8
+              },
+              "layout": "vertical",
+              "gap": 14,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "yWFSq",
+                  "name": "Title / 先填这几项",
+                  "fill": "#33483A",
+                  "content": "先填这几项",
+                  "fontFamily": "Geist",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "ezDPk",
+                  "name": "Field / 性别",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "VHTeX",
+                      "name": "Label / 性别",
+                      "fill": "#6F8074",
+                      "content": "性别",
+                      "fontFamily": "Geist",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "cKYyW",
+                      "name": "Segment / 性别",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "o0fCz",
+                          "name": "Option / 女",
+                          "width": "fill_container",
+                          "height": 42,
+                          "fill": "#EAF8EF",
+                          "cornerRadius": 13,
+                          "stroke": "#BEE6CC",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "gUmnE",
+                              "name": "Text / 女",
+                              "fill": "#23965B",
+                              "content": "女",
+                              "fontFamily": "Geist",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "wQneN",
+                          "name": "Option / 男",
+                          "width": "fill_container",
+                          "height": 42,
+                          "fill": "#FAF7F1",
+                          "cornerRadius": 13,
+                          "stroke": "#E9DCC8",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "LnBYy",
+                              "name": "Text / 男",
+                              "fill": "#33483A",
+                              "content": "男",
+                              "fontFamily": "Geist",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "DKarK",
+                          "name": "Option / 暂不选",
+                          "width": "fill_container",
+                          "height": 42,
+                          "fill": "#FAF7F1",
+                          "cornerRadius": 13,
+                          "stroke": "#E9DCC8",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "e6UXKM",
+                              "name": "Text / 暂不选",
+                              "fill": "#33483A",
+                              "content": "暂不选",
+                              "fontFamily": "Geist",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "gehoX",
+                  "name": "Row / 年龄身高",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "T0DUw",
+                      "name": "Input / 年龄",
+                      "width": "fill_container",
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 13,
+                      "stroke": "#E9DCC8",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "D6Cnve",
+                          "name": "Label / 年龄",
+                          "fill": "#6F8074",
+                          "content": "年龄",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "I3Evtr",
+                          "name": "Value / 年龄",
+                          "gap": 4,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "sOS7w",
+                              "name": "Number / 年龄",
+                              "fill": "#183326",
+                              "content": "28",
+                              "fontFamily": "Geist",
+                              "fontSize": 22,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "WH47K",
+                              "name": "Unit / 年龄",
+                              "fill": "#6F8074",
+                              "content": "岁",
+                              "fontFamily": "Geist",
+                              "fontSize": 12,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "NeZOB",
+                      "name": "Input / 身高",
+                      "width": "fill_container",
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 13,
+                      "stroke": "#E9DCC8",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "hfcee",
+                          "name": "Label / 身高",
+                          "fill": "#6F8074",
+                          "content": "身高",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "eQlwZ",
+                          "name": "Value / 身高",
+                          "gap": 4,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "qAY9q",
+                              "name": "Number / 身高",
+                              "fill": "#183326",
+                              "content": "165",
+                              "fontFamily": "Geist",
+                              "fontSize": 22,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "kO00g",
+                              "name": "Unit / 身高",
+                              "fill": "#6F8074",
+                              "content": "cm",
+                              "fontFamily": "Geist",
+                              "fontSize": 12,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "EoDet",
+                  "name": "Row / 体重活动",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "qJX1A",
+                      "name": "Input / 当前体重",
+                      "width": "fill_container",
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 13,
+                      "stroke": "#E9DCC8",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "G2czF",
+                          "name": "Label / 当前体重",
+                          "fill": "#6F8074",
+                          "content": "当前体重",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "u5lv3t",
+                          "name": "Value / 当前体重",
+                          "gap": 4,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "ND6fr",
+                              "name": "Number / 当前体重",
+                              "fill": "#183326",
+                              "content": "55.8",
+                              "fontFamily": "Geist",
+                              "fontSize": 22,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "FJ3BH",
+                              "name": "Unit / 当前体重",
+                              "fill": "#6F8074",
+                              "content": "kg",
+                              "fontFamily": "Geist",
+                              "fontSize": 12,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "pfxRW",
+                      "name": "Input / 活动水平",
+                      "width": "fill_container",
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 13,
+                      "stroke": "#E9DCC8",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "nifJo",
+                          "name": "Label / 活动水平",
+                          "fill": "#6F8074",
+                          "content": "活动水平",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Rd9sO",
+                          "name": "Value / 活动水平",
+                          "fill": "#183326",
+                          "content": "轻活动",
+                          "fontFamily": "Geist",
+                          "fontSize": 22,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "pptHM",
+              "name": "Note / 可填大概",
+              "width": "fill_container",
+              "fill": "#EAF8EF",
+              "cornerRadius": 14,
+              "gap": 8,
+              "padding": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "Gjv33",
+                  "name": "Icon / Info",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "info",
+                  "library": "lucide",
+                  "fill": "#48B878"
+                },
+                {
+                  "type": "text",
+                  "id": "tvyCn",
+                  "name": "Text / 可填大概",
+                  "fill": "#6F8074",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "可以先填大概值，后面在我的页面随时微调。",
+                  "fontFamily": "Geist",
+                  "fontSize": 12,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "WzvPg",
+              "name": "Spacer",
+              "width": "fill_container",
+              "height": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "MAdOa",
+              "name": "Bottom Actions",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "M6Z9n",
+                  "name": "Button / 下一步",
+                  "width": "fill_container",
+                  "height": 54,
+                  "fill": "#48B878",
+                  "cornerRadius": 16,
+                  "gap": 8,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "WqhCd",
+                      "name": "Text / 下一步",
+                      "fill": "#FFFFFF",
+                      "content": "下一步",
+                      "fontFamily": "Geist",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "cYru9",
+                  "name": "Button / 稍后再说",
+                  "width": "fill_container",
+                  "height": 38,
+                  "fill": "#FFFFFF00",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "X1d07",
+                      "name": "Text / 稍后再说",
+                      "fill": "#6F8074",
+                      "content": "稍后再说",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ypoQp",
+      "x": 14536,
+      "y": 142,
+      "name": "首页 / 已校准无提示",
+      "clip": true,
+      "width": 402,
+      "height": 874,
+      "fill": "#F7FBF6",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "GwEiv",
+          "type": "ref",
+          "ref": "Nt6Zm",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "type": "frame",
+          "id": "JZna5",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 14,
+          "padding": [
+            8,
+            16,
+            16,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "iFB8A",
+              "name": "Nav / 今天吃得怎么样",
+              "width": "fill_container",
+              "height": 52,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Ko8rK",
+                  "name": "Title / 今天吃得怎么样",
+                  "fill": "#183326",
+                  "content": "今天吃得怎么样",
+                  "fontFamily": "Geist",
+                  "fontSize": 15,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "bYJeE",
+                  "name": "Pill / 补记录",
+                  "fill": "#EAF8EF",
+                  "cornerRadius": 999,
+                  "stroke": "#BEE6CC",
+                  "strokeWidth": 1,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "lYwtp",
+                      "name": "Text / 补记录",
+                      "fill": "#23965B",
+                      "content": "补记录",
+                      "fontFamily": "Geist",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "pT1eL",
+              "name": "Card / 今日热量已校准",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 16,
+              "stroke": "#DDEBDD",
+              "strokeWidth": 1,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#143B230A",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 8
+              },
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "seOAV",
+                  "name": "Row / 热量上下文",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "srFyB",
+                      "name": "Text / 摄入目标",
+                      "fill": "#6F8074",
+                      "content": "已摄入937 / 目标1800",
+                      "fontFamily": "Geist",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "iZHYQ",
+                      "name": "Tag / 日期",
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 999,
+                      "stroke": "#00000000",
+                      "strokeWidth": 1,
+                      "padding": [
+                        6,
+                        10
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "yZWyU",
+                          "name": "Text / 6月8日",
+                          "fill": "#23965B",
+                          "content": "6月8日",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "YcoFs",
+                  "name": "Metric / 还能吃",
+                  "width": "fill_container",
+                  "gap": 6,
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ggHe4",
+                      "name": "Number / 还能吃",
+                      "fill": "#183326",
+                      "content": "863",
+                      "fontFamily": "Geist",
+                      "fontSize": 38,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "I6Ca8b",
+                      "name": "Unit / 千卡还能吃",
+                      "fill": "#6F8074",
+                      "content": "千卡还能吃",
+                      "fontFamily": "Geist",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "fQoN3",
+                  "name": "Progress / 今日热量",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": 12,
+                  "fill": "#EAF8EF",
+                  "cornerRadius": 999,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 999,
+                      "id": "jLceD",
+                      "x": 0,
+                      "y": 0,
+                      "name": "Progress Fill",
+                      "fill": "#48B878",
+                      "width": 220,
+                      "height": 12
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Z62Df",
+                  "name": "Stats / 营养结构",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "f10dE",
+                      "name": "Chip / 碳水",
+                      "width": "fill_container",
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": 10,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "mQ5Qc",
+                          "name": "Label / 碳水",
+                          "fill": "#7A746A",
+                          "content": "碳水",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "EAyKv",
+                          "name": "Value / 碳水",
+                          "gap": 3,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "s3ShB",
+                              "name": "Number / 碳水",
+                              "fill": "#33483A",
+                              "content": "116",
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "v5uBY",
+                              "name": "Unit / 碳水",
+                              "fill": "#6F8074",
+                              "content": "g",
+                              "fontFamily": "Geist",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "EDywl",
+                      "name": "Chip / 蛋白质",
+                      "width": "fill_container",
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": 10,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "N6AvJ",
+                          "name": "Label / 蛋白质",
+                          "fill": "#7A746A",
+                          "content": "蛋白质",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "YamWh",
+                          "name": "Value / 蛋白质",
+                          "gap": 3,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Jcuzy",
+                              "name": "Number / 蛋白质",
+                              "fill": "#33483A",
+                              "content": "42",
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "d7du7",
+                              "name": "Unit / 蛋白质",
+                              "fill": "#6F8074",
+                              "content": "g",
+                              "fontFamily": "Geist",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "t0dE0N",
+                      "name": "Chip / 脂肪",
+                      "width": "fill_container",
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": 10,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "SMAQH",
+                          "name": "Label / 脂肪",
+                          "fill": "#7A746A",
+                          "content": "脂肪",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "pj5y9",
+                          "name": "Value / 脂肪",
+                          "gap": 3,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "X2pq67",
+                              "name": "Number / 脂肪",
+                              "fill": "#33483A",
+                              "content": "28",
+                              "fontFamily": "Geist",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "b6Snw",
+                              "name": "Unit / 脂肪",
+                              "fill": "#6F8074",
+                              "content": "g",
+                              "fontFamily": "Geist",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "YMwRJ",
+              "name": "Card / 今日饮食",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 16,
+              "stroke": "#DDEBDD",
+              "strokeWidth": 1,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#143B230A",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 8
+              },
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "F0HaD",
+                  "name": "Header / 今日饮食",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "PSkcn",
+                      "name": "Title / 今日饮食",
+                      "fill": "#33483A",
+                      "content": "今日饮食",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "tAbEd",
+                      "name": "Action / 晚餐可补录",
+                      "fill": "#23965B",
+                      "content": "晚餐可补录",
+                      "fontFamily": "Geist",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Ec0Wv",
+                  "name": "Meal / 早餐",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "MRE92",
+                      "name": "Meal Icon / 早餐",
+                      "width": 42,
+                      "height": 42,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 14,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ZJVrH",
+                          "name": "Meal Short / 早餐",
+                          "fill": "#48B878",
+                          "content": "早",
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ObxBI",
+                      "name": "Meal Copy / 早餐",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "D9uGe",
+                          "name": "Meal Title / 早餐",
+                          "fill": "#33483A",
+                          "content": "早餐",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "AGH8C",
+                          "name": "Meal Desc / 早餐",
+                          "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "鸡蛋 2个 · 豆浆",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "SZ7SU",
+                      "name": "Meal Action / 早餐",
+                      "fill": "#23965B",
+                      "content": "268",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "xg03T",
+                  "name": "Meal / 午餐",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "EmdP4",
+                      "name": "Meal Icon / 午餐",
+                      "width": 42,
+                      "height": 42,
+                      "fill": "#EAF8EF",
+                      "cornerRadius": 14,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "CDYGc",
+                          "name": "Meal Short / 午餐",
+                          "fill": "#48B878",
+                          "content": "午",
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "kav3u",
+                      "name": "Meal Copy / 午餐",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "l1Fcny",
+                          "name": "Meal Title / 午餐",
+                          "fill": "#33483A",
+                          "content": "午餐",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "oubbp",
+                          "name": "Meal Desc / 午餐",
+                          "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "牛肉饭 · 青菜",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Z5bihj",
+                      "name": "Meal Action / 午餐",
+                      "fill": "#23965B",
+                      "content": "444",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QClIt",
+                  "name": "Meal / 晚餐",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "wUt5W",
+                      "name": "Meal Icon / 晚餐",
+                      "width": 42,
+                      "height": 42,
+                      "fill": "#FAF7F1",
+                      "cornerRadius": 14,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "LSAVS",
+                          "name": "Meal Short / 晚餐",
+                          "fill": "#7A746A",
+                          "content": "晚",
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "YruVn",
+                      "name": "Meal Copy / 晚餐",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "a4CSb",
+                          "name": "Meal Title / 晚餐",
+                          "fill": "#33483A",
+                          "content": "晚餐",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Jph1K",
+                          "name": "Meal Desc / 晚餐",
+                          "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "还没记录，点补录添加这一餐",
+                          "fontFamily": "Geist",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "uDT1g",
+                      "name": "Meal Action / 晚餐",
+                      "fill": "#23965B",
+                      "content": "补录",
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "loZhZ",
+          "type": "ref",
+          "ref": "hhYjg",
+          "name": "Bottom Tabs",
+          "width": "fill_container",
+          "height": 68,
+          "x": 0,
+          "y": 806,
+          "descendants": {
+            "Zc9Lr": {
+              "fill": "#EAF8EF",
+              "stroke": "#BEE6CC",
+              "strokeWidth": 1
+            },
+            "QnGsZ": {
+              "fill": "#48B878"
+            },
+            "TuP5q": {
+              "fill": "#48B878"
+            },
+            "NrPJG": {
+              "fill": "#00000000",
+              "stroke": "#00000000",
+              "strokeWidth": 0
+            },
+            "w4RUd": {
+              "fill": "#9AA79D"
+            },
+            "h4zuVF": {
+              "fill": "#9AA79D"
             },
             "v7NzI": {
               "fill": "#00000000",

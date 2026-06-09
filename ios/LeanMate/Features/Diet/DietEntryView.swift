@@ -209,6 +209,8 @@ private extension DietEntryView {
                 stateMessage
 
                 if !showsResultOnly {
+                    mealControls
+
                     ForEach($viewModel.confirmationItems) { item in
                         CompactFoodItemCard(item: item)
                     }
@@ -409,18 +411,7 @@ private extension DietEntryView {
     }
 
     var mealControls: some View {
-        VStack(alignment: .leading, spacing: LMSpacing.medium) {
-            Picker("餐次", selection: $viewModel.mealType) {
-                ForEach(MealType.allCases) { mealType in
-                    Text(mealType.title).tag(mealType)
-                }
-            }
-            .pickerStyle(.segmented)
-
-            DatePicker("业务日期", selection: $viewModel.mealDate, displayedComponents: .date)
-                .font(LMTypography.caption)
-                .foregroundStyle(LMColors.textBody)
-        }
+        MealTypeSelector(selection: $viewModel.mealType, isDisabled: viewModel.isBusy)
     }
 
     var methodCards: some View {
@@ -608,65 +599,75 @@ private extension DietEntryView {
     }
 
     var photoModeSection: some View {
-        LMCard(cornerRadius: 18, padding: 14) {
-            selectedMethodCard(for: .photo)
-            photoUploadArea
+        VStack(spacing: LMSpacing.regular) {
+            mealControls
 
-            HStack(spacing: 10) {
-                Button(action: startCameraCapture) {
-                    secondaryActionLabel(title: "拍照", systemImage: "camera")
+            LMCard(cornerRadius: 18, padding: 14) {
+                selectedMethodCard(for: .photo)
+                photoUploadArea
+
+                HStack(spacing: 10) {
+                    Button(action: startCameraCapture) {
+                        secondaryActionLabel(title: "拍照", systemImage: "camera")
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(viewModel.isBusy)
+
+                    PhotosPicker(selection: $photoPickerItem, matching: .images) {
+                        secondaryActionLabel(title: "从相册选", systemImage: "photo.on.rectangle")
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(viewModel.isBusy)
                 }
-                .buttonStyle(.plain)
-                .disabled(viewModel.isBusy)
 
-                PhotosPicker(selection: $photoPickerItem, matching: .images) {
-                    secondaryActionLabel(title: "从相册选", systemImage: "photo.on.rectangle")
+                HStack(spacing: 8) {
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(LMColors.primary)
+
+                    Text("识别后先进入确认页")
+                        .font(LMTypography.caption)
+                        .foregroundStyle(LMColors.textSecondary)
                 }
-                .buttonStyle(.plain)
-                .disabled(viewModel.isBusy)
+                .padding(.horizontal, 12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(height: 38)
+                .background(LMColors.primarySoft)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+
+                LMButton(
+                    title: "开始识别",
+                    systemImage: "sparkles",
+                    isLoading: viewModel.isRecognizing,
+                    action: startPhotoRecognition
+                )
             }
-
-            HStack(spacing: 8) {
-                Image(systemName: "sparkles")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(LMColors.primary)
-
-                Text("识别后先进入确认页")
-                    .font(LMTypography.caption)
-                    .foregroundStyle(LMColors.textSecondary)
-            }
-            .padding(.horizontal, 12)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .frame(height: 38)
-            .background(LMColors.primarySoft)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-
-            LMButton(
-                title: "开始识别",
-                systemImage: "sparkles",
-                isLoading: viewModel.isRecognizing,
-                action: startPhotoRecognition
-            )
         }
     }
 
     var textModeSection: some View {
-        LMCard(cornerRadius: 18, padding: 14) {
-            selectedMethodCard(for: .text)
-            textInputArea
-            commonUnitsInlineSection(title: "常用表达", badge: "点选追加", interaction: .appendText)
+        VStack(spacing: LMSpacing.regular) {
+            mealControls
 
-            LMButton(
-                title: "识别并确认",
-                systemImage: "sparkles",
-                isLoading: viewModel.isRecognizing,
-                action: startRecognition
-            )
+            LMCard(cornerRadius: 18, padding: 14) {
+                selectedMethodCard(for: .text)
+                textInputArea
+                commonUnitsInlineSection(title: "常用表达", badge: "点选追加", interaction: .appendText)
+
+                LMButton(
+                    title: "识别并确认",
+                    systemImage: "sparkles",
+                    isLoading: viewModel.isRecognizing,
+                    action: startRecognition
+                )
+            }
         }
     }
 
     var manualModeSection: some View {
         VStack(spacing: LMSpacing.regular) {
+            mealControls
+
             LMCard(cornerRadius: 18, padding: 14) {
                 selectedMethodCard(for: .manual)
                 manualInputFields
@@ -1024,6 +1025,8 @@ private extension DietEntryView {
                 }
             }
 
+            mealControls
+
             ForEach($viewModel.confirmationItems) { item in
                 EditableFoodItemCard(title: "食物", item: item)
             }
@@ -1240,6 +1243,68 @@ private struct CompactFoodItemCard: View {
         .frame(height: 48)
         .background(LMColors.background)
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+    }
+}
+
+private struct MealTypeSelector: View {
+    @Binding var selection: MealType
+    let isDisabled: Bool
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 10) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("餐次")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(LMColors.textBody)
+
+                Text("当前：\(selection.title)")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(LMColors.primary)
+                    .lineLimit(1)
+            }
+            .frame(width: 74, alignment: .leading)
+
+            HStack(spacing: 6) {
+                ForEach(MealType.allCases) { mealType in
+                    mealTypeButton(mealType)
+                }
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity)
+        .frame(height: 58)
+        .background(LMColors.card)
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(LMColors.primaryBorder.opacity(0.72), lineWidth: 1)
+        }
+    }
+
+    func mealTypeButton(_ mealType: MealType) -> some View {
+        let isSelected = selection == mealType
+
+        return Button {
+            selection = mealType
+        } label: {
+            Text(mealType.title)
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundStyle(isSelected ? LMColors.primaryDeep : LMColors.textSecondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+                .frame(maxWidth: .infinity)
+                .frame(height: 34)
+                .background(isSelected ? LMColors.primarySoft : LMColors.warmSurface)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(isSelected ? LMColors.primaryBorder : LMColors.inputBorder, lineWidth: 1)
+                }
+        }
+        .buttonStyle(.plain)
+        .disabled(isDisabled)
+        .accessibilityLabel("选择\(mealType.title)")
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
 

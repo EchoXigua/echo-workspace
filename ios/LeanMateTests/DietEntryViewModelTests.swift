@@ -32,6 +32,19 @@ final class DietEntryViewModelTests: XCTestCase {
         XCTAssertEqual(request?.items.first?.name, "鸡蛋")
     }
 
+    func testManualSaveUsesSelectedMealType() async {
+        let apiClient = DietAPIClientStub()
+        let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: MockData.today)
+        viewModel.mealType = .dinner
+        viewModel.manualItem.name = "鸡蛋"
+
+        let succeeded = await viewModel.saveManualEntry()
+        let request = await apiClient.lastDietRequest
+
+        XCTAssertTrue(succeeded)
+        XCTAssertEqual(request?.mealType, .dinner)
+    }
+
     func testManualSaveFailureKeepsInput() async {
         let apiClient = DietAPIClientStub(saveDietResult: .failure(.networkUnavailable))
         let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: MockData.today)
@@ -62,6 +75,32 @@ final class DietEntryViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.mode, .confirmation)
         XCTAssertEqual(viewModel.state, .confirmation)
         XCTAssertEqual(viewModel.confirmationItems.count, 2)
+    }
+
+    func testTextRecognitionUsesSelectedMealType() async {
+        let apiClient = DietAPIClientStub()
+        let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: MockData.today)
+        viewModel.mealType = .lunch
+        viewModel.textInput = "鸡蛋两个豆浆一杯"
+
+        await viewModel.startTextRecognition()
+        let request = await apiClient.lastTextRecognitionRequest
+
+        XCTAssertEqual(request?.mealType, .lunch)
+    }
+
+    func testConfirmationSaveUsesEditedMealType() async {
+        let apiClient = DietAPIClientStub()
+        let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: MockData.today)
+        viewModel.textInput = "早餐两个鸡蛋一杯豆浆"
+
+        await viewModel.startTextRecognition()
+        viewModel.mealType = .dinner
+        let succeeded = await viewModel.saveRecognitionEntry()
+        let request = await apiClient.lastDietRequest
+
+        XCTAssertTrue(succeeded)
+        XCTAssertEqual(request?.mealType, .dinner)
     }
 
     func testTextRecognitionFailureCanSwitchToManual() async {
@@ -97,6 +136,17 @@ final class DietEntryViewModelTests: XCTestCase {
 
         XCTAssertTrue(succeeded)
         XCTAssertEqual(request?.sourceType, .photo)
+    }
+
+    func testPhotoRecognitionUsesSelectedMealType() async {
+        let apiClient = DietAPIClientStub()
+        let viewModel = DietEntryViewModel(apiClient: apiClient, mealDate: MockData.today)
+        viewModel.mealType = .snack
+
+        await viewModel.startPhotoRecognition(imageData: Data([1, 2, 3]))
+        let mealType = await apiClient.lastPhotoRecognitionMealType
+
+        XCTAssertEqual(mealType, .snack)
     }
 
     func testPhotoRecognitionRunningCanRefresh() async {
@@ -280,6 +330,8 @@ private actor DietAPIClientStub: APIClient {
     private(set) var recognitionTaskCallCount = 0
     private(set) var saveDietEntryCallCount = 0
     private(set) var deleteDietEntryCallCount = 0
+    private(set) var lastTextRecognitionRequest: TextRecognitionRequest?
+    private(set) var lastPhotoRecognitionMealType: MealType?
     private(set) var lastDietRequest: SaveFoodEntryRequest?
 
     init(
@@ -331,6 +383,7 @@ private actor DietAPIClientStub: APIClient {
         note: String?
     ) async throws -> RecognitionTask {
         createPhotoRecognitionCallCount += 1
+        lastPhotoRecognitionMealType = mealType
         if delayNanoseconds > 0 {
             try await Task.sleep(nanoseconds: delayNanoseconds)
         }
@@ -339,6 +392,7 @@ private actor DietAPIClientStub: APIClient {
 
     func createTextRecognition(_ request: TextRecognitionRequest) async throws -> RecognitionTask {
         createTextRecognitionCallCount += 1
+        lastTextRecognitionRequest = request
         return Self.succeededRecognitionTask
     }
 
