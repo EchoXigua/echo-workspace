@@ -2,34 +2,41 @@ import SwiftUI
 
 struct ProfileSummaryView: View {
     @StateObject private var viewModel: ProfileSummaryViewModel
+    @StateObject private var weightViewModel: WeightViewModel
     @Binding private var selectedTab: AppTab
     @State private var showsDebugResetConfirmation = false
     @State private var debugResetErrorMessage: String?
     @State private var isDebugResetting = false
+    @State private var showsWeightSheet = false
 
     let onLoginRequired: () -> Void
     let onProfileRequired: () -> Void
+    let onOpenSettings: (ProfileRoutePayload?) -> Void
     let onOpenDataPlan: (ProfileRoutePayload) -> Void
-    let onOpenProfileEdit: () -> Void
+    let onOpenProfileEdit: (ProfileRoutePayload) -> Void
     let onOpenWeightTrend: (ProfileRoutePayload) -> Void
     let onOpenDataSync: () -> Void
     let onDebugClearLocalData: (() async throws -> Void)?
 
     init(
         viewModel: ProfileSummaryViewModel,
+        weightViewModel: WeightViewModel,
         selectedTab: Binding<AppTab>,
         onLoginRequired: @escaping () -> Void,
         onProfileRequired: @escaping () -> Void,
+        onOpenSettings: @escaping (ProfileRoutePayload?) -> Void = { _ in },
         onOpenDataPlan: @escaping (ProfileRoutePayload) -> Void = { _ in },
-        onOpenProfileEdit: @escaping () -> Void = {},
+        onOpenProfileEdit: @escaping (ProfileRoutePayload) -> Void = { _ in },
         onOpenWeightTrend: @escaping (ProfileRoutePayload) -> Void = { _ in },
         onOpenDataSync: @escaping () -> Void = {},
         onDebugClearLocalData: (() async throws -> Void)? = nil
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        _weightViewModel = StateObject(wrappedValue: weightViewModel)
         _selectedTab = selectedTab
         self.onLoginRequired = onLoginRequired
         self.onProfileRequired = onProfileRequired
+        self.onOpenSettings = onOpenSettings
         self.onOpenDataPlan = onOpenDataPlan
         self.onOpenProfileEdit = onOpenProfileEdit
         self.onOpenWeightTrend = onOpenWeightTrend
@@ -55,6 +62,12 @@ struct ProfileSummaryView: View {
         .task {
             await viewModel.load()
         }
+        .sheet(isPresented: $showsWeightSheet, onDismiss: refreshAfterWeightEntry) {
+            WeightEntrySheet(viewModel: weightViewModel)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.hidden)
+                .presentationBackground(LMColors.background)
+        }
         .alert("清空本地数据？", isPresented: $showsDebugResetConfirmation) {
             Button("取消", role: .cancel) {}
             Button("清空", role: .destructive) {
@@ -78,16 +91,16 @@ struct ProfileSummaryView: View {
 private extension ProfileSummaryView {
     @ViewBuilder
     var content: some View {
-        navHeader
-
         switch viewModel.state {
         case .idle, .loading:
+            navHeader(settingsPayload: nil)
             LMStateView(
                 kind: .loading,
                 title: "正在读取我的计划",
                 message: "档案、目标和连续打卡会以后端返回为准。"
             )
         case .visitor:
+            navHeader(settingsPayload: nil)
             LMStateView(
                 kind: .empty,
                 title: "登录后查看我的计划",
@@ -96,6 +109,7 @@ private extension ProfileSummaryView {
                 action: onLoginRequired
             )
         case .profileIncomplete:
+            navHeader(settingsPayload: nil)
             LMStateView(
                 kind: .empty,
                 title: "先完成档案",
@@ -104,8 +118,11 @@ private extension ProfileSummaryView {
                 action: onProfileRequired
             )
         case .loaded(let snapshot):
-            loadedContent(snapshot)
+            let payload = routePayload(from: snapshot)
+            navHeader(settingsPayload: payload)
+            loadedContent(snapshot, payload: payload)
         case .error(let message, let recovery):
+            navHeader(settingsPayload: nil)
             LMStateView(
                 kind: .error,
                 title: "我的页加载失败",
@@ -121,34 +138,38 @@ private extension ProfileSummaryView {
     }
 
     @ViewBuilder
-    func loadedContent(_ snapshot: ProfileSummarySnapshot) -> some View {
-        let payload = routePayload(from: snapshot)
-
+    func loadedContent(_ snapshot: ProfileSummarySnapshot, payload: ProfileRoutePayload) -> some View {
         profileCard(snapshot)
-        bodyStats(snapshot.profile)
-        streakCard(snapshot.streak)
-        planDetails(snapshot.profile, payload: payload)
+        weightGoalCard(snapshot.profile)
+        dataPlanCard(snapshot, payload: payload)
         profileActions(payload)
     }
 
-    var navHeader: some View {
+    func navHeader(settingsPayload: ProfileRoutePayload?) -> some View {
         HStack {
             Text("我的")
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(LMColors.textPrimary)
 
             Spacer()
 
-            Button(action: retry) {
-                Image(systemName: "arrow.clockwise")
+            Button {
+                onOpenSettings(settingsPayload)
+            } label: {
+                Image(systemName: "gearshape")
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(LMColors.textPrimary)
-                    .frame(width: 42, height: 42)
+                    .frame(width: 38, height: 38)
                     .background(LMColors.card)
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .clipShape(RoundedRectangle(cornerRadius: 19, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 19, style: .continuous)
+                            .stroke(LMColors.border, lineWidth: 1)
+                    }
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("刷新我的页")
+            .id(settingsPayload)
+            .accessibilityLabel("打开设置")
         }
         .frame(height: 52)
     }
@@ -157,13 +178,13 @@ private extension ProfileSummaryView {
         LMCard(cornerRadius: 16, padding: 14) {
             HStack(spacing: 14) {
                 ZStack {
-                    Circle()
-                        .fill(LMColors.primarySoft)
-                        .frame(width: 54, height: 54)
+                    RoundedRectangle(cornerRadius: 17, style: .continuous)
+                        .fill(LMColors.primary)
+                        .frame(width: 58, height: 58)
 
-                    Image(systemName: "person.fill")
-                        .font(.system(size: 22, weight: .semibold))
-                        .foregroundStyle(LMColors.primary)
+                    Text(profileInitial(snapshot.displayName))
+                        .font(.system(size: 25, weight: .bold))
+                        .foregroundStyle(.white)
                 }
 
                 VStack(alignment: .leading, spacing: 5) {
@@ -178,87 +199,148 @@ private extension ProfileSummaryView {
                         .foregroundStyle(LMColors.textSecondary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.72)
-                }
 
-                Spacer()
-            }
-
-            LMTag(
-                title: "每日目标 \(snapshot.profile.dailyCalorieTargetKcal) kcal",
-                systemImage: "leaf.fill"
-            )
-        }
-    }
-
-    func bodyStats(_ profile: UserProfile) -> some View {
-        HStack(spacing: LMSpacing.small) {
-            LMMetricTile(title: "当前体重", value: display(profile.currentWeightKg), unit: "kg")
-            LMMetricTile(title: "目标体重", value: display(profile.targetWeightKg), unit: "kg", accent: LMColors.primaryDeep)
-            LMMetricTile(title: "每日目标", value: "\(profile.dailyCalorieTargetKcal)", unit: "kcal", accent: LMColors.danger)
-        }
-    }
-
-    func streakCard(_ streak: Streak) -> some View {
-        LMCard(cornerRadius: 16, padding: 14) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("连续打卡")
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(LMColors.textBody)
-
-                    Text(streakSubtitle(streak))
-                        .font(LMTypography.caption)
-                        .foregroundStyle(LMColors.textSecondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-
-                Spacer()
-
-                HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text("\(streak.currentDays)")
-                        .font(.system(size: 30, weight: .semibold))
-                        .foregroundStyle(LMColors.textPrimary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
-
-                    Text("天")
-                        .font(LMTypography.caption)
-                        .foregroundStyle(LMColors.textSecondary)
-                }
-            }
-
-            HStack(spacing: LMSpacing.small) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("历史最长")
-                        .font(LMTypography.caption)
-                        .foregroundStyle(LMColors.textSecondary)
-                    Text("\(streak.longestDays) 天")
-                        .font(LMTypography.bodyStrong)
-                        .foregroundStyle(LMColors.textBody)
-                }
-
-                Spacer()
-
-                VStack(alignment: .trailing, spacing: 4) {
-                    Text("最近打卡")
-                        .font(LMTypography.caption)
-                        .foregroundStyle(LMColors.textSecondary)
-                    Text(lastActiveText(streak.lastActiveDate))
-                        .font(LMTypography.bodyStrong)
-                        .foregroundStyle(LMColors.textBody)
-                }
-            }
-
-            HStack(spacing: LMSpacing.small) {
-                ForEach(streak.milestones) { milestone in
                     LMTag(
-                        title: "\(milestone.days)天",
-                        systemImage: milestone.achieved ? "checkmark" : nil,
-                        style: milestone.achieved ? .primary : .neutral
+                        title: streakTagTitle(snapshot.streak),
+                        systemImage: "flame",
+                        style: .primary
+                    )
+                }
+
+                Spacer()
+            }
+        }
+    }
+
+    func weightGoalCard(_ profile: UserProfile) -> some View {
+        LMCard(cornerRadius: 16, padding: 14) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("体重目标")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(LMColors.textBody)
+
+                Spacer()
+
+                Button(action: recordWeight) {
+                    Text("记录体重")
+                        .font(LMTypography.badge)
+                        .foregroundStyle(LMColors.primaryDeep)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("记录体重")
+            }
+
+            HStack(alignment: .bottom) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("当前体重")
+                        .font(LMTypography.caption)
+                        .foregroundStyle(LMColors.textSecondary)
+
+                    HStack(alignment: .firstTextBaseline, spacing: 4) {
+                        Text(display(profile.currentWeightKg))
+                            .font(.system(size: 40, weight: .semibold))
+                            .foregroundStyle(LMColors.textPrimary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.72)
+
+                        Text("kg")
+                            .font(LMTypography.bodyStrong)
+                            .foregroundStyle(LMColors.textSecondary)
+                    }
+                }
+
+                Spacer()
+
+                HStack(alignment: .bottom, spacing: 22) {
+                    weightGoalInfo(title: "目标", value: display(profile.targetWeightKg), unit: "kg", color: LMColors.textBody)
+                    weightGoalInfo(title: "差距", value: display(abs(profile.currentWeightKg - profile.targetWeightKg)), unit: "kg", color: weightGapColor(profile))
+                }
+            }
+
+            progressBar(progress: weightProgress(profile))
+        }
+    }
+
+    func weightGoalInfo(title: String, value: String, unit: String, color: Color) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(LMTypography.caption)
+                .foregroundStyle(LMColors.textSecondary)
+
+            HStack(alignment: .firstTextBaseline, spacing: 3) {
+                Text(value)
+                    .font(.system(size: 19, weight: .semibold))
+                    .foregroundStyle(color)
+
+                Text(unit)
+                    .font(LMTypography.caption)
+                    .foregroundStyle(LMColors.textSecondary)
+            }
+        }
+    }
+
+    func dataPlanCard(_ snapshot: ProfileSummarySnapshot, payload: ProfileRoutePayload) -> some View {
+        Button {
+            onOpenDataPlan(payload)
+        } label: {
+            LMCard(cornerRadius: 16, padding: 14) {
+                HStack {
+                    Text("数据与计划")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(LMColors.textBody)
+
+                    Spacer()
+
+                    Text("查看全部")
+                        .font(LMTypography.badge)
+                        .foregroundStyle(LMColors.primaryDeep)
+                }
+
+                HStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("每日目标")
+                            .font(LMTypography.caption)
+                            .foregroundStyle(LMColors.textSecondary)
+
+                        HStack(alignment: .firstTextBaseline, spacing: 4) {
+                            Text("\(snapshot.profile.dailyCalorieTargetKcal)")
+                                .font(.system(size: 28, weight: .semibold))
+                                .foregroundStyle(LMColors.textPrimary)
+
+                            Text("kcal")
+                                .font(LMTypography.bodyStrong)
+                                .foregroundStyle(LMColors.textSecondary)
+                        }
+                    }
+
+                    Spacer()
+
+                    Text("低于日常消耗，可按状态调整")
+                        .font(LMTypography.caption)
+                        .foregroundStyle(LMColors.primaryDeep)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.trailing)
+                        .frame(maxWidth: 160, alignment: .trailing)
+                }
+                .padding(12)
+                .frame(maxWidth: .infinity)
+                .background(LMColors.primarySoft.opacity(0.72))
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+
+                HStack(spacing: LMSpacing.small) {
+                    profileMetric(title: "BMI", value: display(snapshot.profile.bmi), unit: nil)
+                    profileMetric(title: "基础代谢", value: "\(snapshot.profile.bmrKcal)", unit: "kcal")
+                    profileMetric(
+                        title: "本周变化",
+                        value: weeklyChangeValue(snapshot.weeklyWeightChangeKg),
+                        unit: weeklyChangeUnit(snapshot.weeklyWeightChangeKg),
+                        accent: weeklyChangeColor(snapshot.weeklyWeightChangeKg)
                     )
                 }
             }
         }
+        .buttonStyle(.plain)
+        .accessibilityLabel("查看数据与计划详情")
     }
 
     func planDetails(_ profile: UserProfile, payload: ProfileRoutePayload) -> some View {
@@ -294,7 +376,7 @@ private extension ProfileSummaryView {
         .accessibilityLabel("查看数据与计划详情")
     }
 
-    func profileMetric(title: String, value: String, unit: String?) -> some View {
+    func profileMetric(title: String, value: String, unit: String?, accent: Color = LMColors.textPrimary) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title)
                 .font(LMTypography.caption)
@@ -303,7 +385,7 @@ private extension ProfileSummaryView {
             HStack(alignment: .firstTextBaseline, spacing: 3) {
                 Text(value)
                     .font(.system(size: 19, weight: .semibold))
-                    .foregroundStyle(LMColors.textPrimary)
+                    .foregroundStyle(accent)
                     .lineLimit(1)
                     .minimumScaleFactor(0.72)
 
@@ -315,18 +397,20 @@ private extension ProfileSummaryView {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(12)
-        .background(LMColors.warmSurface)
+        .padding(10)
+        .background(LMColors.card)
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         .overlay {
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .stroke(LMColors.inputBorder, lineWidth: 1)
+                .stroke(LMColors.border, lineWidth: 1)
         }
     }
 
     func profileActions(_ payload: ProfileRoutePayload) -> some View {
         HStack(spacing: LMSpacing.small) {
-            profileActionButton(title: "档案", systemImage: "person.text.rectangle", action: onOpenProfileEdit)
+            profileActionButton(title: "档案", systemImage: "person.text.rectangle") {
+                onOpenProfileEdit(payload)
+            }
             profileActionButton(title: "趋势", systemImage: "chart.line.uptrend.xyaxis") {
                 onOpenWeightTrend(payload)
             }
@@ -340,7 +424,7 @@ private extension ProfileSummaryView {
                 ZStack {
                     Circle()
                         .fill(LMColors.primarySoft)
-                        .frame(width: 34, height: 34)
+                        .frame(width: 30, height: 30)
 
                     Image(systemName: systemImage)
                         .font(.system(size: 15, weight: .semibold))
@@ -354,7 +438,7 @@ private extension ProfileSummaryView {
                     .minimumScaleFactor(0.78)
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 86)
+            .frame(height: 66)
             .background(LMColors.card)
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .overlay {
@@ -496,6 +580,17 @@ private extension ProfileSummaryView {
         }
     }
 
+    func recordWeight() {
+        weightViewModel.resetForNewEntry()
+        showsWeightSheet = true
+    }
+
+    func refreshAfterWeightEntry() {
+        Task {
+            await viewModel.refresh()
+        }
+    }
+
     var debugResetErrorBinding: Binding<Bool> {
         Binding(
             get: { debugResetErrorMessage != nil },
@@ -542,6 +637,64 @@ private extension ProfileSummaryView {
         return APICoding.dateString(from: date)
     }
 
+    func profileInitial(_ name: String) -> String {
+        String(name.trimmingCharacters(in: .whitespacesAndNewlines).first ?? "我")
+    }
+
+    func streakTagTitle(_ streak: Streak) -> String {
+        streak.currentDays > 0 ? "连续打卡 \(streak.currentDays) 天" : "开始记录"
+    }
+
+    func weightGapColor(_ profile: UserProfile) -> Color {
+        profile.currentWeightKg <= profile.targetWeightKg ? LMColors.danger : LMColors.primaryDeep
+    }
+
+    func weightProgress(_ profile: UserProfile) -> Double {
+        guard profile.currentWeightKg > 0, profile.targetWeightKg > 0 else {
+            return 0
+        }
+        let ratio: Double
+        if profile.currentWeightKg >= profile.targetWeightKg {
+            ratio = profile.targetWeightKg / profile.currentWeightKg
+        } else {
+            ratio = profile.currentWeightKg / profile.targetWeightKg
+        }
+        return min(max(ratio, 0.12), 1)
+    }
+
+    func progressBar(progress: Double) -> some View {
+        GeometryReader { proxy in
+            ZStack(alignment: .leading) {
+                Capsule()
+                    .fill(LMColors.primarySoft)
+
+                Capsule()
+                    .fill(LMColors.primary)
+                    .frame(width: max(10, proxy.size.width * progress))
+            }
+        }
+        .frame(height: 8)
+    }
+
+    func weeklyChangeValue(_ value: Double?) -> String {
+        guard let value else {
+            return "记录后"
+        }
+        let prefix = value > 0 ? "+" : ""
+        return "\(prefix)\(display(value))"
+    }
+
+    func weeklyChangeUnit(_ value: Double?) -> String? {
+        value == nil ? "显示" : "kg"
+    }
+
+    func weeklyChangeColor(_ value: Double?) -> Color {
+        guard let value else {
+            return LMColors.textSecondary
+        }
+        return value > 0 ? LMColors.danger : LMColors.primaryDeep
+    }
+
     func routePayload(from snapshot: ProfileSummarySnapshot) -> ProfileRoutePayload {
         let profile = snapshot.profile
 
@@ -550,11 +703,14 @@ private extension ProfileSummaryView {
             summary: "\(profile.age) 岁 · \(profile.gender.title) · \(profile.activityLevel.title)",
             currentWeight: "\(display(profile.currentWeightKg)) kg",
             targetWeight: "\(display(profile.targetWeightKg)) kg",
+            currentWeightKg: profile.currentWeightKg,
+            targetWeightKg: profile.targetWeightKg,
             height: "\(display(profile.heightCm)) cm",
             bmi: display(profile.bmi),
             bmr: "\(profile.bmrKcal) kcal",
             dailyTarget: "\(profile.dailyCalorieTargetKcal) kcal",
-            activityLevel: profile.activityLevel.title
+            activityLevel: profile.activityLevel.title,
+            weeklyWeightChangeKg: snapshot.weeklyWeightChangeKg
         )
     }
 
@@ -602,6 +758,7 @@ private struct ProfileSummaryPreviewContainer: View {
     var body: some View {
         ProfileSummaryView(
             viewModel: ProfileSummaryViewModel(apiClient: MockAPIClient(delayNanoseconds: 0)),
+            weightViewModel: WeightViewModel(apiClient: MockAPIClient(delayNanoseconds: 0)),
             selectedTab: $selectedTab,
             onLoginRequired: {},
             onProfileRequired: {}

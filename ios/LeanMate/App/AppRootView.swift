@@ -59,6 +59,8 @@ private extension AppRootView {
                 reloadKey: router.contentReloadKey,
                 onLoginRequired: router.showOnboarding,
                 onProfileRequired: router.showProfileSetupRoute,
+                onOpenProfileSettings: router.showProfileSettings,
+                onOpenProfileEdit: router.showProfileEdit,
                 onOpenProfileDataPlan: router.showProfileDataPlan,
                 onOpenProfileWeightTrend: router.showProfileWeightTrend,
                 onOpenProfileDataSync: router.showProfileDataSync
@@ -73,6 +75,8 @@ private extension AppRootView {
                 reloadKey: router.contentReloadKey,
                 onLoginRequired: router.showOnboarding,
                 onProfileRequired: router.showProfileSetupRoute,
+                onOpenProfileSettings: router.showProfileSettings,
+                onOpenProfileEdit: router.showProfileEdit,
                 onOpenProfileDataPlan: router.showProfileDataPlan,
                 onOpenProfileWeightTrend: router.showProfileWeightTrend,
                 onOpenProfileDataSync: router.showProfileDataSync
@@ -96,13 +100,46 @@ private extension AppRootView {
                 onSkipped: router.popRoute,
                 usesBackButtonIcon: true
             )
+        case .profileSettings(let payload):
+            ProfileSettingsView(
+                payload: payload,
+                isVisitor: router.rootState == .visitorHome,
+                onBack: router.popRoute,
+                onLoginRequired: router.showOnboarding,
+                onNavigate: { router.path.append($0) }
+            )
+        case .profileEdit:
+            ProfileEditView(
+                viewModel: ProfileSetupViewModel(
+                    apiClient: environment.apiClient,
+                    tokenStore: environment.tokenStore,
+                    localStore: environment.localStore,
+                    savesLocally: router.rootState == .visitorHome
+                ),
+                onBack: router.popRoute,
+                onCompleted: router.completeProfileSetupRoute,
+                onAuthExpired: router.showOnboarding
+            )
         case .profileDataPlan(let payload):
-            ProfileDataPlanDetailView(payload: payload)
+            ProfileDataPlanDetailView(
+                payload: payload,
+                onBack: router.popRoute,
+                onEditProfile: { router.showProfileEdit(payload) }
+            )
         case .profileWeightTrend(let payload):
-            ProfileWeightTrendView(payload: payload)
+            ProfileWeightTrendView(
+                payload: payload,
+                weightViewModel: WeightViewModel(
+                    apiClient: environment.apiClient,
+                    localStore: environment.localStore,
+                    savesLocally: router.rootState == .visitorHome
+                ),
+                onBack: router.popRoute
+            )
         case .profileDataSync:
             ProfileDataSyncView(
                 isVisitor: router.rootState == .visitorHome,
+                onBack: router.popRoute,
                 onLoginRequired: router.showOnboarding
             )
         }
@@ -156,6 +193,8 @@ private struct MainTabContainerView: View {
     let reloadKey: Int
     let onLoginRequired: () -> Void
     let onProfileRequired: () -> Void
+    let onOpenProfileSettings: (ProfileRoutePayload?) -> Void
+    let onOpenProfileEdit: (ProfileRoutePayload) -> Void
     let onOpenProfileDataPlan: (ProfileRoutePayload) -> Void
     let onOpenProfileWeightTrend: (ProfileRoutePayload) -> Void
     let onOpenProfileDataSync: () -> Void
@@ -207,11 +246,17 @@ private struct MainTabContainerView: View {
                     apiClient: environment.apiClient,
                     tokenStore: environment.tokenStore
                 ),
+                weightViewModel: WeightViewModel(
+                    apiClient: environment.apiClient,
+                    localStore: environment.localStore,
+                    savesLocally: isVisitor
+                ),
                 selectedTab: $selectedTab,
                 onLoginRequired: onLoginRequired,
                 onProfileRequired: onProfileRequired,
+                onOpenSettings: onOpenProfileSettings,
                 onOpenDataPlan: onOpenProfileDataPlan,
-                onOpenProfileEdit: onProfileRequired,
+                onOpenProfileEdit: onOpenProfileEdit,
                 onOpenWeightTrend: onOpenProfileWeightTrend,
                 onOpenDataSync: onOpenProfileDataSync,
                 onDebugClearLocalData: debugClearLocalData

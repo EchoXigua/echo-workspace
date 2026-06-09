@@ -19,6 +19,7 @@ struct ProfileSummarySnapshot: Sendable {
     let user: CurrentUser
     let profile: UserProfile
     let streak: Streak
+    let weeklyWeightChangeKg: Double?
 
     var displayName: String {
         let name = user.nickname?.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -106,7 +107,13 @@ final class ProfileSummaryViewModel: ObservableObject {
                 return
             }
 
-            let snapshot = ProfileSummarySnapshot(user: user, profile: profile, streak: streak)
+            let weeklyWeightChange = await loadRemoteWeeklyWeightChange(apiClient: apiClient)
+            let snapshot = ProfileSummarySnapshot(
+                user: user,
+                profile: profile,
+                streak: streak,
+                weeklyWeightChangeKg: weeklyWeightChange
+            )
             state = .loaded(snapshot)
             presentMilestoneIfNeeded(from: streak)
         } catch {
@@ -147,9 +154,10 @@ private extension ProfileSummaryViewModel {
                 return
             }
 
+            let weights = try await localStore.localWeightEntries()
             let user = CurrentUser(
                 id: UUID(),
-                nickname: "本地游客",
+                nickname: "我的档案",
                 avatarUrl: nil,
                 status: .active,
                 profileCompleted: true,
@@ -159,7 +167,8 @@ private extension ProfileSummaryViewModel {
                 ProfileSummarySnapshot(
                     user: user,
                     profile: profile,
-                    streak: Streak(currentDays: 0, longestDays: 0, lastActiveDate: nil, milestones: [])
+                    streak: Streak(currentDays: 0, longestDays: 0, lastActiveDate: nil, milestones: []),
+                    weeklyWeightChangeKg: weeklyWeightChange(from: weights)
                 )
             )
             milestoneToPresent = nil
@@ -184,5 +193,35 @@ private extension ProfileSummaryViewModel {
         }
 
         milestoneToPresent = milestone
+    }
+
+    func loadRemoteWeeklyWeightChange(apiClient: any APIClient) async -> Double? {
+        let calendar = Calendar.current
+        let today = Date()
+        let startDate = calendar.date(byAdding: .day, value: -6, to: today) ?? today
+
+        do {
+            let weights = try await apiClient.weightEntries(startDate: startDate, endDate: today)
+            return weeklyWeightChange(from: weights)
+        } catch {
+            return nil
+        }
+    }
+
+    func weeklyWeightChange(from entries: [WeightEntry]) -> Double? {
+        let calendar = Calendar.current
+        let today = Date()
+        let startDate = calendar.date(byAdding: .day, value: -6, to: today) ?? today
+        let recentEntries = entries
+            .filter { entry in
+                (entry.recordDate >= startDate && entry.recordDate <= today)
+                    || calendar.isDate(entry.recordDate, inSameDayAs: today)
+            }
+            .sorted { $0.recordDate < $1.recordDate }
+
+        guard let first = recentEntries.first, let last = recentEntries.last, first.id != last.id else {
+            return nil
+        }
+        return last.weightKg - first.weightKg
     }
 }

@@ -40,6 +40,17 @@ final class WeightViewModel: ObservableObject {
         state == .saving
     }
 
+    func resetForNewEntry(recordDate: Date = Date()) {
+        guard !isSaving else {
+            return
+        }
+        state = .editing
+        self.recordDate = recordDate
+        weightText = ""
+        noteText = ""
+        savedEntry = nil
+    }
+
     func save() async -> Bool {
         guard !isSaving else {
             return false

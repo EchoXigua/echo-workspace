@@ -69,7 +69,7 @@ final class ProfileSummaryViewModelTests: XCTestCase {
 
         if case .loaded(let snapshot) = viewModel.state {
             XCTAssertEqual(snapshot.profile.currentWeightKg, 55.8)
-            XCTAssertEqual(snapshot.displayName, "本地游客")
+            XCTAssertEqual(snapshot.displayName, "我的档案")
         } else {
             XCTFail("Expected loaded state")
         }

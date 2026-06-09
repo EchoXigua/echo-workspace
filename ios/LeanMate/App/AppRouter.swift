@@ -54,15 +54,20 @@ struct ProfileRoutePayload: Hashable {
     let summary: String
     let currentWeight: String
     let targetWeight: String
+    let currentWeightKg: Double
+    let targetWeightKg: Double
     let height: String
     let bmi: String
     let bmr: String
     let dailyTarget: String
     let activityLevel: String
+    let weeklyWeightChangeKg: Double?
 }
 
 enum AppRoute: Hashable {
     case profileSetup
+    case profileSettings(ProfileRoutePayload?)
+    case profileEdit(ProfileRoutePayload)
     case profileDataPlan(ProfileRoutePayload)
     case profileWeightTrend(ProfileRoutePayload)
     case profileDataSync
@@ -112,6 +117,14 @@ final class AppRouter: ObservableObject {
 
     func showProfileSetupRoute() {
         path.append(.profileSetup)
+    }
+
+    func showProfileSettings(_ payload: ProfileRoutePayload? = nil) {
+        path.append(.profileSettings(payload))
+    }
+
+    func showProfileEdit(_ payload: ProfileRoutePayload) {
+        path.append(.profileEdit(payload))
     }
 
     func showProfileDataPlan(_ payload: ProfileRoutePayload) {
