@@ -10436,45 +10436,42 @@
         },
         {
           "type": "frame",
-          "id": "G5yaY",
-          "name": "Content",
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 14,
-          "padding": [
-            8,
-            16,
-            16,
-            16
-          ],
+          "id": "AEEt7",
+          "name": "完成确认内容",
+          "width": 402,
+          "height": 812,
+          "layout": "none",
           "children": [
             {
               "type": "frame",
-              "id": "J5z2q",
-              "name": "Top Bar / 目标校准",
-              "width": "fill_container",
+              "id": "qvyZY",
+              "x": 16,
+              "y": 8,
+              "name": "顶部导航",
+              "width": 370,
               "height": 52,
-              "justifyContent": "space_between",
-              "alignItems": "center",
+              "layout": "none",
               "children": [
                 {
                   "type": "frame",
-                  "id": "BWLXX",
-                  "name": "Button / 关闭",
+                  "id": "Y63Ar",
+                  "x": 0,
+                  "y": 5,
+                  "name": "关闭按钮",
                   "width": 42,
                   "height": 42,
                   "fill": "#FFFFFF",
-                  "cornerRadius": 21,
+                  "cornerRadius": 999,
                   "stroke": "#DDEBDD",
                   "strokeWidth": 1,
+                  "layout": "vertical",
                   "justifyContent": "center",
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "icon",
-                      "id": "SrlEF",
-                      "name": "Icon / 关闭",
+                      "id": "sepvp",
+                      "name": "关闭图标",
                       "width": 20,
                       "height": 20,
                       "icon": "x",
@@ -10485,89 +10482,79 @@
                 },
                 {
                   "type": "text",
-                  "id": "z2eNaf",
-                  "name": "Title / 目标校准",
+                  "id": "s17fX3",
+                  "x": 155.5,
+                  "y": 15,
+                  "name": "导航标题",
                   "fill": "#183326",
+                  "textGrowth": "fixed-width-height",
+                  "width": 61,
+                  "height": 22,
                   "content": "目标校准",
-                  "fontFamily": "Geist",
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
                   "fontSize": 15,
-                  "fontWeight": "600"
+                  "fontWeight": "700"
                 },
                 {
                   "type": "frame",
-                  "id": "mJKOk",
-                  "name": "Pill / 1 of 3",
+                  "id": "WSwD3",
+                  "x": 330,
+                  "y": 13,
+                  "name": "步数标签",
+                  "width": 40,
+                  "height": 26,
                   "fill": "#EAF8EF",
                   "cornerRadius": 999,
                   "stroke": "#BEE6CC",
                   "strokeWidth": 1,
-                  "padding": [
-                    6,
-                    10
-                  ],
+                  "layout": "vertical",
                   "justifyContent": "center",
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "text",
-                      "id": "w662qo",
-                      "name": "Text / 1/3",
+                      "id": "Qnoar",
+                      "name": "步数",
                       "fill": "#23965B",
                       "content": "3/3",
-                      "fontFamily": "Geist",
-                      "fontSize": 11,
-                      "fontWeight": "600"
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "800"
                     }
                   ]
                 }
               ]
             },
             {
-              "type": "frame",
-              "id": "r00b0",
-              "name": "Intro / 目标校准",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "jyTsm",
-                  "name": "Title / 让目标更贴近你",
-                  "fill": "#183326",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "你的目标已生成",
-                  "fontFamily": "Geist",
-                  "fontSize": 22,
-                  "fontWeight": "700"
-                },
-                {
-                  "type": "text",
-                  "id": "P8WxV5",
-                  "name": "Desc / 这些信息只用于估算",
-                  "fill": "#6F8074",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "已根据你的基础信息生成每日热量目标，首页将按新目标展示。",
-                  "fontFamily": "Geist",
-                  "fontSize": 13,
-                  "fontWeight": "500"
-                }
-              ]
+              "type": "text",
+              "id": "fsS14",
+              "x": 16,
+              "y": 74,
+              "name": "完成标题",
+              "fill": "#183326",
+              "textGrowth": "fixed-width",
+              "width": 370,
+              "content": "你的目标已生成",
+              "fontFamily": "Inter",
+              "fontSize": 22,
+              "fontWeight": "800"
             },
             {
               "type": "frame",
-              "id": "f3NVL",
-              "name": "Progress / 校准步骤",
-              "width": "fill_container",
+              "id": "HXtrE",
+              "x": 16,
+              "y": 124,
+              "name": "完成进度",
+              "width": 370,
+              "height": 6,
               "gap": 6,
               "children": [
                 {
                   "type": "rectangle",
                   "cornerRadius": 999,
-                  "id": "oo8yb",
-                  "name": "Step Bar / 1",
+                  "id": "MY9K2",
+                  "name": "进度 1",
                   "fill": "#48B878",
                   "width": "fill_container",
                   "height": 6
@@ -10575,8 +10562,8 @@
                 {
                   "type": "rectangle",
                   "cornerRadius": 999,
-                  "id": "ib1rw",
-                  "name": "Step Bar / 2",
+                  "id": "sUu3P",
+                  "name": "进度 2",
                   "fill": "#48B878",
                   "width": "fill_container",
                   "height": 6
@@ -10584,8 +10571,8 @@
                 {
                   "type": "rectangle",
                   "cornerRadius": 999,
-                  "id": "gpaz2",
-                  "name": "Step Bar / 3",
+                  "id": "vh4hH",
+                  "name": "进度 3",
                   "fill": "#48B878",
                   "width": "fill_container",
                   "height": 6
@@ -10594,9 +10581,11 @@
             },
             {
               "type": "frame",
-              "id": "Eq46a",
-              "name": "Card / 目标结果摘要",
-              "width": "fill_container",
+              "id": "K0Rwb",
+              "x": 16,
+              "y": 144,
+              "name": "目标结果卡片",
+              "width": 370,
               "fill": "#FFFFFF",
               "cornerRadius": 16,
               "stroke": "#DDEBDD",
@@ -10617,27 +10606,28 @@
               "children": [
                 {
                   "type": "frame",
-                  "id": "waYPx",
-                  "name": "Header / 目标结果",
+                  "id": "h1nEO",
+                  "name": "结果卡片标题",
                   "width": "fill_container",
                   "gap": 10,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "frame",
-                      "id": "n9Dtk1",
-                      "name": "Icon Bg / 已生成",
+                      "id": "UboCL",
+                      "name": "完成图标底",
                       "width": 38,
                       "height": 38,
                       "fill": "#EAF8EF",
                       "cornerRadius": 14,
+                      "layout": "vertical",
                       "justifyContent": "center",
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "icon",
-                          "id": "GvshT",
-                          "name": "Icon / Check",
+                          "id": "nyRxL",
+                          "name": "完成图标",
                           "width": 18,
                           "height": 18,
                           "icon": "check",
@@ -10648,33 +10638,35 @@
                     },
                     {
                       "type": "frame",
-                      "id": "AEllS",
-                      "name": "Copy / 目标结果",
+                      "id": "XkZOP",
+                      "name": "结果标题组",
                       "width": "fill_container",
                       "layout": "vertical",
                       "gap": 3,
                       "children": [
                         {
                           "type": "text",
-                          "id": "YcS7c",
-                          "name": "Title / 今日目标已准备好",
+                          "id": "WmGyk",
+                          "name": "结果标题",
                           "fill": "#183326",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "今日目标已准备好",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 16,
-                          "fontWeight": "700"
+                          "fontWeight": "800"
                         },
                         {
                           "type": "text",
-                          "id": "uTqmg",
-                          "name": "Desc / 首页同步展示",
+                          "id": "RkUvP",
+                          "name": "结果说明",
                           "fill": "#6F8074",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
                           "content": "保存后会同步到首页热量目标和饮食记录计算。",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 12,
-                          "fontWeight": "500"
+                          "fontWeight": "600"
                         }
                       ]
                     }
@@ -10682,8 +10674,8 @@
                 },
                 {
                   "type": "frame",
-                  "id": "kw9hR",
-                  "name": "Hero / 每日推荐热量",
+                  "id": "gDYoD",
+                  "name": "每日热量卡",
                   "width": "fill_container",
                   "fill": "#F4FBF6",
                   "cornerRadius": 15,
@@ -10698,70 +10690,73 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "ZzCNj",
-                      "name": "Label / 每日推荐热量",
+                      "id": "OUDrz",
+                      "name": "每日推荐热量标签",
                       "fill": "#6F8074",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "每日推荐热量",
-                      "fontFamily": "Geist",
+                      "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "600"
                     },
                     {
                       "type": "frame",
-                      "id": "WNO3Y",
-                      "name": "Metric / 2021 kcal",
+                      "id": "PaKtv",
+                      "name": "每日热量数值",
                       "width": "fill_container",
                       "gap": 6,
                       "alignItems": "end",
                       "children": [
                         {
                           "type": "text",
-                          "id": "Ml2NL",
-                          "name": "Number / 2021",
+                          "id": "sBlvq",
+                          "name": "每日热量",
                           "fill": "#183326",
                           "content": "2021",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 36,
-                          "fontWeight": "700"
+                          "fontWeight": "800"
                         },
                         {
                           "type": "text",
-                          "id": "sdo4i",
-                          "name": "Unit / kcal",
+                          "id": "uRywp",
+                          "name": "热量单位",
                           "fill": "#6F8074",
                           "content": "kcal",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 15,
-                          "fontWeight": "600"
+                          "fontWeight": "700"
                         }
                       ]
                     },
                     {
                       "type": "text",
-                      "id": "FMlWJ",
-                      "name": "Hint / 推荐热量说明",
+                      "id": "OhZml",
+                      "name": "每日热量说明",
                       "fill": "#6F8074",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "先按这个目标执行，后续体重变化后可以再微调。",
-                      "fontFamily": "Geist",
+                      "fontFamily": "Inter",
                       "fontSize": 12,
-                      "fontWeight": "500"
+                      "fontWeight": "600"
                     }
                   ]
                 },
                 {
                   "type": "frame",
-                  "id": "gXdfk",
-                  "name": "Row / BMI BMR",
+                  "id": "iyOIS",
+                  "name": "指标行",
                   "width": "fill_container",
                   "gap": 10,
                   "children": [
                     {
                       "type": "frame",
-                      "id": "r9gIf",
-                      "name": "Metric Card / BMI",
+                      "id": "yClfl",
+                      "name": "BMI 指标",
                       "width": "fill_container",
+                      "height": 77,
                       "fill": "#FAF7F1",
                       "cornerRadius": 13,
                       "stroke": "#E9DCC8",
@@ -10772,41 +10767,43 @@
                       "children": [
                         {
                           "type": "text",
-                          "id": "RwoSD",
-                          "name": "Label / BMI",
+                          "id": "F6zj7",
+                          "name": "BMI 标题",
                           "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "BMI",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
                         },
                         {
                           "type": "frame",
-                          "id": "J9Rl4q",
-                          "name": "Value / BMI",
+                          "id": "Ur05A",
+                          "name": "BMI 数值",
                           "width": "fill_container",
                           "gap": 4,
                           "alignItems": "end",
                           "children": [
                             {
                               "type": "text",
-                              "id": "bcrOR",
-                              "name": "Number / BMI",
+                              "id": "w5ALZI",
+                              "name": "BMI 值",
                               "fill": "#183326",
                               "content": "22.9",
-                              "fontFamily": "Geist",
+                              "fontFamily": "Inter",
                               "fontSize": 24,
-                              "fontWeight": "700"
+                              "fontWeight": "800"
                             },
                             {
                               "type": "text",
-                              "id": "Z4xenD",
-                              "name": "Unit / 健康",
+                              "id": "d4li41",
+                              "name": "BMI 单位",
                               "fill": "#48B878",
                               "content": "健康",
-                              "fontFamily": "Geist",
+                              "fontFamily": "Inter",
                               "fontSize": 11,
-                              "fontWeight": "600"
+                              "fontWeight": "700"
                             }
                           ]
                         }
@@ -10814,9 +10811,10 @@
                     },
                     {
                       "type": "frame",
-                      "id": "b3MDMt",
-                      "name": "Metric Card / BMR",
+                      "id": "eqqkv",
+                      "name": "BMR 指标",
                       "width": "fill_container",
+                      "height": 77,
                       "fill": "#FAF7F1",
                       "cornerRadius": 13,
                       "stroke": "#E9DCC8",
@@ -10827,41 +10825,43 @@
                       "children": [
                         {
                           "type": "text",
-                          "id": "JljcQ",
-                          "name": "Label / BMR",
+                          "id": "Op8WP",
+                          "name": "BMR 标题",
                           "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "BMR",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
                         },
                         {
                           "type": "frame",
-                          "id": "dlvAn",
-                          "name": "Value / BMR",
+                          "id": "DSCNM",
+                          "name": "BMR 数值",
                           "width": "fill_container",
                           "gap": 4,
                           "alignItems": "end",
                           "children": [
                             {
                               "type": "text",
-                              "id": "SDQWM",
-                              "name": "Number / BMR",
+                              "id": "tfRty",
+                              "name": "BMR 值",
                               "fill": "#183326",
                               "content": "1761",
-                              "fontFamily": "Geist",
+                              "fontFamily": "Inter",
                               "fontSize": 24,
-                              "fontWeight": "700"
+                              "fontWeight": "800"
                             },
                             {
                               "type": "text",
-                              "id": "tnO8Q",
-                              "name": "Unit / kcal",
+                              "id": "HC9GS",
+                              "name": "BMR 单位",
                               "fill": "#6F8074",
                               "content": "kcal",
-                              "fontFamily": "Geist",
-                              "fontSize": 12,
-                              "fontWeight": "600"
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "700"
                             }
                           ]
                         }
@@ -10871,19 +10871,20 @@
                 },
                 {
                   "type": "frame",
-                  "id": "iw7hG",
-                  "name": "Note / 可调整",
+                  "id": "u5p0lI",
+                  "name": "提示",
                   "width": "fill_container",
                   "fill": "#EAF8EF",
                   "cornerRadius": 14,
+                  "stroke": "#EAF8EF",
                   "gap": 8,
                   "padding": 12,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "icon",
-                      "id": "ft1HH",
-                      "name": "Icon / Info",
+                      "id": "LlnBN",
+                      "name": "提示图标",
                       "width": 16,
                       "height": 16,
                       "icon": "info",
@@ -10892,15 +10893,15 @@
                     },
                     {
                       "type": "text",
-                      "id": "TX2xa",
-                      "name": "Text / 可调整",
+                      "id": "d6ZnK",
+                      "name": "提示文案",
                       "fill": "#6F8074",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "目标用于每日推荐，不代表医疗建议；后面可以在我的页面调整。",
-                      "fontFamily": "Geist",
+                      "fontFamily": "Inter",
                       "fontSize": 12,
-                      "fontWeight": "500"
+                      "fontWeight": "700"
                     }
                   ]
                 }
@@ -10908,90 +10909,37 @@
             },
             {
               "type": "frame",
-              "id": "rdpzE",
+              "id": "nA9IP",
               "x": 16,
-              "y": 484,
-              "name": "Note / 可填大概",
-              "enabled": false,
-              "width": "fill_container(370)",
-              "fill": "#EAF8EF",
-              "cornerRadius": 14,
+              "y": 742,
+              "name": "进入首页按钮",
+              "width": 370,
+              "height": 54,
+              "fill": "#48B878",
+              "cornerRadius": 16,
               "gap": 8,
-              "padding": 12,
+              "justifyContent": "center",
               "alignItems": "center",
               "children": [
                 {
                   "type": "icon",
-                  "id": "X3djyo",
-                  "name": "Icon / Info",
-                  "width": 16,
-                  "height": 16,
-                  "icon": "info",
+                  "id": "exqNM",
+                  "name": "首页图标",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "house",
                   "library": "lucide",
-                  "fill": "#48B878"
+                  "fill": "#FFFFFF"
                 },
                 {
                   "type": "text",
-                  "id": "RTmUM",
-                  "name": "Text / 可填大概",
-                  "fill": "#6F8074",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "可以先填大概值，后面在我的页面随时微调。",
-                  "fontFamily": "Geist",
-                  "fontSize": 12,
-                  "fontWeight": "500"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "sw9hh",
-              "name": "Spacer",
-              "width": "fill_container",
-              "height": "fill_container"
-            },
-            {
-              "type": "frame",
-              "id": "busOJ",
-              "name": "Bottom Actions / 完成",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 10,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "NENJX",
-                  "name": "Button / 进入首页",
-                  "width": "fill_container",
-                  "height": 54,
-                  "fill": "#48B878",
-                  "cornerRadius": 16,
-                  "gap": 8,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "KVvE4",
-                      "name": "Icon / House",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "house",
-                      "library": "lucide",
-                      "fill": "#FFFFFF"
-                    },
-                    {
-                      "type": "text",
-                      "id": "FSliO",
-                      "name": "Text / 进入首页",
-                      "fill": "#FFFFFF",
-                      "content": "进入首页",
-                      "fontFamily": "Geist",
-                      "fontSize": 15,
-                      "fontWeight": "700"
-                    }
-                  ]
+                  "id": "f4Ihl",
+                  "name": "按钮文案",
+                  "fill": "#FFFFFF",
+                  "content": "进入首页",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "800"
                 }
               ]
             }
@@ -16740,45 +16688,42 @@
         },
         {
           "type": "frame",
-          "id": "hdfdv",
-          "name": "Content",
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 14,
-          "padding": [
-            8,
-            16,
-            16,
-            16
-          ],
+          "id": "Gr2sw",
+          "name": "完成确认内容",
+          "width": 402,
+          "height": 812,
+          "layout": "none",
           "children": [
             {
               "type": "frame",
-              "id": "HF4MK",
-              "name": "Top Bar / 目标校准",
-              "width": "fill_container",
+              "id": "Urnav",
+              "x": 16,
+              "y": 8,
+              "name": "顶部导航",
+              "width": 370,
               "height": 52,
-              "justifyContent": "space_between",
-              "alignItems": "center",
+              "layout": "none",
               "children": [
                 {
                   "type": "frame",
-                  "id": "ZD1Wp",
-                  "name": "Button / 关闭",
+                  "id": "YAO5D",
+                  "x": 0,
+                  "y": 5,
+                  "name": "关闭按钮",
                   "width": 42,
                   "height": 42,
                   "fill": "#FFFFFF",
-                  "cornerRadius": 21,
+                  "cornerRadius": 999,
                   "stroke": "#DDEBDD",
                   "strokeWidth": 1,
+                  "layout": "vertical",
                   "justifyContent": "center",
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "icon",
-                      "id": "Si2k9",
-                      "name": "Icon / 关闭",
+                      "id": "m3XcN",
+                      "name": "关闭图标",
                       "width": 20,
                       "height": 20,
                       "icon": "x",
@@ -16789,89 +16734,79 @@
                 },
                 {
                   "type": "text",
-                  "id": "FVKHb",
-                  "name": "Title / 目标校准",
+                  "id": "m9yuc",
+                  "x": 155.5,
+                  "y": 15,
+                  "name": "导航标题",
                   "fill": "#183326",
+                  "textGrowth": "fixed-width-height",
+                  "width": 61,
+                  "height": 22,
                   "content": "目标校准",
-                  "fontFamily": "Geist",
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
                   "fontSize": 15,
-                  "fontWeight": "600"
+                  "fontWeight": "700"
                 },
                 {
                   "type": "frame",
-                  "id": "o4brRn",
-                  "name": "Pill / 1 of 3",
+                  "id": "a2gDx",
+                  "x": 330,
+                  "y": 13,
+                  "name": "步数标签",
+                  "width": 40,
+                  "height": 26,
                   "fill": "#EAF8EF",
                   "cornerRadius": 999,
                   "stroke": "#BEE6CC",
                   "strokeWidth": 1,
-                  "padding": [
-                    6,
-                    10
-                  ],
+                  "layout": "vertical",
                   "justifyContent": "center",
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "text",
-                      "id": "fs9Uj",
-                      "name": "Text / 1/3",
+                      "id": "W6yy0d",
+                      "name": "步数",
                       "fill": "#23965B",
                       "content": "3/3",
-                      "fontFamily": "Geist",
-                      "fontSize": 11,
-                      "fontWeight": "600"
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "800"
                     }
                   ]
                 }
               ]
             },
             {
-              "type": "frame",
-              "id": "z4CC4",
-              "name": "Intro / 目标校准",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "P9HpEr",
-                  "name": "Title / 让目标更贴近你",
-                  "fill": "#183326",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "你的目标已生成",
-                  "fontFamily": "Geist",
-                  "fontSize": 22,
-                  "fontWeight": "700"
-                },
-                {
-                  "type": "text",
-                  "id": "utKSW",
-                  "name": "Desc / 这些信息只用于估算",
-                  "fill": "#6F8074",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "已根据你的基础信息生成每日热量目标，BMI 提示仅用于帮助你判断调整节奏。",
-                  "fontFamily": "Geist",
-                  "fontSize": 13,
-                  "fontWeight": "500"
-                }
-              ]
+              "type": "text",
+              "id": "U2zKM",
+              "x": 16,
+              "y": 74,
+              "name": "完成标题",
+              "fill": "#183326",
+              "textGrowth": "fixed-width",
+              "width": 370,
+              "content": "你的目标已生成",
+              "fontFamily": "Inter",
+              "fontSize": 22,
+              "fontWeight": "800"
             },
             {
               "type": "frame",
-              "id": "hxfHB",
-              "name": "Progress / 校准步骤",
-              "width": "fill_container",
+              "id": "SMlhR",
+              "x": 16,
+              "y": 124,
+              "name": "完成进度",
+              "width": 370,
+              "height": 6,
               "gap": 6,
               "children": [
                 {
                   "type": "rectangle",
                   "cornerRadius": 999,
-                  "id": "I7O7i",
-                  "name": "Step Bar / 1",
+                  "id": "c41XY",
+                  "name": "进度 1",
                   "fill": "#48B878",
                   "width": "fill_container",
                   "height": 6
@@ -16879,8 +16814,8 @@
                 {
                   "type": "rectangle",
                   "cornerRadius": 999,
-                  "id": "MONKK",
-                  "name": "Step Bar / 2",
+                  "id": "bKg6f",
+                  "name": "进度 2",
                   "fill": "#48B878",
                   "width": "fill_container",
                   "height": 6
@@ -16888,8 +16823,8 @@
                 {
                   "type": "rectangle",
                   "cornerRadius": 999,
-                  "id": "DS4ps",
-                  "name": "Step Bar / 3",
+                  "id": "KtBjw",
+                  "name": "进度 3",
                   "fill": "#48B878",
                   "width": "fill_container",
                   "height": 6
@@ -16898,9 +16833,11 @@
             },
             {
               "type": "frame",
-              "id": "XSVt9",
-              "name": "Card / 目标结果摘要",
-              "width": "fill_container",
+              "id": "ZpBjO",
+              "x": 16,
+              "y": 144,
+              "name": "目标结果卡片",
+              "width": 370,
               "fill": "#FFFFFF",
               "cornerRadius": 16,
               "stroke": "#DDEBDD",
@@ -16921,27 +16858,28 @@
               "children": [
                 {
                   "type": "frame",
-                  "id": "t4y23",
-                  "name": "Header / 目标结果",
+                  "id": "q50L1r",
+                  "name": "结果卡片标题",
                   "width": "fill_container",
                   "gap": 10,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "frame",
-                      "id": "GM5yv",
-                      "name": "Icon Bg / 已生成",
+                      "id": "ziu2a",
+                      "name": "完成图标底",
                       "width": 38,
                       "height": 38,
                       "fill": "#EAF8EF",
                       "cornerRadius": 14,
+                      "layout": "vertical",
                       "justifyContent": "center",
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "icon",
-                          "id": "yNFvh",
-                          "name": "Icon / Check",
+                          "id": "wxR2q",
+                          "name": "完成图标",
                           "width": 18,
                           "height": 18,
                           "icon": "check",
@@ -16952,33 +16890,35 @@
                     },
                     {
                       "type": "frame",
-                      "id": "EFNJT",
-                      "name": "Copy / 目标结果",
+                      "id": "ujmkd",
+                      "name": "结果标题组",
                       "width": "fill_container",
                       "layout": "vertical",
                       "gap": 3,
                       "children": [
                         {
                           "type": "text",
-                          "id": "K5B7bf",
-                          "name": "Title / 今日目标已准备好",
+                          "id": "C9CVK7",
+                          "name": "结果标题",
                           "fill": "#183326",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "今日目标已准备好",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 16,
-                          "fontWeight": "700"
+                          "fontWeight": "800"
                         },
                         {
                           "type": "text",
-                          "id": "a6g4p5",
-                          "name": "Desc / 首页同步展示",
+                          "id": "ALls8",
+                          "name": "结果说明",
                           "fill": "#6F8074",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
                           "content": "保存后会同步到首页热量目标和饮食记录计算。",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 12,
-                          "fontWeight": "500"
+                          "fontWeight": "600"
                         }
                       ]
                     }
@@ -16986,8 +16926,8 @@
                 },
                 {
                   "type": "frame",
-                  "id": "uObWR",
-                  "name": "Hero / 每日推荐热量",
+                  "id": "q4nES",
+                  "name": "每日热量卡",
                   "width": "fill_container",
                   "fill": "#F4FBF6",
                   "cornerRadius": 15,
@@ -17002,70 +16942,73 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "s3h46",
-                      "name": "Label / 每日推荐热量",
+                      "id": "t0yMU",
+                      "name": "每日推荐热量标签",
                       "fill": "#6F8074",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "每日推荐热量",
-                      "fontFamily": "Geist",
+                      "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "600"
                     },
                     {
                       "type": "frame",
-                      "id": "m13rt6",
-                      "name": "Metric / 2021 kcal",
+                      "id": "eZlkP",
+                      "name": "每日热量数值",
                       "width": "fill_container",
                       "gap": 6,
                       "alignItems": "end",
                       "children": [
                         {
                           "type": "text",
-                          "id": "c4U71",
-                          "name": "Number / 2021",
+                          "id": "W3YFcB",
+                          "name": "每日热量",
                           "fill": "#183326",
                           "content": "1680",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 36,
-                          "fontWeight": "700"
+                          "fontWeight": "800"
                         },
                         {
                           "type": "text",
-                          "id": "VgDaE",
-                          "name": "Unit / kcal",
+                          "id": "YMRRc",
+                          "name": "热量单位",
                           "fill": "#6F8074",
                           "content": "kcal",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 15,
-                          "fontWeight": "600"
+                          "fontWeight": "700"
                         }
                       ]
                     },
                     {
                       "type": "text",
-                      "id": "L1cYVU",
-                      "name": "Hint / 推荐热量说明",
+                      "id": "iTKud",
+                      "name": "每日热量说明",
                       "fill": "#6F8074",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "先按这个目标执行，后续体重变化后可以再微调。",
-                      "fontFamily": "Geist",
+                      "fontFamily": "Inter",
                       "fontSize": 12,
-                      "fontWeight": "500"
+                      "fontWeight": "600"
                     }
                   ]
                 },
                 {
                   "type": "frame",
-                  "id": "DTQ5V",
-                  "name": "Row / BMI BMR",
+                  "id": "a6oWc",
+                  "name": "指标行",
                   "width": "fill_container",
                   "gap": 10,
                   "children": [
                     {
                       "type": "frame",
-                      "id": "ikc0Y",
-                      "name": "Metric Card / BMI",
+                      "id": "moAIN",
+                      "name": "BMI 指标",
                       "width": "fill_container",
+                      "height": 77,
                       "fill": "#FAF7F1",
                       "cornerRadius": 13,
                       "stroke": "#E9DCC8",
@@ -17076,41 +17019,43 @@
                       "children": [
                         {
                           "type": "text",
-                          "id": "ROwM7",
-                          "name": "Label / BMI",
+                          "id": "vkmJ8",
+                          "name": "BMI 标题",
                           "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "BMI",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
                         },
                         {
                           "type": "frame",
-                          "id": "i4c64i",
-                          "name": "Value / BMI",
+                          "id": "DmcX8",
+                          "name": "BMI 数值",
                           "width": "fill_container",
                           "gap": 4,
                           "alignItems": "end",
                           "children": [
                             {
                               "type": "text",
-                              "id": "PkqNe",
-                              "name": "Number / BMI",
+                              "id": "w6C5W",
+                              "name": "BMI 值",
                               "fill": "#183326",
                               "content": "18.4",
-                              "fontFamily": "Geist",
+                              "fontFamily": "Inter",
                               "fontSize": 24,
-                              "fontWeight": "700"
+                              "fontWeight": "800"
                             },
                             {
                               "type": "text",
-                              "id": "voNKX",
-                              "name": "Unit / 健康",
-                              "fill": "#2B7A90",
+                              "id": "fkEr7",
+                              "name": "BMI 单位",
+                              "fill": "#247F9E",
                               "content": "偏低",
-                              "fontFamily": "Geist",
+                              "fontFamily": "Inter",
                               "fontSize": 11,
-                              "fontWeight": "600"
+                              "fontWeight": "700"
                             }
                           ]
                         }
@@ -17118,9 +17063,10 @@
                     },
                     {
                       "type": "frame",
-                      "id": "dWOn0",
-                      "name": "Metric Card / BMR",
+                      "id": "KqnUR",
+                      "name": "BMR 指标",
                       "width": "fill_container",
+                      "height": 77,
                       "fill": "#FAF7F1",
                       "cornerRadius": 13,
                       "stroke": "#E9DCC8",
@@ -17131,41 +17077,43 @@
                       "children": [
                         {
                           "type": "text",
-                          "id": "EFf8B",
-                          "name": "Label / BMR",
+                          "id": "f7nMtE",
+                          "name": "BMR 标题",
                           "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "BMR",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
                         },
                         {
                           "type": "frame",
-                          "id": "pJBxq",
-                          "name": "Value / BMR",
+                          "id": "ZR17u",
+                          "name": "BMR 数值",
                           "width": "fill_container",
                           "gap": 4,
                           "alignItems": "end",
                           "children": [
                             {
                               "type": "text",
-                              "id": "ZTbHO",
-                              "name": "Number / BMR",
+                              "id": "MJ7gj",
+                              "name": "BMR 值",
                               "fill": "#183326",
                               "content": "1761",
-                              "fontFamily": "Geist",
+                              "fontFamily": "Inter",
                               "fontSize": 24,
-                              "fontWeight": "700"
+                              "fontWeight": "800"
                             },
                             {
                               "type": "text",
-                              "id": "ZepFb",
-                              "name": "Unit / kcal",
+                              "id": "EZ8j1",
+                              "name": "BMR 单位",
                               "fill": "#6F8074",
                               "content": "kcal",
-                              "fontFamily": "Geist",
-                              "fontSize": 12,
-                              "fontWeight": "600"
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "700"
                             }
                           ]
                         }
@@ -17175,12 +17123,12 @@
                 },
                 {
                   "type": "frame",
-                  "id": "SvVQd",
-                  "name": "Note / 可调整",
+                  "id": "E6slvF",
+                  "name": "提示",
                   "width": "fill_container",
-                  "fill": "#EAF6FA",
+                  "fill": "#EAF8FF",
                   "cornerRadius": 14,
-                  "stroke": "#BDE4EF",
+                  "stroke": "#BDE5F3",
                   "strokeWidth": 1,
                   "gap": 8,
                   "padding": 12,
@@ -17188,25 +17136,25 @@
                   "children": [
                     {
                       "type": "icon",
-                      "id": "K6iQ54",
-                      "name": "Icon / Info",
+                      "id": "InXh6",
+                      "name": "提示图标",
                       "width": 16,
                       "height": 16,
                       "icon": "info",
                       "library": "lucide",
-                      "fill": "#2B7A90"
+                      "fill": "#247F9E"
                     },
                     {
                       "type": "text",
-                      "id": "b1JBV",
-                      "name": "Text / 可调整",
-                      "fill": "#2B6374",
+                      "id": "qDvgU",
+                      "name": "提示文案",
+                      "fill": "#2D6171",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "当前/目标体重偏低，建议关注营养摄入，必要时咨询专业人士。",
-                      "fontFamily": "Geist",
+                      "fontFamily": "Inter",
                       "fontSize": 12,
-                      "fontWeight": "500"
+                      "fontWeight": "700"
                     }
                   ]
                 }
@@ -17214,90 +17162,37 @@
             },
             {
               "type": "frame",
-              "id": "Wbkmu",
+              "id": "dNQqP",
               "x": 16,
-              "y": 484,
-              "name": "Note / 可填大概",
-              "enabled": false,
+              "y": 742,
+              "name": "进入首页按钮",
               "width": 370,
-              "fill": "#EAF8EF",
-              "cornerRadius": 14,
+              "height": 54,
+              "fill": "#48B878",
+              "cornerRadius": 16,
               "gap": 8,
-              "padding": 12,
+              "justifyContent": "center",
               "alignItems": "center",
               "children": [
                 {
                   "type": "icon",
-                  "id": "hq8jt",
-                  "name": "Icon / Info",
-                  "width": 16,
-                  "height": 16,
-                  "icon": "info",
+                  "id": "jDFZ9",
+                  "name": "首页图标",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "house",
                   "library": "lucide",
-                  "fill": "#48B878"
+                  "fill": "#FFFFFF"
                 },
                 {
                   "type": "text",
-                  "id": "bAscn",
-                  "name": "Text / 可填大概",
-                  "fill": "#6F8074",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "可以先填大概值，后面在我的页面随时微调。",
-                  "fontFamily": "Geist",
-                  "fontSize": 12,
-                  "fontWeight": "500"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "OQXez",
-              "name": "Spacer",
-              "width": "fill_container",
-              "height": "fill_container"
-            },
-            {
-              "type": "frame",
-              "id": "w0DdGI",
-              "name": "Bottom Actions / 完成",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 10,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "r1D8eL",
-                  "name": "Button / 进入首页",
-                  "width": "fill_container",
-                  "height": 54,
-                  "fill": "#48B878",
-                  "cornerRadius": 16,
-                  "gap": 8,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "AhzMw",
-                      "name": "Icon / House",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "house",
-                      "library": "lucide",
-                      "fill": "#FFFFFF"
-                    },
-                    {
-                      "type": "text",
-                      "id": "fRtNu",
-                      "name": "Text / 进入首页",
-                      "fill": "#FFFFFF",
-                      "content": "进入首页",
-                      "fontFamily": "Geist",
-                      "fontSize": 15,
-                      "fontWeight": "700"
-                    }
-                  ]
+                  "id": "uKLj8",
+                  "name": "按钮文案",
+                  "fill": "#FFFFFF",
+                  "content": "进入首页",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "800"
                 }
               ]
             }
@@ -17329,45 +17224,42 @@
         },
         {
           "type": "frame",
-          "id": "Z8dO8",
-          "name": "Content",
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 14,
-          "padding": [
-            8,
-            16,
-            16,
-            16
-          ],
+          "id": "auPBu",
+          "name": "完成确认内容",
+          "width": 402,
+          "height": 812,
+          "layout": "none",
           "children": [
             {
               "type": "frame",
-              "id": "kMIdQ",
-              "name": "Top Bar / 目标校准",
-              "width": "fill_container",
+              "id": "w06OJb",
+              "x": 16,
+              "y": 8,
+              "name": "顶部导航",
+              "width": 370,
               "height": 52,
-              "justifyContent": "space_between",
-              "alignItems": "center",
+              "layout": "none",
               "children": [
                 {
                   "type": "frame",
-                  "id": "jrVbS",
-                  "name": "Button / 关闭",
+                  "id": "CkkqQ",
+                  "x": 0,
+                  "y": 5,
+                  "name": "关闭按钮",
                   "width": 42,
                   "height": 42,
                   "fill": "#FFFFFF",
-                  "cornerRadius": 21,
+                  "cornerRadius": 999,
                   "stroke": "#DDEBDD",
                   "strokeWidth": 1,
+                  "layout": "vertical",
                   "justifyContent": "center",
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "icon",
-                      "id": "ZgIEj",
-                      "name": "Icon / 关闭",
+                      "id": "qOHnl",
+                      "name": "关闭图标",
                       "width": 20,
                       "height": 20,
                       "icon": "x",
@@ -17378,89 +17270,79 @@
                 },
                 {
                   "type": "text",
-                  "id": "yFaIs",
-                  "name": "Title / 目标校准",
+                  "id": "Kuprx",
+                  "x": 155.5,
+                  "y": 15,
+                  "name": "导航标题",
                   "fill": "#183326",
+                  "textGrowth": "fixed-width-height",
+                  "width": 61,
+                  "height": 22,
                   "content": "目标校准",
-                  "fontFamily": "Geist",
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
                   "fontSize": 15,
-                  "fontWeight": "600"
+                  "fontWeight": "700"
                 },
                 {
                   "type": "frame",
-                  "id": "rwDyl",
-                  "name": "Pill / 1 of 3",
+                  "id": "Wbi63",
+                  "x": 330,
+                  "y": 13,
+                  "name": "步数标签",
+                  "width": 40,
+                  "height": 26,
                   "fill": "#EAF8EF",
                   "cornerRadius": 999,
                   "stroke": "#BEE6CC",
                   "strokeWidth": 1,
-                  "padding": [
-                    6,
-                    10
-                  ],
+                  "layout": "vertical",
                   "justifyContent": "center",
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "text",
-                      "id": "YXHnz",
-                      "name": "Text / 1/3",
+                      "id": "mOYXU",
+                      "name": "步数",
                       "fill": "#23965B",
                       "content": "3/3",
-                      "fontFamily": "Geist",
-                      "fontSize": 11,
-                      "fontWeight": "600"
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "800"
                     }
                   ]
                 }
               ]
             },
             {
-              "type": "frame",
-              "id": "GcK7y",
-              "name": "Intro / 目标校准",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "cxFen",
-                  "name": "Title / 让目标更贴近你",
-                  "fill": "#183326",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "你的目标已生成",
-                  "fontFamily": "Geist",
-                  "fontSize": 22,
-                  "fontWeight": "700"
-                },
-                {
-                  "type": "text",
-                  "id": "xiYkO",
-                  "name": "Desc / 这些信息只用于估算",
-                  "fill": "#6F8074",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "已根据你的基础信息生成每日热量目标，BMI 提示仅用于帮助你判断调整节奏。",
-                  "fontFamily": "Geist",
-                  "fontSize": 13,
-                  "fontWeight": "500"
-                }
-              ]
+              "type": "text",
+              "id": "X2iViJ",
+              "x": 16,
+              "y": 74,
+              "name": "完成标题",
+              "fill": "#183326",
+              "textGrowth": "fixed-width",
+              "width": 370,
+              "content": "你的目标已生成",
+              "fontFamily": "Inter",
+              "fontSize": 22,
+              "fontWeight": "800"
             },
             {
               "type": "frame",
-              "id": "ltGA0",
-              "name": "Progress / 校准步骤",
-              "width": "fill_container",
+              "id": "SJS6H",
+              "x": 16,
+              "y": 124,
+              "name": "完成进度",
+              "width": 370,
+              "height": 6,
               "gap": 6,
               "children": [
                 {
                   "type": "rectangle",
                   "cornerRadius": 999,
-                  "id": "YtP3W",
-                  "name": "Step Bar / 1",
+                  "id": "QEcoP",
+                  "name": "进度 1",
                   "fill": "#48B878",
                   "width": "fill_container",
                   "height": 6
@@ -17468,8 +17350,8 @@
                 {
                   "type": "rectangle",
                   "cornerRadius": 999,
-                  "id": "k41fbt",
-                  "name": "Step Bar / 2",
+                  "id": "T4TV7q",
+                  "name": "进度 2",
                   "fill": "#48B878",
                   "width": "fill_container",
                   "height": 6
@@ -17477,8 +17359,8 @@
                 {
                   "type": "rectangle",
                   "cornerRadius": 999,
-                  "id": "eoE59",
-                  "name": "Step Bar / 3",
+                  "id": "YJFNt",
+                  "name": "进度 3",
                   "fill": "#48B878",
                   "width": "fill_container",
                   "height": 6
@@ -17487,9 +17369,11 @@
             },
             {
               "type": "frame",
-              "id": "wcs6Q",
-              "name": "Card / 目标结果摘要",
-              "width": "fill_container",
+              "id": "Nap9c",
+              "x": 16,
+              "y": 144,
+              "name": "目标结果卡片",
+              "width": 370,
               "fill": "#FFFFFF",
               "cornerRadius": 16,
               "stroke": "#DDEBDD",
@@ -17510,27 +17394,28 @@
               "children": [
                 {
                   "type": "frame",
-                  "id": "UOq5g",
-                  "name": "Header / 目标结果",
+                  "id": "kuzOp",
+                  "name": "结果卡片标题",
                   "width": "fill_container",
                   "gap": 10,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "frame",
-                      "id": "p9z6M",
-                      "name": "Icon Bg / 已生成",
+                      "id": "zuQIU",
+                      "name": "完成图标底",
                       "width": 38,
                       "height": 38,
                       "fill": "#EAF8EF",
                       "cornerRadius": 14,
+                      "layout": "vertical",
                       "justifyContent": "center",
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "icon",
-                          "id": "d31MkY",
-                          "name": "Icon / Check",
+                          "id": "Hq5Fj",
+                          "name": "完成图标",
                           "width": 18,
                           "height": 18,
                           "icon": "check",
@@ -17541,33 +17426,35 @@
                     },
                     {
                       "type": "frame",
-                      "id": "C2bTDs",
-                      "name": "Copy / 目标结果",
+                      "id": "zaUta",
+                      "name": "结果标题组",
                       "width": "fill_container",
                       "layout": "vertical",
                       "gap": 3,
                       "children": [
                         {
                           "type": "text",
-                          "id": "JG4VZ",
-                          "name": "Title / 今日目标已准备好",
+                          "id": "lGmt8",
+                          "name": "结果标题",
                           "fill": "#183326",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "今日目标已准备好",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 16,
-                          "fontWeight": "700"
+                          "fontWeight": "800"
                         },
                         {
                           "type": "text",
-                          "id": "igXYD",
-                          "name": "Desc / 首页同步展示",
+                          "id": "J5qd1",
+                          "name": "结果说明",
                           "fill": "#6F8074",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
                           "content": "保存后会同步到首页热量目标和饮食记录计算。",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 12,
-                          "fontWeight": "500"
+                          "fontWeight": "600"
                         }
                       ]
                     }
@@ -17575,8 +17462,8 @@
                 },
                 {
                   "type": "frame",
-                  "id": "tRNpM",
-                  "name": "Hero / 每日推荐热量",
+                  "id": "X4ewtm",
+                  "name": "每日热量卡",
                   "width": "fill_container",
                   "fill": "#F4FBF6",
                   "cornerRadius": 15,
@@ -17591,70 +17478,73 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "E6hMK",
-                      "name": "Label / 每日推荐热量",
+                      "id": "Iu2sH",
+                      "name": "每日推荐热量标签",
                       "fill": "#6F8074",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "每日推荐热量",
-                      "fontFamily": "Geist",
+                      "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "600"
                     },
                     {
                       "type": "frame",
-                      "id": "VSkoQ",
-                      "name": "Metric / 2021 kcal",
+                      "id": "qrGlO",
+                      "name": "每日热量数值",
                       "width": "fill_container",
                       "gap": 6,
                       "alignItems": "end",
                       "children": [
                         {
                           "type": "text",
-                          "id": "uDW3I",
-                          "name": "Number / 2021",
+                          "id": "x4dEcU",
+                          "name": "每日热量",
                           "fill": "#183326",
                           "content": "2021",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 36,
-                          "fontWeight": "700"
+                          "fontWeight": "800"
                         },
                         {
                           "type": "text",
-                          "id": "RX26X",
-                          "name": "Unit / kcal",
+                          "id": "w4qJ0",
+                          "name": "热量单位",
                           "fill": "#6F8074",
                           "content": "kcal",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 15,
-                          "fontWeight": "600"
+                          "fontWeight": "700"
                         }
                       ]
                     },
                     {
                       "type": "text",
-                      "id": "diyAE",
-                      "name": "Hint / 推荐热量说明",
+                      "id": "C9sef",
+                      "name": "每日热量说明",
                       "fill": "#6F8074",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "先按这个目标执行，后续体重变化后可以再微调。",
-                      "fontFamily": "Geist",
+                      "fontFamily": "Inter",
                       "fontSize": 12,
-                      "fontWeight": "500"
+                      "fontWeight": "600"
                     }
                   ]
                 },
                 {
                   "type": "frame",
-                  "id": "rqTOF",
-                  "name": "Row / BMI BMR",
+                  "id": "ujT00",
+                  "name": "指标行",
                   "width": "fill_container",
                   "gap": 10,
                   "children": [
                     {
                       "type": "frame",
-                      "id": "wmDoL",
-                      "name": "Metric Card / BMI",
+                      "id": "DNV38",
+                      "name": "BMI 指标",
                       "width": "fill_container",
+                      "height": 77,
                       "fill": "#FAF7F1",
                       "cornerRadius": 13,
                       "stroke": "#E9DCC8",
@@ -17665,41 +17555,43 @@
                       "children": [
                         {
                           "type": "text",
-                          "id": "lejXH",
-                          "name": "Label / BMI",
+                          "id": "u9iKNb",
+                          "name": "BMI 标题",
                           "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "BMI",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
                         },
                         {
                           "type": "frame",
-                          "id": "CZfws",
-                          "name": "Value / BMI",
+                          "id": "PBkal",
+                          "name": "BMI 数值",
                           "width": "fill_container",
                           "gap": 4,
                           "alignItems": "end",
                           "children": [
                             {
                               "type": "text",
-                              "id": "r1qKyo",
-                              "name": "Number / BMI",
+                              "id": "Ap5gL",
+                              "name": "BMI 值",
                               "fill": "#183326",
                               "content": "22.9",
-                              "fontFamily": "Geist",
+                              "fontFamily": "Inter",
                               "fontSize": 24,
-                              "fontWeight": "700"
+                              "fontWeight": "800"
                             },
                             {
                               "type": "text",
-                              "id": "MN7oK",
-                              "name": "Unit / 健康",
+                              "id": "pTqrP",
+                              "name": "BMI 单位",
                               "fill": "#48B878",
                               "content": "健康",
-                              "fontFamily": "Geist",
+                              "fontFamily": "Inter",
                               "fontSize": 11,
-                              "fontWeight": "600"
+                              "fontWeight": "700"
                             }
                           ]
                         }
@@ -17707,9 +17599,10 @@
                     },
                     {
                       "type": "frame",
-                      "id": "UzCiB",
-                      "name": "Metric Card / BMR",
+                      "id": "udmHt",
+                      "name": "BMR 指标",
                       "width": "fill_container",
+                      "height": 77,
                       "fill": "#FAF7F1",
                       "cornerRadius": 13,
                       "stroke": "#E9DCC8",
@@ -17720,41 +17613,43 @@
                       "children": [
                         {
                           "type": "text",
-                          "id": "Jufck",
-                          "name": "Label / BMR",
+                          "id": "M3dDlV",
+                          "name": "BMR 标题",
                           "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "BMR",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
                         },
                         {
                           "type": "frame",
-                          "id": "KPX46",
-                          "name": "Value / BMR",
+                          "id": "OCH8i",
+                          "name": "BMR 数值",
                           "width": "fill_container",
                           "gap": 4,
                           "alignItems": "end",
                           "children": [
                             {
                               "type": "text",
-                              "id": "ancUc",
-                              "name": "Number / BMR",
+                              "id": "OL0uJ",
+                              "name": "BMR 值",
                               "fill": "#183326",
                               "content": "1761",
-                              "fontFamily": "Geist",
+                              "fontFamily": "Inter",
                               "fontSize": 24,
-                              "fontWeight": "700"
+                              "fontWeight": "800"
                             },
                             {
                               "type": "text",
-                              "id": "RgFW0",
-                              "name": "Unit / kcal",
+                              "id": "Vq46e",
+                              "name": "BMR 单位",
                               "fill": "#6F8074",
                               "content": "kcal",
-                              "fontFamily": "Geist",
-                              "fontSize": 12,
-                              "fontWeight": "600"
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "700"
                             }
                           ]
                         }
@@ -17764,8 +17659,8 @@
                 },
                 {
                   "type": "frame",
-                  "id": "Tmxb5",
-                  "name": "Note / 可调整",
+                  "id": "yTkVh",
+                  "name": "提示",
                   "width": "fill_container",
                   "fill": "#EAF8EF",
                   "cornerRadius": 14,
@@ -17777,8 +17672,8 @@
                   "children": [
                     {
                       "type": "icon",
-                      "id": "XUPTc",
-                      "name": "Icon / Info",
+                      "id": "mHlpP",
+                      "name": "提示图标",
                       "width": 16,
                       "height": 16,
                       "icon": "circle-check",
@@ -17787,15 +17682,15 @@
                     },
                     {
                       "type": "text",
-                      "id": "wH0NM",
-                      "name": "Text / 可调整",
-                      "fill": "#2D8D57",
+                      "id": "mwVi0",
+                      "name": "提示文案",
+                      "fill": "#248A58",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "当前范围较健康，继续保持稳定记录。",
-                      "fontFamily": "Geist",
+                      "fontFamily": "Inter",
                       "fontSize": 12,
-                      "fontWeight": "500"
+                      "fontWeight": "700"
                     }
                   ]
                 }
@@ -17803,90 +17698,37 @@
             },
             {
               "type": "frame",
-              "id": "zXsCK",
+              "id": "ZC3K2",
               "x": 16,
-              "y": 484,
-              "name": "Note / 可填大概",
-              "enabled": false,
+              "y": 742,
+              "name": "进入首页按钮",
               "width": 370,
-              "fill": "#EAF8EF",
-              "cornerRadius": 14,
+              "height": 54,
+              "fill": "#48B878",
+              "cornerRadius": 16,
               "gap": 8,
-              "padding": 12,
+              "justifyContent": "center",
               "alignItems": "center",
               "children": [
                 {
                   "type": "icon",
-                  "id": "ESQhN",
-                  "name": "Icon / Info",
-                  "width": 16,
-                  "height": 16,
-                  "icon": "info",
+                  "id": "Lz8H3",
+                  "name": "首页图标",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "house",
                   "library": "lucide",
-                  "fill": "#48B878"
+                  "fill": "#FFFFFF"
                 },
                 {
                   "type": "text",
-                  "id": "p93xr",
-                  "name": "Text / 可填大概",
-                  "fill": "#6F8074",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "可以先填大概值，后面在我的页面随时微调。",
-                  "fontFamily": "Geist",
-                  "fontSize": 12,
-                  "fontWeight": "500"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "IlZaI",
-              "name": "Spacer",
-              "width": "fill_container",
-              "height": "fill_container"
-            },
-            {
-              "type": "frame",
-              "id": "DZx4b",
-              "name": "Bottom Actions / 完成",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 10,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "k9BS6W",
-                  "name": "Button / 进入首页",
-                  "width": "fill_container",
-                  "height": 54,
-                  "fill": "#48B878",
-                  "cornerRadius": 16,
-                  "gap": 8,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "uFbmK",
-                      "name": "Icon / House",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "house",
-                      "library": "lucide",
-                      "fill": "#FFFFFF"
-                    },
-                    {
-                      "type": "text",
-                      "id": "bMQ6w",
-                      "name": "Text / 进入首页",
-                      "fill": "#FFFFFF",
-                      "content": "进入首页",
-                      "fontFamily": "Geist",
-                      "fontSize": 15,
-                      "fontWeight": "700"
-                    }
-                  ]
+                  "id": "JPnFR",
+                  "name": "按钮文案",
+                  "fill": "#FFFFFF",
+                  "content": "进入首页",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "800"
                 }
               ]
             }
@@ -17918,45 +17760,42 @@
         },
         {
           "type": "frame",
-          "id": "M07lDE",
-          "name": "Content",
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 14,
-          "padding": [
-            8,
-            16,
-            16,
-            16
-          ],
+          "id": "YX7Fi",
+          "name": "完成确认内容",
+          "width": 402,
+          "height": 812,
+          "layout": "none",
           "children": [
             {
               "type": "frame",
-              "id": "S5VGPy",
-              "name": "Top Bar / 目标校准",
-              "width": "fill_container",
+              "id": "AMXCt",
+              "x": 16,
+              "y": 8,
+              "name": "顶部导航",
+              "width": 370,
               "height": 52,
-              "justifyContent": "space_between",
-              "alignItems": "center",
+              "layout": "none",
               "children": [
                 {
                   "type": "frame",
-                  "id": "QpRK9",
-                  "name": "Button / 关闭",
+                  "id": "lZ1Ax",
+                  "x": 0,
+                  "y": 5,
+                  "name": "关闭按钮",
                   "width": 42,
                   "height": 42,
                   "fill": "#FFFFFF",
-                  "cornerRadius": 21,
+                  "cornerRadius": 999,
                   "stroke": "#DDEBDD",
                   "strokeWidth": 1,
+                  "layout": "vertical",
                   "justifyContent": "center",
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "icon",
-                      "id": "jIOzl",
-                      "name": "Icon / 关闭",
+                      "id": "F0jGfY",
+                      "name": "关闭图标",
                       "width": 20,
                       "height": 20,
                       "icon": "x",
@@ -17967,89 +17806,79 @@
                 },
                 {
                   "type": "text",
-                  "id": "cMWGE",
-                  "name": "Title / 目标校准",
+                  "id": "sLwbq",
+                  "x": 155.5,
+                  "y": 15,
+                  "name": "导航标题",
                   "fill": "#183326",
+                  "textGrowth": "fixed-width-height",
+                  "width": 61,
+                  "height": 22,
                   "content": "目标校准",
-                  "fontFamily": "Geist",
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
                   "fontSize": 15,
-                  "fontWeight": "600"
+                  "fontWeight": "700"
                 },
                 {
                   "type": "frame",
-                  "id": "DfIKp",
-                  "name": "Pill / 1 of 3",
+                  "id": "uLzOR",
+                  "x": 330,
+                  "y": 13,
+                  "name": "步数标签",
+                  "width": 40,
+                  "height": 26,
                   "fill": "#EAF8EF",
                   "cornerRadius": 999,
                   "stroke": "#BEE6CC",
                   "strokeWidth": 1,
-                  "padding": [
-                    6,
-                    10
-                  ],
+                  "layout": "vertical",
                   "justifyContent": "center",
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "text",
-                      "id": "pi4ZF",
-                      "name": "Text / 1/3",
+                      "id": "el4Dl",
+                      "name": "步数",
                       "fill": "#23965B",
                       "content": "3/3",
-                      "fontFamily": "Geist",
-                      "fontSize": 11,
-                      "fontWeight": "600"
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "800"
                     }
                   ]
                 }
               ]
             },
             {
-              "type": "frame",
-              "id": "fb0RK",
-              "name": "Intro / 目标校准",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "m97bP",
-                  "name": "Title / 让目标更贴近你",
-                  "fill": "#183326",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "你的目标已生成",
-                  "fontFamily": "Geist",
-                  "fontSize": 22,
-                  "fontWeight": "700"
-                },
-                {
-                  "type": "text",
-                  "id": "LVMBY",
-                  "name": "Desc / 这些信息只用于估算",
-                  "fill": "#6F8074",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "已根据你的基础信息生成每日热量目标，BMI 提示仅用于帮助你判断调整节奏。",
-                  "fontFamily": "Geist",
-                  "fontSize": 13,
-                  "fontWeight": "500"
-                }
-              ]
+              "type": "text",
+              "id": "ND7B5",
+              "x": 16,
+              "y": 74,
+              "name": "完成标题",
+              "fill": "#183326",
+              "textGrowth": "fixed-width",
+              "width": 370,
+              "content": "你的目标已生成",
+              "fontFamily": "Inter",
+              "fontSize": 22,
+              "fontWeight": "800"
             },
             {
               "type": "frame",
-              "id": "IsP6d",
-              "name": "Progress / 校准步骤",
-              "width": "fill_container",
+              "id": "tkZWg",
+              "x": 16,
+              "y": 124,
+              "name": "完成进度",
+              "width": 370,
+              "height": 6,
               "gap": 6,
               "children": [
                 {
                   "type": "rectangle",
                   "cornerRadius": 999,
-                  "id": "lFK2I",
-                  "name": "Step Bar / 1",
+                  "id": "pcgm9",
+                  "name": "进度 1",
                   "fill": "#48B878",
                   "width": "fill_container",
                   "height": 6
@@ -18057,8 +17886,8 @@
                 {
                   "type": "rectangle",
                   "cornerRadius": 999,
-                  "id": "vAC35",
-                  "name": "Step Bar / 2",
+                  "id": "yaRhL",
+                  "name": "进度 2",
                   "fill": "#48B878",
                   "width": "fill_container",
                   "height": 6
@@ -18066,8 +17895,8 @@
                 {
                   "type": "rectangle",
                   "cornerRadius": 999,
-                  "id": "OSYL7",
-                  "name": "Step Bar / 3",
+                  "id": "N0gfzG",
+                  "name": "进度 3",
                   "fill": "#48B878",
                   "width": "fill_container",
                   "height": 6
@@ -18076,9 +17905,11 @@
             },
             {
               "type": "frame",
-              "id": "NUBDS",
-              "name": "Card / 目标结果摘要",
-              "width": "fill_container",
+              "id": "epIQG",
+              "x": 16,
+              "y": 144,
+              "name": "目标结果卡片",
+              "width": 370,
               "fill": "#FFFFFF",
               "cornerRadius": 16,
               "stroke": "#DDEBDD",
@@ -18099,27 +17930,28 @@
               "children": [
                 {
                   "type": "frame",
-                  "id": "Rzq4T",
-                  "name": "Header / 目标结果",
+                  "id": "dVnfR",
+                  "name": "结果卡片标题",
                   "width": "fill_container",
                   "gap": 10,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "frame",
-                      "id": "mSwJf",
-                      "name": "Icon Bg / 已生成",
+                      "id": "whnB0",
+                      "name": "完成图标底",
                       "width": 38,
                       "height": 38,
                       "fill": "#EAF8EF",
                       "cornerRadius": 14,
+                      "layout": "vertical",
                       "justifyContent": "center",
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "icon",
-                          "id": "r1tVvV",
-                          "name": "Icon / Check",
+                          "id": "bddIe",
+                          "name": "完成图标",
                           "width": 18,
                           "height": 18,
                           "icon": "check",
@@ -18130,33 +17962,35 @@
                     },
                     {
                       "type": "frame",
-                      "id": "JpXEY",
-                      "name": "Copy / 目标结果",
+                      "id": "UAXmT",
+                      "name": "结果标题组",
                       "width": "fill_container",
                       "layout": "vertical",
                       "gap": 3,
                       "children": [
                         {
                           "type": "text",
-                          "id": "ieYUN",
-                          "name": "Title / 今日目标已准备好",
+                          "id": "R0nfdN",
+                          "name": "结果标题",
                           "fill": "#183326",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "今日目标已准备好",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 16,
-                          "fontWeight": "700"
+                          "fontWeight": "800"
                         },
                         {
                           "type": "text",
-                          "id": "B01gbe",
-                          "name": "Desc / 首页同步展示",
+                          "id": "X0Gc5",
+                          "name": "结果说明",
                           "fill": "#6F8074",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
                           "content": "保存后会同步到首页热量目标和饮食记录计算。",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 12,
-                          "fontWeight": "500"
+                          "fontWeight": "600"
                         }
                       ]
                     }
@@ -18164,8 +17998,8 @@
                 },
                 {
                   "type": "frame",
-                  "id": "IXHPe",
-                  "name": "Hero / 每日推荐热量",
+                  "id": "w6P7Ui",
+                  "name": "每日热量卡",
                   "width": "fill_container",
                   "fill": "#F4FBF6",
                   "cornerRadius": 15,
@@ -18180,70 +18014,73 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "pIfyl",
-                      "name": "Label / 每日推荐热量",
+                      "id": "jUdIs",
+                      "name": "每日推荐热量标签",
                       "fill": "#6F8074",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "每日推荐热量",
-                      "fontFamily": "Geist",
+                      "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "600"
                     },
                     {
                       "type": "frame",
-                      "id": "b7DDC",
-                      "name": "Metric / 2021 kcal",
+                      "id": "VQYfj",
+                      "name": "每日热量数值",
                       "width": "fill_container",
                       "gap": 6,
                       "alignItems": "end",
                       "children": [
                         {
                           "type": "text",
-                          "id": "y9yVQ",
-                          "name": "Number / 2021",
+                          "id": "HlCML",
+                          "name": "每日热量",
                           "fill": "#183326",
                           "content": "1880",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 36,
-                          "fontWeight": "700"
+                          "fontWeight": "800"
                         },
                         {
                           "type": "text",
-                          "id": "OMJm3",
-                          "name": "Unit / kcal",
+                          "id": "xE1ok",
+                          "name": "热量单位",
                           "fill": "#6F8074",
                           "content": "kcal",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 15,
-                          "fontWeight": "600"
+                          "fontWeight": "700"
                         }
                       ]
                     },
                     {
                       "type": "text",
-                      "id": "AC74A",
-                      "name": "Hint / 推荐热量说明",
+                      "id": "nEsvg",
+                      "name": "每日热量说明",
                       "fill": "#6F8074",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "先按这个目标执行，后续体重变化后可以再微调。",
-                      "fontFamily": "Geist",
+                      "fontFamily": "Inter",
                       "fontSize": 12,
-                      "fontWeight": "500"
+                      "fontWeight": "600"
                     }
                   ]
                 },
                 {
                   "type": "frame",
-                  "id": "B25aVZ",
-                  "name": "Row / BMI BMR",
+                  "id": "PMdgl",
+                  "name": "指标行",
                   "width": "fill_container",
                   "gap": 10,
                   "children": [
                     {
                       "type": "frame",
-                      "id": "X9Pp3y",
-                      "name": "Metric Card / BMI",
+                      "id": "uRrfv",
+                      "name": "BMI 指标",
                       "width": "fill_container",
+                      "height": 77,
                       "fill": "#FAF7F1",
                       "cornerRadius": 13,
                       "stroke": "#E9DCC8",
@@ -18254,41 +18091,43 @@
                       "children": [
                         {
                           "type": "text",
-                          "id": "qgr1S",
-                          "name": "Label / BMI",
+                          "id": "CXN12",
+                          "name": "BMI 标题",
                           "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "BMI",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
                         },
                         {
                           "type": "frame",
-                          "id": "lNalO",
-                          "name": "Value / BMI",
+                          "id": "yDSeU",
+                          "name": "BMI 数值",
                           "width": "fill_container",
                           "gap": 4,
                           "alignItems": "end",
                           "children": [
                             {
                               "type": "text",
-                              "id": "fDtcl",
-                              "name": "Number / BMI",
+                              "id": "H7wdGr",
+                              "name": "BMI 值",
                               "fill": "#183326",
                               "content": "26.2",
-                              "fontFamily": "Geist",
+                              "fontFamily": "Inter",
                               "fontSize": 24,
-                              "fontWeight": "700"
+                              "fontWeight": "800"
                             },
                             {
                               "type": "text",
-                              "id": "TNvbm",
-                              "name": "Unit / 健康",
-                              "fill": "#A36E14",
+                              "id": "VCwRX",
+                              "name": "BMI 单位",
+                              "fill": "#A86B00",
                               "content": "偏高",
-                              "fontFamily": "Geist",
+                              "fontFamily": "Inter",
                               "fontSize": 11,
-                              "fontWeight": "600"
+                              "fontWeight": "700"
                             }
                           ]
                         }
@@ -18296,9 +18135,10 @@
                     },
                     {
                       "type": "frame",
-                      "id": "drSid",
-                      "name": "Metric Card / BMR",
+                      "id": "sJMQC",
+                      "name": "BMR 指标",
                       "width": "fill_container",
+                      "height": 77,
                       "fill": "#FAF7F1",
                       "cornerRadius": 13,
                       "stroke": "#E9DCC8",
@@ -18309,41 +18149,43 @@
                       "children": [
                         {
                           "type": "text",
-                          "id": "W5eQsX",
-                          "name": "Label / BMR",
+                          "id": "m289sX",
+                          "name": "BMR 标题",
                           "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "BMR",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
                         },
                         {
                           "type": "frame",
-                          "id": "pd3NQ",
-                          "name": "Value / BMR",
+                          "id": "z7sDP",
+                          "name": "BMR 数值",
                           "width": "fill_container",
                           "gap": 4,
                           "alignItems": "end",
                           "children": [
                             {
                               "type": "text",
-                              "id": "c2LSj2",
-                              "name": "Number / BMR",
+                              "id": "L53yH",
+                              "name": "BMR 值",
                               "fill": "#183326",
                               "content": "1761",
-                              "fontFamily": "Geist",
+                              "fontFamily": "Inter",
                               "fontSize": 24,
-                              "fontWeight": "700"
+                              "fontWeight": "800"
                             },
                             {
                               "type": "text",
-                              "id": "u7BEX",
-                              "name": "Unit / kcal",
+                              "id": "UfyfU",
+                              "name": "BMR 单位",
                               "fill": "#6F8074",
                               "content": "kcal",
-                              "fontFamily": "Geist",
-                              "fontSize": 12,
-                              "fontWeight": "600"
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "700"
                             }
                           ]
                         }
@@ -18353,12 +18195,12 @@
                 },
                 {
                   "type": "frame",
-                  "id": "k0k76G",
-                  "name": "Note / 可调整",
+                  "id": "ZwRNi",
+                  "name": "提示",
                   "width": "fill_container",
-                  "fill": "#FFF7E2",
+                  "fill": "#FFF8E8",
                   "cornerRadius": 14,
-                  "stroke": "#F0D99A",
+                  "stroke": "#F1D27D",
                   "strokeWidth": 1,
                   "gap": 8,
                   "padding": 12,
@@ -18366,25 +18208,25 @@
                   "children": [
                     {
                       "type": "icon",
-                      "id": "yxDl9",
-                      "name": "Icon / Info",
+                      "id": "xmI6i",
+                      "name": "提示图标",
                       "width": 16,
                       "height": 16,
                       "icon": "circle-alert",
                       "library": "lucide",
-                      "fill": "#A36E14"
+                      "fill": "#A86B00"
                     },
                     {
                       "type": "text",
-                      "id": "VOAWj",
-                      "name": "Text / 可调整",
-                      "fill": "#7A551D",
+                      "id": "TWLbE",
+                      "name": "提示文案",
+                      "fill": "#805514",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "当前体重偏高，建议用温和节奏调整，不建议极端节食。",
-                      "fontFamily": "Geist",
+                      "fontFamily": "Inter",
                       "fontSize": 12,
-                      "fontWeight": "500"
+                      "fontWeight": "700"
                     }
                   ]
                 }
@@ -18392,90 +18234,37 @@
             },
             {
               "type": "frame",
-              "id": "ZH33J",
+              "id": "SnNT8",
               "x": 16,
-              "y": 484,
-              "name": "Note / 可填大概",
-              "enabled": false,
+              "y": 742,
+              "name": "进入首页按钮",
               "width": 370,
-              "fill": "#EAF8EF",
-              "cornerRadius": 14,
+              "height": 54,
+              "fill": "#48B878",
+              "cornerRadius": 16,
               "gap": 8,
-              "padding": 12,
+              "justifyContent": "center",
               "alignItems": "center",
               "children": [
                 {
                   "type": "icon",
-                  "id": "UQHEg",
-                  "name": "Icon / Info",
-                  "width": 16,
-                  "height": 16,
-                  "icon": "info",
+                  "id": "Q3RaZ",
+                  "name": "首页图标",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "house",
                   "library": "lucide",
-                  "fill": "#48B878"
+                  "fill": "#FFFFFF"
                 },
                 {
                   "type": "text",
-                  "id": "rPlCK",
-                  "name": "Text / 可填大概",
-                  "fill": "#6F8074",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "可以先填大概值，后面在我的页面随时微调。",
-                  "fontFamily": "Geist",
-                  "fontSize": 12,
-                  "fontWeight": "500"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "V9HRn",
-              "name": "Spacer",
-              "width": "fill_container",
-              "height": "fill_container"
-            },
-            {
-              "type": "frame",
-              "id": "AZ1SE",
-              "name": "Bottom Actions / 完成",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 10,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "p40F0t",
-                  "name": "Button / 进入首页",
-                  "width": "fill_container",
-                  "height": 54,
-                  "fill": "#48B878",
-                  "cornerRadius": 16,
-                  "gap": 8,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "SRhxz",
-                      "name": "Icon / House",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "house",
-                      "library": "lucide",
-                      "fill": "#FFFFFF"
-                    },
-                    {
-                      "type": "text",
-                      "id": "N4CXvs",
-                      "name": "Text / 进入首页",
-                      "fill": "#FFFFFF",
-                      "content": "进入首页",
-                      "fontFamily": "Geist",
-                      "fontSize": 15,
-                      "fontWeight": "700"
-                    }
-                  ]
+                  "id": "Bl3Rf",
+                  "name": "按钮文案",
+                  "fill": "#FFFFFF",
+                  "content": "进入首页",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "800"
                 }
               ]
             }
@@ -18507,45 +18296,42 @@
         },
         {
           "type": "frame",
-          "id": "pxvCe",
-          "name": "Content",
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 14,
-          "padding": [
-            8,
-            16,
-            16,
-            16
-          ],
+          "id": "Gllq3",
+          "name": "完成确认内容",
+          "width": 402,
+          "height": 812,
+          "layout": "none",
           "children": [
             {
               "type": "frame",
-              "id": "tFSTL",
-              "name": "Top Bar / 目标校准",
-              "width": "fill_container",
+              "id": "KLph2",
+              "x": 16,
+              "y": 8,
+              "name": "顶部导航",
+              "width": 370,
               "height": 52,
-              "justifyContent": "space_between",
-              "alignItems": "center",
+              "layout": "none",
               "children": [
                 {
                   "type": "frame",
-                  "id": "GsvIf",
-                  "name": "Button / 关闭",
+                  "id": "j2cFQp",
+                  "x": 0,
+                  "y": 5,
+                  "name": "关闭按钮",
                   "width": 42,
                   "height": 42,
                   "fill": "#FFFFFF",
-                  "cornerRadius": 21,
+                  "cornerRadius": 999,
                   "stroke": "#DDEBDD",
                   "strokeWidth": 1,
+                  "layout": "vertical",
                   "justifyContent": "center",
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "icon",
-                      "id": "X9fYQB",
-                      "name": "Icon / 关闭",
+                      "id": "xwqKg",
+                      "name": "关闭图标",
                       "width": 20,
                       "height": 20,
                       "icon": "x",
@@ -18556,89 +18342,79 @@
                 },
                 {
                   "type": "text",
-                  "id": "qAMOI",
-                  "name": "Title / 目标校准",
+                  "id": "LkRnN",
+                  "x": 155.5,
+                  "y": 15,
+                  "name": "导航标题",
                   "fill": "#183326",
+                  "textGrowth": "fixed-width-height",
+                  "width": 61,
+                  "height": 22,
                   "content": "目标校准",
-                  "fontFamily": "Geist",
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
                   "fontSize": 15,
-                  "fontWeight": "600"
+                  "fontWeight": "700"
                 },
                 {
                   "type": "frame",
-                  "id": "AxEt2",
-                  "name": "Pill / 1 of 3",
+                  "id": "tnhC2",
+                  "x": 330,
+                  "y": 13,
+                  "name": "步数标签",
+                  "width": 40,
+                  "height": 26,
                   "fill": "#EAF8EF",
                   "cornerRadius": 999,
                   "stroke": "#BEE6CC",
                   "strokeWidth": 1,
-                  "padding": [
-                    6,
-                    10
-                  ],
+                  "layout": "vertical",
                   "justifyContent": "center",
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "text",
-                      "id": "n4Vn1",
-                      "name": "Text / 1/3",
+                      "id": "XGF7T",
+                      "name": "步数",
                       "fill": "#23965B",
                       "content": "3/3",
-                      "fontFamily": "Geist",
-                      "fontSize": 11,
-                      "fontWeight": "600"
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "800"
                     }
                   ]
                 }
               ]
             },
             {
-              "type": "frame",
-              "id": "c6XTRo",
-              "name": "Intro / 目标校准",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "W7a5C",
-                  "name": "Title / 让目标更贴近你",
-                  "fill": "#183326",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "你的目标已生成",
-                  "fontFamily": "Geist",
-                  "fontSize": 22,
-                  "fontWeight": "700"
-                },
-                {
-                  "type": "text",
-                  "id": "lZo4n",
-                  "name": "Desc / 这些信息只用于估算",
-                  "fill": "#6F8074",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "已根据你的基础信息生成每日热量目标，BMI 提示仅用于帮助你判断调整节奏。",
-                  "fontFamily": "Geist",
-                  "fontSize": 13,
-                  "fontWeight": "500"
-                }
-              ]
+              "type": "text",
+              "id": "Q5huT",
+              "x": 16,
+              "y": 74,
+              "name": "完成标题",
+              "fill": "#183326",
+              "textGrowth": "fixed-width",
+              "width": 370,
+              "content": "你的目标已生成",
+              "fontFamily": "Inter",
+              "fontSize": 22,
+              "fontWeight": "800"
             },
             {
               "type": "frame",
-              "id": "dLPSw",
-              "name": "Progress / 校准步骤",
-              "width": "fill_container",
+              "id": "g7jG4",
+              "x": 16,
+              "y": 124,
+              "name": "完成进度",
+              "width": 370,
+              "height": 6,
               "gap": 6,
               "children": [
                 {
                   "type": "rectangle",
                   "cornerRadius": 999,
-                  "id": "pwAmp",
-                  "name": "Step Bar / 1",
+                  "id": "sn86m",
+                  "name": "进度 1",
                   "fill": "#48B878",
                   "width": "fill_container",
                   "height": 6
@@ -18646,8 +18422,8 @@
                 {
                   "type": "rectangle",
                   "cornerRadius": 999,
-                  "id": "O3AIz5",
-                  "name": "Step Bar / 2",
+                  "id": "d5oDZO",
+                  "name": "进度 2",
                   "fill": "#48B878",
                   "width": "fill_container",
                   "height": 6
@@ -18655,8 +18431,8 @@
                 {
                   "type": "rectangle",
                   "cornerRadius": 999,
-                  "id": "rL6Qz",
-                  "name": "Step Bar / 3",
+                  "id": "Nm5of",
+                  "name": "进度 3",
                   "fill": "#48B878",
                   "width": "fill_container",
                   "height": 6
@@ -18665,9 +18441,11 @@
             },
             {
               "type": "frame",
-              "id": "jtC0d",
-              "name": "Card / 目标结果摘要",
-              "width": "fill_container",
+              "id": "G0wfx",
+              "x": 16,
+              "y": 144,
+              "name": "目标结果卡片",
+              "width": 370,
               "fill": "#FFFFFF",
               "cornerRadius": 16,
               "stroke": "#DDEBDD",
@@ -18688,27 +18466,28 @@
               "children": [
                 {
                   "type": "frame",
-                  "id": "j25Wc",
-                  "name": "Header / 目标结果",
+                  "id": "RiocH",
+                  "name": "结果卡片标题",
                   "width": "fill_container",
                   "gap": 10,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "frame",
-                      "id": "w5B57",
-                      "name": "Icon Bg / 已生成",
+                      "id": "y9FSx",
+                      "name": "完成图标底",
                       "width": 38,
                       "height": 38,
                       "fill": "#EAF8EF",
                       "cornerRadius": 14,
+                      "layout": "vertical",
                       "justifyContent": "center",
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "icon",
-                          "id": "LP9lF",
-                          "name": "Icon / Check",
+                          "id": "VVKuo",
+                          "name": "完成图标",
                           "width": 18,
                           "height": 18,
                           "icon": "check",
@@ -18719,33 +18498,35 @@
                     },
                     {
                       "type": "frame",
-                      "id": "PHiX1",
-                      "name": "Copy / 目标结果",
+                      "id": "vXMgo",
+                      "name": "结果标题组",
                       "width": "fill_container",
                       "layout": "vertical",
                       "gap": 3,
                       "children": [
                         {
                           "type": "text",
-                          "id": "MZ4mU",
-                          "name": "Title / 今日目标已准备好",
+                          "id": "BJSCK",
+                          "name": "结果标题",
                           "fill": "#183326",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "今日目标已准备好",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 16,
-                          "fontWeight": "700"
+                          "fontWeight": "800"
                         },
                         {
                           "type": "text",
-                          "id": "DTZRZ",
-                          "name": "Desc / 首页同步展示",
+                          "id": "i8EEu",
+                          "name": "结果说明",
                           "fill": "#6F8074",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
                           "content": "保存后会同步到首页热量目标和饮食记录计算。",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 12,
-                          "fontWeight": "500"
+                          "fontWeight": "600"
                         }
                       ]
                     }
@@ -18753,8 +18534,8 @@
                 },
                 {
                   "type": "frame",
-                  "id": "q2d3W7",
-                  "name": "Hero / 每日推荐热量",
+                  "id": "MEunJ",
+                  "name": "每日热量卡",
                   "width": "fill_container",
                   "fill": "#F4FBF6",
                   "cornerRadius": 15,
@@ -18769,70 +18550,73 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "Go9D6",
-                      "name": "Label / 每日推荐热量",
+                      "id": "nUja5",
+                      "name": "每日推荐热量标签",
                       "fill": "#6F8074",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "每日推荐热量",
-                      "fontFamily": "Geist",
+                      "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "600"
                     },
                     {
                       "type": "frame",
-                      "id": "fMYgT",
-                      "name": "Metric / 2021 kcal",
+                      "id": "k4BVi4",
+                      "name": "每日热量数值",
                       "width": "fill_container",
                       "gap": 6,
                       "alignItems": "end",
                       "children": [
                         {
                           "type": "text",
-                          "id": "r4iqxk",
-                          "name": "Number / 2021",
+                          "id": "OLBwB",
+                          "name": "每日热量",
                           "fill": "#183326",
                           "content": "1760",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 36,
-                          "fontWeight": "700"
+                          "fontWeight": "800"
                         },
                         {
                           "type": "text",
-                          "id": "h1LYOV",
-                          "name": "Unit / kcal",
+                          "id": "oiNJq",
+                          "name": "热量单位",
                           "fill": "#6F8074",
                           "content": "kcal",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 15,
-                          "fontWeight": "600"
+                          "fontWeight": "700"
                         }
                       ]
                     },
                     {
                       "type": "text",
-                      "id": "vmAXS",
-                      "name": "Hint / 推荐热量说明",
+                      "id": "Y9l3ET",
+                      "name": "每日热量说明",
                       "fill": "#6F8074",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "先按这个目标执行，后续体重变化后可以再微调。",
-                      "fontFamily": "Geist",
+                      "fontFamily": "Inter",
                       "fontSize": 12,
-                      "fontWeight": "500"
+                      "fontWeight": "600"
                     }
                   ]
                 },
                 {
                   "type": "frame",
-                  "id": "bOTuf",
-                  "name": "Row / BMI BMR",
+                  "id": "f61M7",
+                  "name": "指标行",
                   "width": "fill_container",
                   "gap": 10,
                   "children": [
                     {
                       "type": "frame",
-                      "id": "xJhg5",
-                      "name": "Metric Card / BMI",
+                      "id": "inpdB",
+                      "name": "BMI 指标",
                       "width": "fill_container",
+                      "height": 77,
                       "fill": "#FAF7F1",
                       "cornerRadius": 13,
                       "stroke": "#E9DCC8",
@@ -18843,41 +18627,43 @@
                       "children": [
                         {
                           "type": "text",
-                          "id": "yqKSq",
-                          "name": "Label / BMI",
+                          "id": "uTiTS",
+                          "name": "BMI 标题",
                           "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "BMI",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
                         },
                         {
                           "type": "frame",
-                          "id": "Y9qJs",
-                          "name": "Value / BMI",
+                          "id": "AahYp",
+                          "name": "BMI 数值",
                           "width": "fill_container",
                           "gap": 4,
                           "alignItems": "end",
                           "children": [
                             {
                               "type": "text",
-                              "id": "Ka4fm",
-                              "name": "Number / BMI",
+                              "id": "U8hua",
+                              "name": "BMI 值",
                               "fill": "#183326",
                               "content": "35.4",
-                              "fontFamily": "Geist",
+                              "fontFamily": "Inter",
                               "fontSize": 24,
-                              "fontWeight": "700"
+                              "fontWeight": "800"
                             },
                             {
                               "type": "text",
-                              "id": "b6hQN",
-                              "name": "Unit / 健康",
-                              "fill": "#B85B20",
+                              "id": "oFfPM",
+                              "name": "BMI 单位",
+                              "fill": "#B85C20",
                               "content": "较高",
-                              "fontFamily": "Geist",
+                              "fontFamily": "Inter",
                               "fontSize": 11,
-                              "fontWeight": "600"
+                              "fontWeight": "700"
                             }
                           ]
                         }
@@ -18885,9 +18671,10 @@
                     },
                     {
                       "type": "frame",
-                      "id": "s1Skly",
-                      "name": "Metric Card / BMR",
+                      "id": "p23ffT",
+                      "name": "BMR 指标",
                       "width": "fill_container",
+                      "height": 77,
                       "fill": "#FAF7F1",
                       "cornerRadius": 13,
                       "stroke": "#E9DCC8",
@@ -18898,41 +18685,43 @@
                       "children": [
                         {
                           "type": "text",
-                          "id": "Qx61E",
-                          "name": "Label / BMR",
+                          "id": "J2NORZ",
+                          "name": "BMR 标题",
                           "fill": "#6F8074",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "BMR",
-                          "fontFamily": "Geist",
+                          "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
                         },
                         {
                           "type": "frame",
-                          "id": "dbIZZ",
-                          "name": "Value / BMR",
+                          "id": "J9Zs8",
+                          "name": "BMR 数值",
                           "width": "fill_container",
                           "gap": 4,
                           "alignItems": "end",
                           "children": [
                             {
                               "type": "text",
-                              "id": "oFFmO",
-                              "name": "Number / BMR",
+                              "id": "P1ujz",
+                              "name": "BMR 值",
                               "fill": "#183326",
                               "content": "1761",
-                              "fontFamily": "Geist",
+                              "fontFamily": "Inter",
                               "fontSize": 24,
-                              "fontWeight": "700"
+                              "fontWeight": "800"
                             },
                             {
                               "type": "text",
-                              "id": "wAwYf",
-                              "name": "Unit / kcal",
+                              "id": "PUc9c",
+                              "name": "BMR 单位",
                               "fill": "#6F8074",
                               "content": "kcal",
-                              "fontFamily": "Geist",
-                              "fontSize": 12,
-                              "fontWeight": "600"
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "700"
                             }
                           ]
                         }
@@ -18942,12 +18731,12 @@
                 },
                 {
                   "type": "frame",
-                  "id": "BA6Do",
-                  "name": "Note / 可调整",
+                  "id": "b1Wzj",
+                  "name": "提示",
                   "width": "fill_container",
-                  "fill": "#FFF0E6",
+                  "fill": "#FFF0E8",
                   "cornerRadius": 14,
-                  "stroke": "#F0C0A1",
+                  "stroke": "#F0B58D",
                   "strokeWidth": 1,
                   "gap": 8,
                   "padding": 12,
@@ -18955,25 +18744,25 @@
                   "children": [
                     {
                       "type": "icon",
-                      "id": "a8IR7",
-                      "name": "Icon / Info",
+                      "id": "tb4sn",
+                      "name": "提示图标",
                       "width": 16,
                       "height": 16,
                       "icon": "heart-pulse",
                       "library": "lucide",
-                      "fill": "#B85B20"
+                      "fill": "#B85C20"
                     },
                     {
                       "type": "text",
-                      "id": "uNnfn",
-                      "name": "Text / 可调整",
-                      "fill": "#7C4328",
+                      "id": "J78xbw",
+                      "name": "提示文案",
+                      "fill": "#81452C",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "当前体重较高，建议以长期可持续方式调整；如有基础疾病建议咨询医生。",
-                      "fontFamily": "Geist",
+                      "fontFamily": "Inter",
                       "fontSize": 12,
-                      "fontWeight": "500"
+                      "fontWeight": "700"
                     }
                   ]
                 }
@@ -18981,90 +18770,37 @@
             },
             {
               "type": "frame",
-              "id": "jT3Cw",
+              "id": "LA8fo",
               "x": 16,
-              "y": 484,
-              "name": "Note / 可填大概",
-              "enabled": false,
+              "y": 742,
+              "name": "进入首页按钮",
               "width": 370,
-              "fill": "#EAF8EF",
-              "cornerRadius": 14,
+              "height": 54,
+              "fill": "#48B878",
+              "cornerRadius": 16,
               "gap": 8,
-              "padding": 12,
+              "justifyContent": "center",
               "alignItems": "center",
               "children": [
                 {
                   "type": "icon",
-                  "id": "M8owT7",
-                  "name": "Icon / Info",
-                  "width": 16,
-                  "height": 16,
-                  "icon": "info",
+                  "id": "wf8Rq",
+                  "name": "首页图标",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "house",
                   "library": "lucide",
-                  "fill": "#48B878"
+                  "fill": "#FFFFFF"
                 },
                 {
                   "type": "text",
-                  "id": "R3VKp",
-                  "name": "Text / 可填大概",
-                  "fill": "#6F8074",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "可以先填大概值，后面在我的页面随时微调。",
-                  "fontFamily": "Geist",
-                  "fontSize": 12,
-                  "fontWeight": "500"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "ObSAg",
-              "name": "Spacer",
-              "width": "fill_container",
-              "height": "fill_container"
-            },
-            {
-              "type": "frame",
-              "id": "REZHv",
-              "name": "Bottom Actions / 完成",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 10,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "GW6Xd",
-                  "name": "Button / 进入首页",
-                  "width": "fill_container",
-                  "height": 54,
-                  "fill": "#48B878",
-                  "cornerRadius": 16,
-                  "gap": 8,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "yeFa2",
-                      "name": "Icon / House",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "house",
-                      "library": "lucide",
-                      "fill": "#FFFFFF"
-                    },
-                    {
-                      "type": "text",
-                      "id": "ZZe5i",
-                      "name": "Text / 进入首页",
-                      "fill": "#FFFFFF",
-                      "content": "进入首页",
-                      "fontFamily": "Geist",
-                      "fontSize": 15,
-                      "fontWeight": "700"
-                    }
-                  ]
+                  "id": "c1Z0t",
+                  "name": "按钮文案",
+                  "fill": "#FFFFFF",
+                  "content": "进入首页",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "800"
                 }
               ]
             }

@@ -149,8 +149,8 @@ private extension ProfileSetupView {
         isSaveSucceeded ? "你的目标已生成" : setupStep.title
     }
 
-    var headerSubtitle: String {
-        isSaveSucceeded ? "已根据你的基础信息生成每日热量目标，首页将按新目标展示。" : setupStep.subtitle
+    var headerSubtitle: String? {
+        isSaveSucceeded ? nil : setupStep.subtitle
     }
 
     var activeStepIndex: Int {
@@ -164,10 +164,12 @@ private extension ProfileSetupView {
                 .foregroundStyle(LMColors.textPrimary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Text(headerSubtitle)
-                .font(.system(size: 13, weight: .medium))
-                .foregroundStyle(LMColors.textSecondary)
-                .fixedSize(horizontal: false, vertical: true)
+            if let headerSubtitle {
+                Text(headerSubtitle)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(LMColors.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
     }
 
@@ -452,7 +454,9 @@ private extension ProfileSetupView {
     }
 
     func successResultCard(_ profile: UserProfile) -> some View {
-        CalibrationCard {
+        let bmiPresentation = bmiStatusPresentation(profile.bmi)
+
+        return CalibrationCard {
             successCardHeader
             dailyCalorieHero(profile.dailyCalorieTargetKcal)
 
@@ -460,8 +464,8 @@ private extension ProfileSetupView {
                 SuccessMetricCard(
                     title: "BMI",
                     value: display(profile.bmi),
-                    unit: bmiStatus(profile.bmi),
-                    unitColor: LMColors.primary
+                    unit: bmiPresentation.label,
+                    unitColor: bmiPresentation.accent
                 )
 
                 SuccessMetricCard(
@@ -471,7 +475,7 @@ private extension ProfileSetupView {
                 )
             }
 
-            successNote
+            successNote(bmiPresentation)
         }
     }
 
@@ -543,33 +547,69 @@ private extension ProfileSetupView {
         }
     }
 
-    var successNote: some View {
+    func successNote(_ presentation: BMIStatusPresentation) -> some View {
         HStack(alignment: .center, spacing: LMSpacing.small) {
-            Image(systemName: "info.circle")
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(LMColors.primary)
+            BMIStatusIconView(kind: presentation.icon, color: presentation.accent)
+                .frame(width: 16, height: 16)
 
-            Text("目标用于每日推荐，不代表医疗建议；后面可以在我的页面调整。")
+            Text(presentation.message)
                 .font(LMTypography.caption)
-                .foregroundStyle(LMColors.textSecondary)
+                .fontWeight(.semibold)
+                .foregroundStyle(presentation.textColor)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(LMColors.primarySoft)
+        .background(presentation.background)
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(presentation.border, lineWidth: 1)
+        }
     }
 
-    func bmiStatus(_ value: Double) -> String {
+    func bmiStatusPresentation(_ value: Double) -> BMIStatusPresentation {
         switch value {
         case ..<18.5:
-            "偏低"
+            BMIStatusPresentation(
+                label: "偏低",
+                icon: .system("info.circle"),
+                message: "当前/目标体重偏低，建议关注营养摄入，必要时咨询专业人士。",
+                accent: Color(hex: 0x247F9E),
+                textColor: Color(hex: 0x2D6171),
+                background: Color(hex: 0xEAF8FF),
+                border: Color(hex: 0xBDE5F3)
+            )
         case ..<24:
-            "健康"
+            BMIStatusPresentation(
+                label: "健康",
+                icon: .system("checkmark.circle"),
+                message: "当前范围较健康，继续保持稳定记录。",
+                accent: LMColors.primary,
+                textColor: Color(hex: 0x248A58),
+                background: LMColors.primarySoft,
+                border: LMColors.primaryBorder
+            )
         case ..<28:
-            "偏高"
+            BMIStatusPresentation(
+                label: "偏高",
+                icon: .system("exclamationmark.circle"),
+                message: "当前体重偏高，建议用温和节奏调整，不建议极端节食。",
+                accent: Color(hex: 0xA86B00),
+                textColor: Color(hex: 0x805514),
+                background: Color(hex: 0xFFF8E8),
+                border: Color(hex: 0xF1D27D)
+            )
         default:
-            "较高"
+            BMIStatusPresentation(
+                label: "较高",
+                icon: .heartPulse,
+                message: "当前体重较高，建议以长期可持续方式调整；如有基础疾病建议咨询医生。",
+                accent: Color(hex: 0xB85C20),
+                textColor: Color(hex: 0x81452C),
+                background: Color(hex: 0xFFF0E8),
+                border: Color(hex: 0xF0B58D)
+            )
         }
     }
 
@@ -583,6 +623,105 @@ private extension ProfileSetupView {
     func valueOrPlaceholder(_ text: String) -> String {
         let value = text.trimmingCharacters(in: .whitespacesAndNewlines)
         return value.isEmpty ? "未填" : value
+    }
+}
+
+private enum BMIStatusIconKind {
+    case system(String)
+    case heartPulse
+}
+
+private struct BMIStatusPresentation {
+    let label: String
+    let icon: BMIStatusIconKind
+    let message: String
+    let accent: Color
+    let textColor: Color
+    let background: Color
+    let border: Color
+}
+
+private struct BMIStatusIconView: View {
+    let kind: BMIStatusIconKind
+    let color: Color
+
+    var body: some View {
+        switch kind {
+        case let .system(systemName):
+            Image(systemName: systemName)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(color)
+        case .heartPulse:
+            HeartPulseIcon(color: color)
+        }
+    }
+}
+
+private struct HeartPulseIcon: View {
+    let color: Color
+
+    var body: some View {
+        ZStack {
+            heartPath
+                .stroke(
+                    color,
+                    style: StrokeStyle(lineWidth: 1.8, lineCap: .round, lineJoin: .round)
+                )
+
+            pulsePath
+                .stroke(
+                    color,
+                    style: StrokeStyle(lineWidth: 1.6, lineCap: .round, lineJoin: .round)
+                )
+        }
+        .frame(width: 16, height: 16)
+    }
+
+    private var heartPath: Path {
+        Path { path in
+            path.move(to: CGPoint(x: 8, y: 13.2))
+            path.addCurve(
+                to: CGPoint(x: 1.9, y: 6.9),
+                control1: CGPoint(x: 4.1, y: 10.3),
+                control2: CGPoint(x: 1.9, y: 8.8)
+            )
+            path.addCurve(
+                to: CGPoint(x: 5.0, y: 3.7),
+                control1: CGPoint(x: 1.9, y: 5.1),
+                control2: CGPoint(x: 3.2, y: 3.7)
+            )
+            path.addCurve(
+                to: CGPoint(x: 8, y: 5.2),
+                control1: CGPoint(x: 6.2, y: 3.7),
+                control2: CGPoint(x: 7.1, y: 4.3)
+            )
+            path.addCurve(
+                to: CGPoint(x: 11.0, y: 3.7),
+                control1: CGPoint(x: 8.9, y: 4.3),
+                control2: CGPoint(x: 9.8, y: 3.7)
+            )
+            path.addCurve(
+                to: CGPoint(x: 14.1, y: 6.9),
+                control1: CGPoint(x: 12.8, y: 3.7),
+                control2: CGPoint(x: 14.1, y: 5.1)
+            )
+            path.addCurve(
+                to: CGPoint(x: 8, y: 13.2),
+                control1: CGPoint(x: 14.1, y: 8.8),
+                control2: CGPoint(x: 11.9, y: 10.3)
+            )
+        }
+    }
+
+    private var pulsePath: Path {
+        Path { path in
+            path.move(to: CGPoint(x: 3.0, y: 8.1))
+            path.addLine(to: CGPoint(x: 5.3, y: 8.1))
+            path.addLine(to: CGPoint(x: 6.5, y: 6.2))
+            path.addLine(to: CGPoint(x: 8.1, y: 10.3))
+            path.addLine(to: CGPoint(x: 9.5, y: 8.1))
+            path.addLine(to: CGPoint(x: 13.0, y: 8.1))
+        }
     }
 }
 
