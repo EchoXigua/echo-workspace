@@ -40,3 +40,6 @@ local.properties
 # Temporary files
 tmp/
 temp/
+
+# Design previews
+design/exports/
