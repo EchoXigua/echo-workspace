@@ -1,7 +1,5 @@
 package com.leanmate.user.domain;
 
-import com.leanmate.common.error.ErrorCode;
-import com.leanmate.common.exception.BusinessException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -11,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProfileCalculator {
 
-    private static final BigDecimal MIN_TARGET_BMI = new BigDecimal("18.5");
     private static final double KCAL_PER_KG = 7700.0;
     private static final double DEFAULT_DEFICIT_RATE = 0.15;
     private static final double DEFAULT_SURPLUS_RATE = 0.10;
@@ -53,8 +50,6 @@ public class ProfileCalculator {
             LocalDate targetDate,
             LocalDate today
     ) {
-        validateTargetWeight(heightCm, targetWeightKg);
-
         BigDecimal bmi = calculateBmi(heightCm, currentWeightKg);
         int bmrKcal = calculateBmr(gender, age, heightCm, currentWeightKg);
         int dailyCalorieTargetKcal = calculateDailyCalorieTarget(
@@ -178,11 +173,4 @@ public class ProfileCalculator {
                 : new BigDecimal("-0.40");
     }
 
-    private void validateTargetWeight(BigDecimal heightCm, BigDecimal targetWeightKg) {
-        BigDecimal heightM = heightCm.divide(new BigDecimal("100"), 6, RoundingMode.HALF_UP);
-        BigDecimal targetBmi = targetWeightKg.divide(heightM.multiply(heightM), 2, RoundingMode.HALF_UP);
-        if (targetBmi.compareTo(MIN_TARGET_BMI) < 0) {
-            throw new BusinessException(ErrorCode.BAD_REQUEST, "目标体重低于安全阈值");
-        }
-    }
 }

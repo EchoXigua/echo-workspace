@@ -1,10 +1,7 @@
 package com.leanmate.user.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.leanmate.common.error.ErrorCode;
-import com.leanmate.common.exception.BusinessException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
@@ -65,8 +62,8 @@ class ProfileCalculatorTests {
     }
 
     @Test
-    void rejectUnsafeTargetWeight() {
-        assertThatThrownBy(() -> profileCalculator.calculate(
+    void calculateLowTargetWeightWithinDtoRange() {
+        ProfileCalculationResult result = profileCalculator.calculate(
                 Gender.FEMALE,
                 30,
                 new BigDecimal("160"),
@@ -74,9 +71,9 @@ class ProfileCalculatorTests {
                 new BigDecimal("40"),
                 ActivityLevel.SEDENTARY,
                 null,
-                LocalDate.parse("2026-06-06")))
-                .isInstanceOf(BusinessException.class)
-                .extracting("errorCode")
-                .isEqualTo(ErrorCode.BAD_REQUEST);
+        LocalDate.parse("2026-06-06"));
+
+        assertThat(result.bmi()).isEqualByComparingTo("23.44");
+        assertThat(result.dailyCalorieTargetKcal()).isEqualTo(1250);
     }
 }
