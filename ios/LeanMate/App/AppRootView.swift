@@ -164,6 +164,13 @@ private extension AppRootView {
         }
 
         do {
+            #if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-LeanMateResetLocalDataOnLaunch") {
+                try await environment.tokenStore.clearTokens()
+                try await environment.localStore.clearAllLocalData()
+            }
+            #endif
+
             guard try await environment.tokenStore.loadTokens() != nil else {
                 if try await environment.localStore.guestSession() != nil {
                     router.showVisitorHome()

@@ -20,6 +20,7 @@ struct ProfileSummarySnapshot: Sendable {
     let profile: UserProfile
     let streak: Streak
     let weeklyWeightChangeKg: Double?
+    let latestWeightKg: Double?
 
     var displayName: String {
         let name = user.nickname?.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -27,6 +28,10 @@ struct ProfileSummarySnapshot: Sendable {
             return "LeanMate 用户"
         }
         return name
+    }
+
+    var displayCurrentWeightKg: Double {
+        latestWeightKg ?? profile.currentWeightKg
     }
 }
 
@@ -107,12 +112,13 @@ final class ProfileSummaryViewModel: ObservableObject {
                 return
             }
 
-            let weeklyWeightChange = await loadRemoteWeeklyWeightChange(apiClient: apiClient)
+            let weightSummary = await loadRemoteWeightSummary(apiClient: apiClient)
             let snapshot = ProfileSummarySnapshot(
                 user: user,
                 profile: profile,
                 streak: streak,
-                weeklyWeightChangeKg: weeklyWeightChange
+                weeklyWeightChangeKg: weightSummary.weeklyChangeKg,
+                latestWeightKg: weightSummary.latestWeightKg
             )
             state = .loaded(snapshot)
             presentMilestoneIfNeeded(from: streak)
@@ -168,7 +174,8 @@ private extension ProfileSummaryViewModel {
                     user: user,
                     profile: profile,
                     streak: Streak(currentDays: 0, longestDays: 0, lastActiveDate: nil, milestones: []),
-                    weeklyWeightChangeKg: weeklyWeightChange(from: weights)
+                    weeklyWeightChangeKg: weeklyWeightChange(from: weights),
+                    latestWeightKg: latestWeight(from: weights)
                 )
             )
             milestoneToPresent = nil
@@ -195,17 +202,29 @@ private extension ProfileSummaryViewModel {
         milestoneToPresent = milestone
     }
 
-    func loadRemoteWeeklyWeightChange(apiClient: any APIClient) async -> Double? {
+    func loadRemoteWeightSummary(apiClient: any APIClient) async -> (weeklyChangeKg: Double?, latestWeightKg: Double?) {
         let calendar = Calendar.current
         let today = Date()
         let startDate = calendar.date(byAdding: .day, value: -6, to: today) ?? today
 
         do {
             let weights = try await apiClient.weightEntries(startDate: startDate, endDate: today)
-            return weeklyWeightChange(from: weights)
+            return (weeklyWeightChange(from: weights), latestWeight(from: weights))
         } catch {
-            return nil
+            return (nil, nil)
         }
+    }
+
+    func latestWeight(from entries: [WeightEntry]) -> Double? {
+        entries
+            .sorted { lhs, rhs in
+                if lhs.recordDate == rhs.recordDate {
+                    return lhs.createdAt < rhs.createdAt
+                }
+                return lhs.recordDate < rhs.recordDate
+            }
+            .last?
+            .weightKg
     }
 
     func weeklyWeightChange(from entries: [WeightEntry]) -> Double? {

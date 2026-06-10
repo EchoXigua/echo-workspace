@@ -569,11 +569,23 @@ private extension DietEntryView {
                 actionTitle: "回到首页",
                 action: goHomeAfterResult
             )
+            if viewModel.canDeleteSavedEntry {
+                LMButton(
+                    title: "删除这条记录",
+                    systemImage: "trash",
+                    role: .destructive,
+                    height: 48,
+                    isLoading: viewModel.isDeleting,
+                    action: { showsDeleteConfirmation = true }
+                )
+            }
         case .deleteSucceeded:
             LMStateView(
                 kind: .empty,
                 title: "记录已删除",
-                message: "服务端会刷新对应业务日期的热量和营养统计。"
+                message: "服务端会刷新对应业务日期的热量和营养统计。",
+                actionTitle: "回到首页",
+                action: goHomeAfterResult
             )
         case .deleteFailed(let message):
             LMStateView(kind: .error, title: "删除失败", message: message)
@@ -1124,17 +1136,13 @@ private extension DietEntryView {
 
     func saveManual() {
         Task {
-            if await viewModel.saveManualEntry() {
-                goHomeAfterResult()
-            }
+            _ = await viewModel.saveManualEntry()
         }
     }
 
     func saveRecognition() {
         Task {
-            if await viewModel.saveRecognitionEntry() {
-                goHomeAfterResult()
-            }
+            _ = await viewModel.saveRecognitionEntry()
         }
     }
 

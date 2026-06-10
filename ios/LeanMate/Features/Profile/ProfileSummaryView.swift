@@ -140,7 +140,7 @@ private extension ProfileSummaryView {
     @ViewBuilder
     func loadedContent(_ snapshot: ProfileSummarySnapshot, payload: ProfileRoutePayload) -> some View {
         profileCard(snapshot)
-        weightGoalCard(snapshot.profile)
+        weightGoalCard(snapshot)
         dataPlanCard(snapshot, payload: payload)
         profileActions(payload)
     }
@@ -212,8 +212,11 @@ private extension ProfileSummaryView {
         }
     }
 
-    func weightGoalCard(_ profile: UserProfile) -> some View {
-        LMCard(cornerRadius: 16, padding: 14) {
+    func weightGoalCard(_ snapshot: ProfileSummarySnapshot) -> some View {
+        let profile = snapshot.profile
+        let currentWeightKg = snapshot.displayCurrentWeightKg
+
+        return LMCard(cornerRadius: 16, padding: 14) {
             HStack(alignment: .firstTextBaseline) {
                 Text("体重目标")
                     .font(.system(size: 15, weight: .semibold))
@@ -222,7 +225,7 @@ private extension ProfileSummaryView {
                 Spacer()
 
                 Button {
-                    recordWeight(defaultWeightKg: profile.currentWeightKg)
+                    recordWeight(defaultWeightKg: currentWeightKg)
                 } label: {
                     Text("记录体重")
                         .font(LMTypography.badge)
@@ -239,7 +242,7 @@ private extension ProfileSummaryView {
                         .foregroundStyle(LMColors.textSecondary)
 
                     HStack(alignment: .firstTextBaseline, spacing: 4) {
-                        Text(display(profile.currentWeightKg))
+                        Text(display(currentWeightKg))
                             .font(.system(size: 40, weight: .semibold))
                             .foregroundStyle(LMColors.textPrimary)
                             .lineLimit(1)
@@ -255,11 +258,11 @@ private extension ProfileSummaryView {
 
                 HStack(alignment: .bottom, spacing: 22) {
                     weightGoalInfo(title: "目标", value: display(profile.targetWeightKg), unit: "kg", color: LMColors.textBody)
-                    weightGoalInfo(title: "差距", value: display(abs(profile.currentWeightKg - profile.targetWeightKg)), unit: "kg", color: weightGapColor(profile))
+                    weightGoalInfo(title: "差距", value: display(abs(currentWeightKg - profile.targetWeightKg)), unit: "kg", color: weightGapColor(currentWeightKg: currentWeightKg, targetWeightKg: profile.targetWeightKg))
                 }
             }
 
-            progressBar(progress: weightProgress(profile))
+            progressBar(progress: weightProgress(currentWeightKg: currentWeightKg, targetWeightKg: profile.targetWeightKg))
         }
     }
 
@@ -647,19 +650,19 @@ private extension ProfileSummaryView {
         streak.currentDays > 0 ? "连续打卡 \(streak.currentDays) 天" : "开始记录"
     }
 
-    func weightGapColor(_ profile: UserProfile) -> Color {
-        profile.currentWeightKg <= profile.targetWeightKg ? LMColors.danger : LMColors.primaryDeep
+    func weightGapColor(currentWeightKg: Double, targetWeightKg: Double) -> Color {
+        currentWeightKg <= targetWeightKg ? LMColors.danger : LMColors.primaryDeep
     }
 
-    func weightProgress(_ profile: UserProfile) -> Double {
-        guard profile.currentWeightKg > 0, profile.targetWeightKg > 0 else {
+    func weightProgress(currentWeightKg: Double, targetWeightKg: Double) -> Double {
+        guard currentWeightKg > 0, targetWeightKg > 0 else {
             return 0
         }
         let ratio: Double
-        if profile.currentWeightKg >= profile.targetWeightKg {
-            ratio = profile.targetWeightKg / profile.currentWeightKg
+        if currentWeightKg >= targetWeightKg {
+            ratio = targetWeightKg / currentWeightKg
         } else {
-            ratio = profile.currentWeightKg / profile.targetWeightKg
+            ratio = currentWeightKg / targetWeightKg
         }
         return min(max(ratio, 0.12), 1)
     }
@@ -699,13 +702,14 @@ private extension ProfileSummaryView {
 
     func routePayload(from snapshot: ProfileSummarySnapshot) -> ProfileRoutePayload {
         let profile = snapshot.profile
+        let currentWeightKg = snapshot.displayCurrentWeightKg
 
         return ProfileRoutePayload(
             displayName: snapshot.displayName,
             summary: "\(profile.age) 岁 · \(profile.gender.title) · \(profile.activityLevel.title)",
-            currentWeight: "\(display(profile.currentWeightKg)) kg",
+            currentWeight: "\(display(currentWeightKg)) kg",
             targetWeight: "\(display(profile.targetWeightKg)) kg",
-            currentWeightKg: profile.currentWeightKg,
+            currentWeightKg: currentWeightKg,
             targetWeightKg: profile.targetWeightKg,
             height: "\(display(profile.heightCm)) cm",
             bmi: display(profile.bmi),

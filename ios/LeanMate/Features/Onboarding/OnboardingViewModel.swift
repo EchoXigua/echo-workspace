@@ -15,6 +15,8 @@ enum OnboardingState: Equatable {
 
 @MainActor
 final class OnboardingViewModel: ObservableObject {
+    static let defaultLocalAppleIdentityToken = "mock:ios-local-user:ios-local@leanmate.local"
+
     private let apiClient: any APIClient
     private let tokenStore: any TokenStore
     private let localStore: any LocalStore
@@ -63,7 +65,7 @@ final class OnboardingViewModel: ObservableObject {
             let token = try await apiClient.oauthLogin(
                 OAuthLoginRequest(
                     provider: .apple,
-                    identityToken: "mock-apple-identity-token",
+                    identityToken: localAppleIdentityToken,
                     authorizationCode: nil,
                     deviceId: nil
                 )
@@ -73,7 +75,7 @@ final class OnboardingViewModel: ObservableObject {
             )
             try await syncGuestDataIfNeeded()
             state = .idle
-            return .home
+            return token.profileCompleted ? .home : .profileSetup
         } catch {
             let appError = AppError(error)
             if case .unauthorized = appError {
@@ -86,6 +88,21 @@ final class OnboardingViewModel: ObservableObject {
 }
 
 private extension OnboardingViewModel {
+    var localAppleIdentityToken: String {
+        let processInfo = ProcessInfo.processInfo
+        if let value = processInfo.environment["LEANMATE_DEV_IDENTITY_TOKEN"] {
+            return value
+        }
+
+        let arguments = processInfo.arguments
+        if let index = arguments.firstIndex(of: "-LeanMateDevIdentityToken"),
+           arguments.indices.contains(index + 1) {
+            return arguments[index + 1]
+        }
+
+        return Self.defaultLocalAppleIdentityToken
+    }
+
     func syncGuestDataIfNeeded() async throws {
         if let profile = try await localStore.localProfile() {
             _ = try await apiClient.saveProfile(

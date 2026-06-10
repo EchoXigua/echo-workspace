@@ -35,6 +35,20 @@ final class FirstBatchViewModelTests: XCTestCase {
         XCTAssertEqual(destination, .home)
     }
 
+    func testMockLoginSyncRoutesToProfileSetupWhenProfileIsIncomplete() async throws {
+        let tokenStore = InMemoryTokenStore()
+        let localStore = InMemoryLocalStore()
+        let viewModel = OnboardingViewModel(
+            apiClient: MockAPIClient(scenario: .profileIncomplete, delayNanoseconds: 0),
+            tokenStore: tokenStore,
+            localStore: localStore
+        )
+
+        let destination = await viewModel.mockLoginAndSyncGuestData()
+
+        XCTAssertEqual(destination, .profileSetup)
+    }
+
     func testProfileValidationFailureDoesNotCallSaveAPI() async throws {
         let apiClient = ProfileAPIClientStub()
         let viewModel = ProfileSetupViewModel(apiClient: apiClient, timezoneIdentifier: "Asia/Shanghai")
@@ -48,6 +62,31 @@ final class FirstBatchViewModelTests: XCTestCase {
         XCTAssertEqual(saveCallCount, 0)
         XCTAssertEqual(viewModel.fieldErrors[.age], "年龄需在 1-120 岁之间")
         XCTAssertEqual(viewModel.state, .localValidationFailed)
+    }
+
+    func testProfileLowTargetWeightWithinRangeCanCallSaveAPI() async throws {
+        let apiClient = ProfileAPIClientStub()
+        let viewModel = ProfileSetupViewModel(apiClient: apiClient, timezoneIdentifier: "Asia/Shanghai")
+        fillValidProfile(on: viewModel)
+        viewModel.targetWeightText = "52"
+
+        let succeeded = await viewModel.save()
+        let saveCallCount = await apiClient.saveProfileCallCount
+
+        XCTAssertTrue(succeeded)
+        XCTAssertEqual(saveCallCount, 1)
+    }
+
+    func testProfileSafeTargetWeightCanCallSaveAPI() async throws {
+        let apiClient = ProfileAPIClientStub()
+        let viewModel = ProfileSetupViewModel(apiClient: apiClient, timezoneIdentifier: "Asia/Shanghai")
+        fillValidProfile(on: viewModel)
+
+        let succeeded = await viewModel.save()
+        let saveCallCount = await apiClient.saveProfileCallCount
+
+        XCTAssertTrue(succeeded)
+        XCTAssertEqual(saveCallCount, 1)
     }
 
     func testProfileSaveSuccessStoresReturnedGoalResult() async throws {

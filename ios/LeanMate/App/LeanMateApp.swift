@@ -2,11 +2,7 @@ import SwiftUI
 
 @main
 struct LeanMateApp: App {
-    private let environment = AppEnvironment(
-        apiClient: MockAPIClient(scenario: .profileIncomplete),
-        tokenStore: InMemoryTokenStore(),
-        localStore: FileLocalStore()
-    )
+    private let environment = AppEnvironment.configured()
 
     var body: some Scene {
         WindowGroup {

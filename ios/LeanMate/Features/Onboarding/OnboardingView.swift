@@ -91,7 +91,7 @@ private extension OnboardingView {
 
             Button {
                 Task {
-                    await handleLogin()
+                    await handleVisitorPreview()
                 }
             } label: {
                 Text("随便看看")
@@ -161,10 +161,22 @@ private extension OnboardingView {
     }
 
     func handleLogin() async {
+        guard let destination = await viewModel.mockLoginAndSyncGuestData() else {
+            return
+        }
+
+        route(to: destination)
+    }
+
+    func handleVisitorPreview() async {
         guard let destination = await viewModel.startGuestSession() else {
             return
         }
 
+        route(to: destination)
+    }
+
+    func route(to destination: OnboardingDestination) {
         switch destination {
         case .profileSetup:
             onProfileRequired()
