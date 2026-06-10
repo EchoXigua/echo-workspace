@@ -196,6 +196,7 @@ private struct MainTabContainerView: View {
     @Binding var selectedTab: AppTab
     @Binding var pendingDietEntryMode: DietEntryLaunchMode?
     @Binding var pendingDietEntryMealType: MealType?
+    @State private var recordHidesTabBar = false
     let isVisitor: Bool
     let reloadKey: Int
     let onLoginRequired: () -> Void
@@ -207,7 +208,47 @@ private struct MainTabContainerView: View {
     let onOpenProfileDataSync: () -> Void
 
     var body: some View {
-        switch selectedTab {
+        VStack(spacing: 0) {
+            TabView(selection: $selectedTab) {
+                tabContent(.home)
+                    .tag(AppTab.home)
+                tabContent(.record)
+                    .tag(AppTab.record)
+                tabContent(.report)
+                    .tag(AppTab.report)
+                tabContent(.profile)
+                    .tag(AppTab.profile)
+            }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .indexViewStyle(.page(backgroundDisplayMode: .never))
+            .environment(\.lmTabScreenHidesBottomTabs, true)
+
+            if !hidesBottomTabs {
+                LMBottomTabs(
+                    items: AppTab.allCases.map {
+                        LMBottomTabItem(id: $0, title: $0.title, systemImage: $0.systemImage)
+                    },
+                    selection: $selectedTab
+                )
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        .background(LMColors.background.ignoresSafeArea())
+        .animation(.easeInOut(duration: 0.2), value: hidesBottomTabs)
+        .onChange(of: selectedTab) { _, newValue in
+            if newValue != .record {
+                recordHidesTabBar = false
+            }
+        }
+    }
+
+    private var hidesBottomTabs: Bool {
+        selectedTab == .record && recordHidesTabBar
+    }
+
+    @ViewBuilder
+    private func tabContent(_ tab: AppTab) -> some View {
+        switch tab {
         case .home:
             HomeView(
                 viewModel: isVisitor ? HomeViewModel.visitor(localStore: environment.localStore) : HomeViewModel(
@@ -238,7 +279,8 @@ private struct MainTabContainerView: View {
                 pendingLaunchMode: $pendingDietEntryMode,
                 pendingLaunchMealType: $pendingDietEntryMealType,
                 isVisitor: isVisitor,
-                onLoginRequired: onLoginRequired
+                onLoginRequired: onLoginRequired,
+                onTabChromeHiddenChange: { recordHidesTabBar = $0 }
             )
         case .report:
             DailyReportView(

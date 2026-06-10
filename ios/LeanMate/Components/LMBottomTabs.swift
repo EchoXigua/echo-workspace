@@ -18,6 +18,7 @@ struct LMBottomTabs<ID: Hashable>: View {
                 }
             }
             .padding(5)
+            .frame(maxWidth: .infinity)
             .frame(height: 54)
             .background(.white)
             .clipShape(RoundedRectangle(cornerRadius: 27, style: .continuous))
@@ -36,6 +37,7 @@ struct LMBottomTabs<ID: Hashable>: View {
 struct LMTabScreen<ID: Hashable, Content: View>: View {
     let items: [LMBottomTabItem<ID>]
     @Binding var selection: ID
+    @Environment(\.lmTabScreenHidesBottomTabs) private var hidesBottomTabs
     private let content: Content
 
     init(
@@ -60,7 +62,9 @@ struct LMTabScreen<ID: Hashable, Content: View>: View {
             }
             .scrollIndicators(.hidden)
 
-            LMBottomTabs(items: items, selection: $selection)
+            if !hidesBottomTabs {
+                LMBottomTabs(items: items, selection: $selection)
+            }
         }
         .background(LMColors.background.ignoresSafeArea())
     }
@@ -71,7 +75,11 @@ private extension LMBottomTabs {
         let isSelected = selection == item.id
 
         return Button {
-            selection = item.id
+            var transaction = Transaction()
+            transaction.disablesAnimations = true
+            withTransaction(transaction) {
+                selection = item.id
+            }
         } label: {
             VStack(spacing: 2) {
                 Image(systemName: item.systemImage)
@@ -87,7 +95,10 @@ private extension LMBottomTabs {
                 RoundedRectangle(cornerRadius: 22, style: .continuous)
                     .stroke(isSelected ? LMColors.primaryBorder : .clear, lineWidth: 1)
             }
+            .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         }
+        .frame(maxWidth: .infinity, minHeight: 44)
+        .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         .buttonStyle(.plain)
         .accessibilityLabel(item.title)
     }
@@ -110,5 +121,16 @@ private struct LMBottomTabsPreview: View {
 struct LMBottomTabs_Previews: PreviewProvider {
     static var previews: some View {
         LMBottomTabsPreview()
+    }
+}
+
+private struct LMTabScreenHidesBottomTabsKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
+extension EnvironmentValues {
+    var lmTabScreenHidesBottomTabs: Bool {
+        get { self[LMTabScreenHidesBottomTabsKey.self] }
+        set { self[LMTabScreenHidesBottomTabsKey.self] = newValue }
     }
 }

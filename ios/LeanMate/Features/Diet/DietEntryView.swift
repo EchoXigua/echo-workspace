@@ -15,6 +15,7 @@ struct DietEntryView: View {
 
     let isVisitor: Bool
     let onLoginRequired: () -> Void
+    let onTabChromeHiddenChange: (Bool) -> Void
 
     init(
         viewModel: DietEntryViewModel,
@@ -23,7 +24,8 @@ struct DietEntryView: View {
         pendingLaunchMode: Binding<DietEntryLaunchMode?> = .constant(nil),
         pendingLaunchMealType: Binding<MealType?> = .constant(nil),
         isVisitor: Bool = false,
-        onLoginRequired: @escaping () -> Void
+        onLoginRequired: @escaping () -> Void,
+        onTabChromeHiddenChange: @escaping (Bool) -> Void = { _ in }
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         _weightViewModel = StateObject(wrappedValue: weightViewModel)
@@ -32,6 +34,7 @@ struct DietEntryView: View {
         _pendingLaunchMealType = pendingLaunchMealType
         self.isVisitor = isVisitor
         self.onLoginRequired = onLoginRequired
+        self.onTabChromeHiddenChange = onTabChromeHiddenChange
     }
 
     var body: some View {
@@ -74,6 +77,7 @@ struct DietEntryView: View {
             loadSelectedPhoto(newItem)
         }
         .onAppear {
+            updateTabChromeVisibility()
             applyPendingLaunchMode(allowDefaultWhenNoPending: true)
         }
         .onChange(of: pendingLaunchMode) { _, _ in
@@ -81,6 +85,12 @@ struct DietEntryView: View {
         }
         .onChange(of: pendingLaunchMealType) { _, _ in
             applyPendingLaunchMode()
+        }
+        .onChange(of: viewModel.mode) { _, _ in
+            updateTabChromeVisibility()
+        }
+        .onDisappear {
+            onTabChromeHiddenChange(false)
         }
     }
 }
@@ -1105,6 +1115,10 @@ private extension DietEntryView {
         pendingLaunchMode = nil
         pendingLaunchMealType = nil
         selectedTab = .home
+    }
+
+    func updateTabChromeVisibility() {
+        onTabChromeHiddenChange(viewModel.mode == .confirmation)
     }
 
     func changeMethod() {
