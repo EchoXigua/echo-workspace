@@ -167,29 +167,61 @@ private extension AppRootView {
 
         do {
             #if DEBUG
-            if ProcessInfo.processInfo.arguments.contains("-LeanMateResetLocalDataOnLaunch") {
-                try await environment.tokenStore.clearTokens()
-                try await environment.localStore.clearAllLocalData()
-            }
+            let resetLocalDataOnLaunch = ProcessInfo.processInfo.arguments.contains("-LeanMateResetLocalDataOnLaunch")
+            #else
+            let resetLocalDataOnLaunch = false
             #endif
 
-            guard try await environment.tokenStore.loadTokens() != nil else {
-                if try await environment.localStore.guestSession() != nil {
-                    router.showVisitorHome()
-                } else {
-                    router.showOnboarding()
-                }
-                return
-            }
-
-            _ = try await environment.apiClient.currentUser()
-            router.showHome()
+            let rootState = try await AppStartupSessionResolver(
+                apiClient: environment.apiClient,
+                tokenStore: environment.tokenStore,
+                localStore: environment.localStore
+            ).resolve(resetLocalDataOnLaunch: resetLocalDataOnLaunch)
+            route(to: rootState)
         } catch {
             if case AppError.unauthorized = AppError(error) {
                 try? await environment.tokenStore.clearTokens()
             }
             router.showOnboarding()
         }
+    }
+
+    func route(to rootState: AppRootState) {
+        switch rootState {
+        case .coldStart:
+            break
+        case .onboarding:
+            router.showOnboarding()
+        case .profileSetup:
+            router.showProfileSetup()
+        case .visitorHome:
+            router.showVisitorHome()
+        case .home:
+            router.showHome()
+        }
+    }
+}
+
+struct AppStartupSessionResolver {
+    let apiClient: any APIClient
+    let tokenStore: any TokenStore
+    let localStore: any LocalStore
+
+    func resolve(resetLocalDataOnLaunch: Bool = false) async throws -> AppRootState {
+        if resetLocalDataOnLaunch {
+            try await tokenStore.clearTokens()
+            try await localStore.clearAllLocalData()
+        }
+
+        guard try await tokenStore.loadTokens() != nil else {
+            if try await localStore.guestSession() != nil {
+                return .visitorHome
+            }
+            return .onboarding
+        }
+
+        let user = try await apiClient.currentUser()
+        return user.profileCompleted ? .home : .profileSetup
     }
 }
 

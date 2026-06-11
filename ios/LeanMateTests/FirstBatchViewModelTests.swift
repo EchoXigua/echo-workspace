@@ -3,6 +3,23 @@ import XCTest
 
 @MainActor
 final class FirstBatchViewModelTests: XCTestCase {
+    func testConfiguredEnvironmentEnablesLocalDebugLoginByDefaultOnDebugSimulator() {
+        #if DEBUG && targetEnvironment(simulator)
+        let environment = AppEnvironment.configured(environment: [:], arguments: [])
+
+        XCTAssertTrue(environment.isLocalDebugLoginEnabled)
+        #endif
+    }
+
+    func testConfiguredEnvironmentCanUseMockAPIWhenRequested() {
+        let environment = AppEnvironment.configured(
+            environment: ["LEANMATE_API_MODE": "mock"],
+            arguments: []
+        )
+
+        XCTAssertFalse(environment.isLocalDebugLoginEnabled)
+    }
+
     func testAppleSignInRequiresAgreementBeforeAuthorization() async throws {
         let authorizer = AppleSignInAuthorizerSpy()
         let viewModel = OnboardingViewModel(
@@ -72,6 +89,34 @@ final class FirstBatchViewModelTests: XCTestCase {
         XCTAssertEqual(destination, .visitorHome)
         XCTAssertNil(tokens)
         XCTAssertNotNil(session)
+    }
+
+    func testStartupSessionRoutesToHomeWhenStoredTokenUserProfileCompleted() async throws {
+        let tokenStore = InMemoryTokenStore()
+        try await tokenStore.saveTokens(AuthTokens(accessToken: "access", refreshToken: "refresh"))
+        let resolver = AppStartupSessionResolver(
+            apiClient: LoginAPIClientSpy(profileCompleted: true),
+            tokenStore: tokenStore,
+            localStore: InMemoryLocalStore()
+        )
+
+        let rootState = try await resolver.resolve()
+
+        XCTAssertEqual(rootState, .home)
+    }
+
+    func testStartupSessionRoutesToProfileSetupWhenStoredTokenUserProfileIncomplete() async throws {
+        let tokenStore = InMemoryTokenStore()
+        try await tokenStore.saveTokens(AuthTokens(accessToken: "access", refreshToken: "refresh"))
+        let resolver = AppStartupSessionResolver(
+            apiClient: LoginAPIClientSpy(profileCompleted: false),
+            tokenStore: tokenStore,
+            localStore: InMemoryLocalStore()
+        )
+
+        let rootState = try await resolver.resolve()
+
+        XCTAssertEqual(rootState, .profileSetup)
     }
 
     func testMockLoginSyncRoutesToHomeWhenProfileIsCompleted() async throws {
@@ -278,7 +323,14 @@ private actor LoginAPIClientSpy: APIClient {
     func logout(_ request: LogoutRequest?) async throws {}
 
     func currentUser() async throws -> CurrentUser {
-        throw AppError.unknown
+        CurrentUser(
+            id: MockData.userId,
+            nickname: nil,
+            avatarUrl: nil,
+            status: .active,
+            profileCompleted: profileCompleted,
+            createdAt: MockData.today
+        )
     }
 
     func profile() async throws -> ProfilePayload {

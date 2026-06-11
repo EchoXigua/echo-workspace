@@ -31,9 +31,22 @@ struct AppEnvironment {
     }
 
     static func configured(processInfo: ProcessInfo = .processInfo) -> AppEnvironment {
-        let appleSignInAuthorizer = configuredAppleSignInAuthorizer(processInfo: processInfo)
+        configured(
+            environment: processInfo.environment,
+            arguments: processInfo.arguments
+        )
+    }
 
-        if let baseURL = liveBaseURL(processInfo: processInfo) {
+    static func configured(
+        environment: [String: String],
+        arguments: [String]
+    ) -> AppEnvironment {
+        let appleSignInAuthorizer = configuredAppleSignInAuthorizer(
+            environment: environment,
+            arguments: arguments
+        )
+
+        if let baseURL = liveBaseURL(environment: environment, arguments: arguments) {
             return live(
                 baseURL: baseURL,
                 appleSignInAuthorizer: appleSignInAuthorizer,
@@ -63,13 +76,15 @@ private extension AppEnvironment {
         #endif
     }
 
-    static func liveBaseURL(processInfo: ProcessInfo) -> URL? {
-        let environment = processInfo.environment
+    static func liveBaseURL(environment: [String: String], arguments: [String]) -> URL? {
+        if environment["LEANMATE_API_MODE"] == "mock" || arguments.contains("-LeanMateUseMockAPI") {
+            return nil
+        }
+
         if let value = environment["LEANMATE_API_BASE_URL"], let url = URL(string: value) {
             return url
         }
 
-        let arguments = processInfo.arguments
         if let index = arguments.firstIndex(of: "-LeanMateAPIBaseURL"),
            arguments.indices.contains(index + 1),
            let url = URL(string: arguments[index + 1]) {
@@ -80,13 +95,19 @@ private extension AppEnvironment {
             return URL(string: "http://127.0.0.1:8080")
         }
 
+        #if DEBUG && targetEnvironment(simulator)
+        return URL(string: "http://127.0.0.1:8080")
+        #else
         return nil
+        #endif
     }
 
-    static func configuredAppleSignInAuthorizer(processInfo: ProcessInfo) -> any AppleSignInAuthorizing {
-        let environment = processInfo.environment
+    static func configuredAppleSignInAuthorizer(
+        environment: [String: String],
+        arguments: [String]
+    ) -> any AppleSignInAuthorizing {
         if environment["LEANMATE_MOCK_APPLE_SIGN_IN"] == "1" ||
-            processInfo.arguments.contains("-LeanMateMockAppleSignIn") {
+            arguments.contains("-LeanMateMockAppleSignIn") {
             return MockAppleSignInAuthorizer()
         }
 
