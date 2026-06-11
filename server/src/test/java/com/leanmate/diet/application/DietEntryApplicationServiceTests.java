@@ -51,7 +51,7 @@ class DietEntryApplicationServiceTests {
     private static final UUID USER_ID = UUID.fromString("11111111-2222-3333-4444-555555555555");
     private static final UUID ENTRY_ID = UUID.fromString("aaaaaaaa-1111-2222-3333-444444444444");
     private static final UUID CLIENT_LOCAL_ID = UUID.fromString("cccccccc-1111-2222-3333-444444444444");
-    private static final UUID FOOD_ID = UUID.fromString("10000000-0000-0000-0000-000000000011");
+    private static final UUID FOOD_ID = UUID.fromString("f1cfb2fc-a61f-497c-b9a6-843c06b1b428");
 
     private CurrentUserApplicationService currentUserApplicationService;
     private UserProfileRepository userProfileRepository;

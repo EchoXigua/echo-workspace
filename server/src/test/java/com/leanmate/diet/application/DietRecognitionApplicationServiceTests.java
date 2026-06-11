@@ -49,7 +49,7 @@ class DietRecognitionApplicationServiceTests {
     private static final UUID USER_ID = UUID.fromString("11111111-2222-3333-4444-555555555555");
     private static final UUID OTHER_USER_ID = UUID.fromString("99999999-2222-3333-4444-555555555555");
     private static final UUID TASK_ID = UUID.fromString("aaaaaaaa-1111-2222-3333-444444444444");
-    private static final UUID EGG_FOOD_ID = UUID.fromString("10000000-0000-0000-0000-000000000004");
+    private static final UUID EGG_FOOD_ID = UUID.fromString("0a1b8ef0-6ec2-429e-b615-2da2b3463af3");
 
     private CurrentUserApplicationService currentUserApplicationService;
     private UserProfileRepository userProfileRepository;

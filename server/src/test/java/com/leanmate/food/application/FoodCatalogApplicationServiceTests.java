@@ -30,8 +30,8 @@ import org.springframework.data.domain.Pageable;
 class FoodCatalogApplicationServiceTests {
 
     private static final UUID USER_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
-    private static final UUID FOOD_ID = UUID.fromString("10000000-0000-0000-0000-000000000011");
-    private static final UUID PORTION_ID = UUID.fromString("20000000-0000-0000-0000-000000000011");
+    private static final UUID FOOD_ID = UUID.fromString("f1cfb2fc-a61f-497c-b9a6-843c06b1b428");
+    private static final UUID PORTION_ID = UUID.fromString("d1bc7ac9-8c26-4636-abad-f15111fa363f");
 
     private FoodCatalogRepository foodCatalogRepository;
     private FoodPortionRepository foodPortionRepository;
