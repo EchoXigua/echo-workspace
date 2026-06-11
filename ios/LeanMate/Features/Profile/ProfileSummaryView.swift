@@ -683,14 +683,14 @@ private extension ProfileSummaryView {
 
     func weeklyChangeValue(_ value: Double?) -> String {
         guard let value else {
-            return "记录后"
+            return "--"
         }
         let prefix = value > 0 ? "+" : ""
         return "\(prefix)\(display(value))"
     }
 
     func weeklyChangeUnit(_ value: Double?) -> String? {
-        value == nil ? "显示" : "kg"
+        "kg"
     }
 
     func weeklyChangeColor(_ value: Double?) -> Color {

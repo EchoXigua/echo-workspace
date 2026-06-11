@@ -822,7 +822,7 @@ private struct ProfileTrendSummaryCard: View {
 
     private var changeValue: String {
         guard let value = payload.weeklyWeightChangeKg else {
-            return "0"
+            return "--"
         }
         let prefix = value > 0 ? "+" : ""
         return "\(prefix)\(display(value))"
