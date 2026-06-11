@@ -150,4 +150,8 @@ final class AppRouter: ObservableObject {
         popRoute()
         contentReloadKey += 1
     }
+
+    func reloadMainContent() {
+        contentReloadKey += 1
+    }
 }

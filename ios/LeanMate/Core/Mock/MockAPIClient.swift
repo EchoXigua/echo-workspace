@@ -1,6 +1,6 @@
 import Foundation
 
-final class MockAPIClient: APIClient, @unchecked Sendable {
+final class MockAPIClient: RetentionNoticeAPIClient, @unchecked Sendable {
     enum Scenario: Sendable {
         case success
         case empty
@@ -14,6 +14,7 @@ final class MockAPIClient: APIClient, @unchecked Sendable {
     private let delayNanoseconds: UInt64
     private var completedProfile: UserProfile?
     private var recognitionTasksById: [UUID: RecognitionTask] = [:]
+    private var dismissedRetentionNoticeIDs: Set<UUID> = []
 
     init(scenario: Scenario = .success, delayNanoseconds: UInt64 = 150_000_000) {
         self.scenario = scenario
@@ -232,6 +233,20 @@ final class MockAPIClient: APIClient, @unchecked Sendable {
             return MockData.emptyStreak
         }
         return MockData.streak
+    }
+
+    func retentionNotices() async throws -> [RetentionNotice] {
+        try await prepare()
+        guard !dismissedRetentionNoticeIDs.contains(MockData.retentionNotice.id),
+              case .success = scenario else {
+            return []
+        }
+        return [MockData.retentionNotice]
+    }
+
+    func dismissRetentionNotice(id: UUID) async throws {
+        try await prepare()
+        dismissedRetentionNoticeIDs.insert(id)
     }
 }
 

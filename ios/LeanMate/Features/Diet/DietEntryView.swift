@@ -15,6 +15,7 @@ struct DietEntryView: View {
 
     let isVisitor: Bool
     let onLoginRequired: () -> Void
+    let onRecordChanged: () -> Void
     let onTabChromeHiddenChange: (Bool) -> Void
 
     init(
@@ -25,6 +26,7 @@ struct DietEntryView: View {
         pendingLaunchMealType: Binding<MealType?> = .constant(nil),
         isVisitor: Bool = false,
         onLoginRequired: @escaping () -> Void,
+        onRecordChanged: @escaping () -> Void = {},
         onTabChromeHiddenChange: @escaping (Bool) -> Void = { _ in }
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -34,6 +36,7 @@ struct DietEntryView: View {
         _pendingLaunchMealType = pendingLaunchMealType
         self.isVisitor = isVisitor
         self.onLoginRequired = onLoginRequired
+        self.onRecordChanged = onRecordChanged
         self.onTabChromeHiddenChange = onTabChromeHiddenChange
     }
 
@@ -59,7 +62,7 @@ struct DietEntryView: View {
                 deleteConfirmationOverlay
             }
         }
-        .sheet(isPresented: $showsWeightSheet) {
+        .sheet(isPresented: $showsWeightSheet, onDismiss: notifyRecordChangedAfterWeightSave) {
             WeightEntrySheet(viewModel: weightViewModel)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.hidden)
@@ -117,7 +120,7 @@ private extension DietEntryView {
 
             Button(action: openWeightSheet) {
                 HStack(spacing: 5) {
-                    Image(systemName: "scalemass")
+                    LMWeightScaleIcon(size: 13, color: LMColors.primary)
                     Text("体重")
                 }
                 .font(LMTypography.badge)
@@ -1150,19 +1153,25 @@ private extension DietEntryView {
 
     func saveManual() {
         Task {
-            _ = await viewModel.saveManualEntry()
+            if await viewModel.saveManualEntry() {
+                onRecordChanged()
+            }
         }
     }
 
     func saveRecognition() {
         Task {
-            _ = await viewModel.saveRecognitionEntry()
+            if await viewModel.saveRecognitionEntry() {
+                onRecordChanged()
+            }
         }
     }
 
     func deleteSavedEntry() {
         Task {
-            _ = await viewModel.deleteSavedEntry()
+            if await viewModel.deleteSavedEntry() {
+                onRecordChanged()
+            }
         }
     }
 
@@ -1187,7 +1196,14 @@ private extension DietEntryView {
         if isVisitor {
             onLoginRequired()
         } else {
+            weightViewModel.resetForNewEntry()
             showsWeightSheet = true
+        }
+    }
+
+    func notifyRecordChangedAfterWeightSave() {
+        if weightViewModel.savedEntry != nil {
+            onRecordChanged()
         }
     }
 

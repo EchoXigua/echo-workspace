@@ -35,6 +35,14 @@ struct ProfileSummarySnapshot: Sendable {
     }
 }
 
+struct StreakMilestonePresentation: Identifiable, Equatable, Sendable {
+    let id: UUID
+    let noticeId: UUID?
+    let days: Int
+    let message: String?
+    let nextValue: Int?
+}
+
 @MainActor
 final class ProfileSummaryViewModel: ObservableObject {
     private let apiClient: (any APIClient)?
@@ -44,7 +52,7 @@ final class ProfileSummaryViewModel: ObservableObject {
     private var shownMilestoneDays: Set<Int> = []
 
     @Published private(set) var state: ProfileSummaryState = .idle
-    @Published private(set) var milestoneToPresent: StreakMilestone?
+    @Published private(set) var milestoneToPresent: StreakMilestonePresentation?
 
     var isLoading: Bool {
         if case .loading = state {
@@ -113,6 +121,7 @@ final class ProfileSummaryViewModel: ObservableObject {
             }
 
             let weightSummary = await loadRemoteWeightSummary(apiClient: apiClient)
+            let milestonePresentation = await loadMilestonePresentation(apiClient: apiClient)
             let snapshot = ProfileSummarySnapshot(
                 user: user,
                 profile: profile,
@@ -121,7 +130,7 @@ final class ProfileSummaryViewModel: ObservableObject {
                 latestWeightKg: weightSummary.latestWeightKg
             )
             state = .loaded(snapshot)
-            presentMilestoneIfNeeded(from: streak)
+            presentMilestoneIfNeeded(milestonePresentation)
         } catch {
             let appError = AppError(error)
             if case .unauthorized = appError {
@@ -136,11 +145,15 @@ final class ProfileSummaryViewModel: ObservableObject {
     }
 
     func dismissMilestone() {
-        if let days = milestoneToPresent?.days {
-            shownMilestoneDays.insert(days)
+        guard let milestone = milestoneToPresent else {
+            return
         }
+
+        shownMilestoneDays.insert(milestone.days)
         milestoneToPresent = nil
+        dismissMilestoneNoticeIfNeeded(milestone)
     }
+
 }
 
 private extension ProfileSummaryViewModel {
@@ -185,21 +198,51 @@ private extension ProfileSummaryViewModel {
         }
     }
 
-    func presentMilestoneIfNeeded(from streak: Streak) {
+    func loadMilestonePresentation(apiClient: any APIClient) async -> StreakMilestonePresentation? {
+        guard let retentionNoticeClient = apiClient as? any RetentionNoticeAPIClient else {
+            return nil
+        }
+
+        do {
+            return try await retentionNoticeClient.retentionNotices()
+                .sorted { $0.triggeredAt < $1.triggeredAt }
+                .first
+                .map { notice in
+                    StreakMilestonePresentation(
+                        id: notice.id,
+                        noticeId: notice.id,
+                        days: notice.currentValue,
+                        message: notice.message,
+                        nextValue: notice.nextValue
+                    )
+                }
+        } catch {
+            return nil
+        }
+    }
+
+    func presentMilestoneIfNeeded(_ milestone: StreakMilestonePresentation?) {
         guard milestoneToPresent == nil else {
             return
         }
 
-        let achievedMilestones = streak.milestones
-            .filter({ $0.achieved })
-            .sorted { $0.days > $1.days }
-
-        guard let milestone = achievedMilestones.first, !shownMilestoneDays.contains(milestone.days) else {
+        guard let milestone, !shownMilestoneDays.contains(milestone.days) else {
             milestoneToPresent = nil
             return
         }
 
         milestoneToPresent = milestone
+    }
+
+    func dismissMilestoneNoticeIfNeeded(_ milestone: StreakMilestonePresentation) {
+        guard let noticeId = milestone.noticeId,
+              let retentionNoticeClient = apiClient as? any RetentionNoticeAPIClient else {
+            return
+        }
+
+        Task {
+            try? await retentionNoticeClient.dismissRetentionNotice(id: noticeId)
+        }
     }
 
     func loadRemoteWeightSummary(apiClient: any APIClient) async -> (weeklyChangeKg: Double?, latestWeightKg: Double?) {

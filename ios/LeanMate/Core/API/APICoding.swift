@@ -1,14 +1,18 @@
 import Foundation
 
 enum APICoding {
-    static let dateFormatter: DateFormatter = {
+    static var dateFormatter: DateFormatter {
+        makeBusinessDateFormatter()
+    }
+
+    static func makeBusinessDateFormatter(timeZone: TimeZone = .autoupdatingCurrent) -> DateFormatter {
         let formatter = DateFormatter()
         formatter.calendar = Calendar(identifier: .gregorian)
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.timeZone = timeZone
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter
-    }()
+    }
 
     static let isoDateTimeFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
@@ -58,6 +62,10 @@ enum APICoding {
     }
 
     static func dateString(from date: Date) -> String {
-        dateFormatter.string(from: date)
+        dateString(from: date, timeZone: .autoupdatingCurrent)
+    }
+
+    static func dateString(from date: Date, timeZone: TimeZone) -> String {
+        makeBusinessDateFormatter(timeZone: timeZone).string(from: date)
     }
 }

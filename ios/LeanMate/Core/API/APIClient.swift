@@ -29,3 +29,8 @@ protocol APIClient: Sendable {
     func markDailyReportViewed(reportId: UUID) async throws -> DailyReport?
     func streak() async throws -> Streak
 }
+
+protocol RetentionNoticeAPIClient: APIClient {
+    func retentionNotices() async throws -> [RetentionNotice]
+    func dismissRetentionNotice(id: UUID) async throws
+}

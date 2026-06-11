@@ -7,7 +7,7 @@ enum HTTPMethod: String {
     case delete = "DELETE"
 }
 
-final class LiveAPIClient: APIClient, @unchecked Sendable {
+final class LiveAPIClient: RetentionNoticeAPIClient, @unchecked Sendable {
     private let baseURL: URL
     private let session: URLSession
     private let tokenStore: any TokenStore
@@ -80,7 +80,7 @@ final class LiveAPIClient: APIClient, @unchecked Sendable {
     ) async throws -> RecognitionTask {
         let fields = [
             "mealType": mealType.rawValue,
-            "mealDate": mealDate.map(APICoding.dateString(from:)),
+            "mealDate": mealDate.map { APICoding.dateString(from: $0) },
             "note": note
         ].compactMapValues { $0 }
 
@@ -157,6 +157,14 @@ final class LiveAPIClient: APIClient, @unchecked Sendable {
 
     func streak() async throws -> Streak {
         try await send(path: "/v1/retention/streak")
+    }
+
+    func retentionNotices() async throws -> [RetentionNotice] {
+        try await send(path: "/v1/retention/milestone-notices")
+    }
+
+    func dismissRetentionNotice(id: UUID) async throws {
+        try await sendEmpty(path: "/v1/retention/milestone-notices/\(id.uuidString)/dismiss", method: .post)
     }
 }
 
@@ -389,7 +397,7 @@ private extension LiveAPIClient {
         case 404:
             return .notFound
         case 409:
-            return .conflict
+            return .conflict(message: "当前状态暂时不能操作")
         default:
             return .server(message: "服务端错误")
         }
@@ -406,7 +414,7 @@ private extension LiveAPIClient {
         case 40401:
             return .notFound
         case 40901:
-            return .conflict
+            return .conflict(message: message)
         case 50010:
             return .aiServiceUnavailable
         case 50001:

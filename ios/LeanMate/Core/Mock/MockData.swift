@@ -141,6 +141,19 @@ enum MockData {
         ]
     )
 
+    static let retentionNoticeId = UUID(uuidString: "77777777-7777-7777-7777-777777777777") ?? UUID()
+
+    static let retentionNotice = RetentionNotice(
+        id: retentionNoticeId,
+        type: "streak",
+        title: "连续记录 7 天",
+        message: "今天也完成记录，继续保持现在的节奏。",
+        currentValue: 7,
+        previousValue: 3,
+        nextValue: 30,
+        triggeredAt: today
+    )
+
     static let emptyStreak = Streak(
         currentDays: 0,
         longestDays: 0,

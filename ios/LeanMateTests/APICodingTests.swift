@@ -38,6 +38,17 @@ final class APICodingTests: XCTestCase {
         XCTAssertEqual(object["weightKg"] as? Double, 55.8)
     }
 
+    func testBusinessDateStringUsesBusinessTimezone() throws {
+        let formatter = ISO8601DateFormatter()
+        let earlyMorningInShanghai = try XCTUnwrap(formatter.date(from: "2026-06-05T16:30:00Z"))
+        let shanghai = try XCTUnwrap(TimeZone(secondsFromGMT: 8 * 60 * 60))
+
+        XCTAssertEqual(
+            APICoding.dateString(from: earlyMorningInShanghai, timeZone: shanghai),
+            "2026-06-06"
+        )
+    }
+
     func testEnumsDecodeOpenAPIValues() throws {
         let json = """
         {

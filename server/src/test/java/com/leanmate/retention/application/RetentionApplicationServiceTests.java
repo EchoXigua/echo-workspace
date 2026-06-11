@@ -153,6 +153,27 @@ class RetentionApplicationServiceTests {
     }
 
     @Test
+    void countMultipleRecordsOnSameDateOnlyOnce() {
+        when(foodEntryRepository.findDistinctMealDatesOnOrBefore(
+                USER_ID,
+                FoodEntryStatus.CONFIRMED.value(),
+                TODAY))
+                .thenReturn(List.of(
+                        LocalDate.parse("2026-06-06"),
+                        LocalDate.parse("2026-06-06"),
+                        TODAY));
+        when(weightEntryRepository.findDistinctRecordDatesOnOrBefore(USER_ID, TODAY))
+                .thenReturn(List.of(TODAY, TODAY));
+
+        StreakResponse response = retentionApplicationService.getStreak(USER_ID);
+
+        assertThat(response.currentDays()).isEqualTo(2);
+        assertThat(response.longestDays()).isEqualTo(2);
+        assertThat(response.lastActiveDate()).isEqualTo(TODAY);
+        verify(achievementRepository, never()).saveAll(any());
+    }
+
+    @Test
     void keepCurrentStreakWhenLastActiveDateIsYesterday() {
         when(foodEntryRepository.findDistinctMealDatesOnOrBefore(
                 USER_ID,

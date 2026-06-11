@@ -65,7 +65,8 @@ private extension AppRootView {
                 onOpenProfileEdit: router.showProfileEdit,
                 onOpenProfileDataPlan: router.showProfileDataPlan,
                 onOpenProfileWeightTrend: router.showProfileWeightTrend,
-                onOpenProfileDataSync: router.showProfileDataSync
+                onOpenProfileDataSync: router.showProfileDataSync,
+                onContentNeedsReload: router.reloadMainContent
             )
         case .home:
             MainTabContainerView(
@@ -81,7 +82,8 @@ private extension AppRootView {
                 onOpenProfileEdit: router.showProfileEdit,
                 onOpenProfileDataPlan: router.showProfileDataPlan,
                 onOpenProfileWeightTrend: router.showProfileWeightTrend,
-                onOpenProfileDataSync: router.showProfileDataSync
+                onOpenProfileDataSync: router.showProfileDataSync,
+                onContentNeedsReload: router.reloadMainContent
             )
         }
     }
@@ -240,6 +242,7 @@ private struct MainTabContainerView: View {
     let onOpenProfileDataPlan: (ProfileRoutePayload) -> Void
     let onOpenProfileWeightTrend: (ProfileRoutePayload) -> Void
     let onOpenProfileDataSync: () -> Void
+    let onContentNeedsReload: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -314,6 +317,7 @@ private struct MainTabContainerView: View {
                 pendingLaunchMealType: $pendingDietEntryMealType,
                 isVisitor: isVisitor,
                 onLoginRequired: onLoginRequired,
+                onRecordChanged: onContentNeedsReload,
                 onTabChromeHiddenChange: { recordHidesTabBar = $0 }
             )
         case .report:

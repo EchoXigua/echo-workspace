@@ -2,6 +2,7 @@ package com.leanmate.weight.application;
 
 import com.leanmate.common.error.ErrorCode;
 import com.leanmate.common.exception.BusinessException;
+import com.leanmate.retention.application.RetentionApplicationService;
 import com.leanmate.stats.application.DailyNutritionSnapshotApplicationService;
 import com.leanmate.stats.dto.DailyNutritionSnapshotResponse;
 import com.leanmate.user.application.CurrentUserApplicationService;
@@ -44,6 +45,7 @@ public class WeightApplicationService {
     private final WeightGoalRepository weightGoalRepository;
     private final WeightEntryRepository weightEntryRepository;
     private final DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService;
+    private final RetentionApplicationService retentionApplicationService;
     private final Clock clock;
 
     @Autowired
@@ -52,7 +54,8 @@ public class WeightApplicationService {
             UserProfileRepository userProfileRepository,
             WeightGoalRepository weightGoalRepository,
             WeightEntryRepository weightEntryRepository,
-            DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService
+            DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService,
+            RetentionApplicationService retentionApplicationService
     ) {
         this(
                 currentUserApplicationService,
@@ -60,6 +63,7 @@ public class WeightApplicationService {
                 weightGoalRepository,
                 weightEntryRepository,
                 dailyNutritionSnapshotApplicationService,
+                retentionApplicationService,
                 Clock.systemUTC());
     }
 
@@ -69,6 +73,7 @@ public class WeightApplicationService {
             WeightGoalRepository weightGoalRepository,
             WeightEntryRepository weightEntryRepository,
             DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService,
+            RetentionApplicationService retentionApplicationService,
             Clock clock
     ) {
         this.currentUserApplicationService = currentUserApplicationService;
@@ -76,6 +81,7 @@ public class WeightApplicationService {
         this.weightGoalRepository = weightGoalRepository;
         this.weightEntryRepository = weightEntryRepository;
         this.dailyNutritionSnapshotApplicationService = dailyNutritionSnapshotApplicationService;
+        this.retentionApplicationService = retentionApplicationService;
         this.clock = clock;
     }
 
@@ -107,6 +113,7 @@ public class WeightApplicationService {
                 request.recordDate(),
                 profile.getDailyCalorieTargetKcal(),
                 savedEntry.getWeightKg());
+        refreshStreak(userId);
         return new WeightEntrySaveResultResponse(toResponse(savedEntry), snapshot);
     }
 
@@ -156,7 +163,12 @@ public class WeightApplicationService {
                 request.recordDate(),
                 profile.getDailyCalorieTargetKcal(),
                 savedEntry.getWeightKg());
+        refreshStreak(userId);
         return Optional.of(toResponse(savedEntry));
+    }
+
+    private void refreshStreak(UUID userId) {
+        retentionApplicationService.getStreak(userId);
     }
 
     private void validateSyncLocalWeight(SyncLocalWeightEntryRequest request) {

@@ -7,6 +7,8 @@ struct HomeView: View {
     @Binding private var pendingDietEntryMealType: MealType?
     @State private var isVisitorBannerVisible = true
     @State private var isTargetCalibrationPromptVisible = true
+    // TODO: 上线前移除首页模拟打卡入口。
+    @State private var isSimulatedMilestonePresented = false
 
     let isVisitor: Bool
     let onLoginRequired: () -> Void
@@ -31,13 +33,24 @@ struct HomeView: View {
     }
 
     var body: some View {
-        LMTabScreen(
-            items: AppTab.allCases.map {
-                LMBottomTabItem(id: $0, title: $0.title, systemImage: $0.systemImage)
-            },
-            selection: $selectedTab
-        ) {
-            content
+        ZStack {
+            LMTabScreen(
+                items: AppTab.allCases.map {
+                    LMBottomTabItem(id: $0, title: $0.title, systemImage: $0.systemImage)
+                },
+                selection: $selectedTab
+            ) {
+                content
+            }
+
+            if isSimulatedMilestonePresented {
+                LMMilestoneCelebrationOverlay(
+                    days: 12,
+                    message: "今天也完成记录，继续保持现在的节奏。",
+                    nextMilestoneDays: 14,
+                    onDismiss: { isSimulatedMilestonePresented = false }
+                )
+            }
         }
         .task {
             await viewModel.refresh()
@@ -107,10 +120,18 @@ private extension HomeView {
 
             Spacer()
 
-            Button(action: openRecordTab) {
-                Text("补记录")
-                    .font(LMTypography.badge)
-                    .foregroundStyle(LMColors.primary)
+            HStack(spacing: 8) {
+                Button {
+                    isSimulatedMilestonePresented = true
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "sparkles")
+                            .font(.system(size: 11, weight: .bold))
+
+                        Text("模拟打卡")
+                            .font(LMTypography.badge)
+                    }
+                    .foregroundStyle(LMColors.primaryDeep)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 6)
                     .background(LMColors.primarySoft)
@@ -119,8 +140,25 @@ private extension HomeView {
                         Capsule()
                             .stroke(LMColors.primaryBorder, lineWidth: 1)
                     }
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("模拟连续打卡动画")
+
+                Button(action: openRecordTab) {
+                    Text("补记录")
+                        .font(LMTypography.badge)
+                        .foregroundStyle(LMColors.primary)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(LMColors.primarySoft)
+                        .clipShape(Capsule())
+                        .overlay {
+                            Capsule()
+                                .stroke(LMColors.primaryBorder, lineWidth: 1)
+                        }
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
         }
         .frame(height: 52)
     }
@@ -622,10 +660,6 @@ private extension HomeView {
                 isRecorded: !entries.isEmpty
             )
         }
-    }
-
-    func hasRecordedMeal(_ mealType: MealType, in home: TodayHome) -> Bool {
-        home.foodEntries.contains { $0.mealType == mealType }
     }
 
     func mealIconIsHighlighted(_ row: HomeMealRow) -> Bool {

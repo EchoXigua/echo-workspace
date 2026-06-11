@@ -348,39 +348,6 @@ private extension ProfileSummaryView {
         .accessibilityLabel("查看数据与计划详情")
     }
 
-    func planDetails(_ profile: UserProfile, payload: ProfileRoutePayload) -> some View {
-        Button {
-            onOpenDataPlan(payload)
-        } label: {
-            LMCard(cornerRadius: 16, padding: 14) {
-                HStack {
-                    Text("数据与计划")
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(LMColors.textBody)
-
-                    Spacer()
-
-                    Text("查看全部")
-                        .font(LMTypography.badge)
-                        .foregroundStyle(LMColors.primaryDeep)
-                }
-
-                HStack(spacing: LMSpacing.small) {
-                    profileMetric(title: "BMI", value: display(profile.bmi), unit: nil)
-                    profileMetric(title: "基础代谢", value: "\(profile.bmrKcal)", unit: "kcal")
-                    profileMetric(title: "身高", value: display(profile.heightCm), unit: "cm")
-                }
-
-                Text("由身体档案估算，后续可在档案中微调。")
-                    .font(LMTypography.caption)
-                    .foregroundStyle(LMColors.textSecondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel("查看数据与计划详情")
-    }
-
     func profileMetric(title: String, value: String, unit: String?, accent: Color = LMColors.textPrimary) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title)
@@ -510,73 +477,13 @@ private extension ProfileSummaryView {
         }
     }
 
-    func profileRow(title: String, value: String, systemImage: String) -> some View {
-        HStack(spacing: 12) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(LMColors.primarySoft)
-                    .frame(width: 34, height: 34)
-
-                Image(systemName: systemImage)
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(LMColors.primary)
-            }
-
-            Text(title)
-                .font(LMTypography.bodyStrong)
-                .foregroundStyle(LMColors.textBody)
-
-            Spacer()
-
-            Text(value)
-                .font(LMTypography.caption)
-                .foregroundStyle(LMColors.textSecondary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.72)
-        }
-    }
-
-    func milestoneOverlay(_ milestone: StreakMilestone) -> some View {
-        ZStack {
-            Color.black.opacity(0.55)
-                .ignoresSafeArea()
-
-            VStack(spacing: 18) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 22, style: .continuous)
-                        .fill(LMColors.primarySoft)
-                        .frame(width: 68, height: 68)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                                .stroke(LMColors.primaryBorder, lineWidth: 1)
-                        }
-
-                    Image(systemName: "award")
-                        .font(.system(size: 34, weight: .semibold))
-                        .foregroundStyle(LMColors.primary)
-                }
-
-                Text("连续记录 \(milestone.days) 天")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundStyle(LMColors.textPrimary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                Text(milestoneMessage(for: milestone))
-                    .font(LMTypography.caption)
-                    .foregroundStyle(LMColors.textSecondary)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                LMButton(title: "知道了", height: 50) {
-                    viewModel.dismissMilestone()
-                }
-            }
-            .padding(22)
-            .frame(maxWidth: 342)
-            .background(LMColors.card)
-            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-            .padding(.horizontal, 24)
-        }
+    func milestoneOverlay(_ milestone: StreakMilestonePresentation) -> some View {
+        LMMilestoneCelebrationOverlay(
+            days: milestone.days,
+            message: milestoneMessage(for: milestone),
+            nextMilestoneDays: milestone.nextValue,
+            onDismiss: viewModel.dismissMilestone
+        )
     }
 
     func retry() {
@@ -624,15 +531,8 @@ private extension ProfileSummaryView {
         }
     }
 
-    func streakSubtitle(_ streak: Streak) -> String {
-        if let next = streak.milestones.sorted(by: { $0.days < $1.days }).first(where: { !$0.achieved }) {
-            return "下一次里程碑是连续 \(next.days) 天。"
-        }
-        return "已达成当前全部连续打卡里程碑。"
-    }
-
-    func milestoneMessage(for milestone: StreakMilestone) -> String {
-        "你已经建立起稳定的记录节奏。系统会继续按后端返回的连续打卡状态展示进度。"
+    func milestoneMessage(for milestone: StreakMilestonePresentation) -> String {
+        milestone.message ?? "你已经建立起稳定的记录节奏。系统会继续按后端返回的连续打卡状态展示进度。"
     }
 
     func lastActiveText(_ date: Date?) -> String {

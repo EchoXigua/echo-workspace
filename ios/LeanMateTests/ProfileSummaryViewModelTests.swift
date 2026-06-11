@@ -120,17 +120,35 @@ final class ProfileSummaryViewModelTests: XCTestCase {
 
         XCTAssertNil(viewModel.milestoneToPresent)
     }
+
+    func testDismissMilestoneDismissesRemoteNotice() async throws {
+        let apiClient = ProfileSummaryAPIClientStub()
+        let viewModel = ProfileSummaryViewModel(apiClient: apiClient)
+
+        await viewModel.load()
+        XCTAssertEqual(viewModel.milestoneToPresent?.days, 7)
+
+        viewModel.dismissMilestone()
+        try await Task.sleep(nanoseconds: 10_000_000)
+        let dismissCallCount = await apiClient.dismissRetentionNoticeCallCount
+
+        XCTAssertEqual(dismissCallCount, 1)
+    }
 }
 
-private actor ProfileSummaryAPIClientStub: APIClient {
+private actor ProfileSummaryAPIClientStub: RetentionNoticeAPIClient {
     private let currentUserResult: Result<CurrentUser, AppError>
     private let profileResult: Result<ProfilePayload, AppError>
     private let streakResult: Result<Streak, AppError>
+    private let retentionNoticesResult: Result<[RetentionNotice], AppError>
     private let delayNanoseconds: UInt64
+    private var dismissedRetentionNoticeIDs: Set<UUID> = []
 
     private(set) var currentUserCallCount = 0
     private(set) var profileCallCount = 0
     private(set) var streakCallCount = 0
+    private(set) var retentionNoticesCallCount = 0
+    private(set) var dismissRetentionNoticeCallCount = 0
 
     init(
         currentUserResult: Result<CurrentUser, AppError> = .success(MockData.currentUser),
@@ -138,11 +156,13 @@ private actor ProfileSummaryAPIClientStub: APIClient {
             ProfilePayload(profileCompleted: true, profile: MockData.profile)
         ),
         streakResult: Result<Streak, AppError> = .success(MockData.streak),
+        retentionNoticesResult: Result<[RetentionNotice], AppError> = .success([MockData.retentionNotice]),
         delayNanoseconds: UInt64 = 0
     ) {
         self.currentUserResult = currentUserResult
         self.profileResult = profileResult
         self.streakResult = streakResult
+        self.retentionNoticesResult = retentionNoticesResult
         self.delayNanoseconds = delayNanoseconds
     }
 
@@ -248,6 +268,22 @@ private actor ProfileSummaryAPIClientStub: APIClient {
         case .failure(let error):
             throw error
         }
+    }
+
+    func retentionNotices() async throws -> [RetentionNotice] {
+        retentionNoticesCallCount += 1
+        try await waitIfNeeded()
+        switch retentionNoticesResult {
+        case .success(let notices):
+            return notices.filter { !dismissedRetentionNoticeIDs.contains($0.id) }
+        case .failure(let error):
+            throw error
+        }
+    }
+
+    func dismissRetentionNotice(id: UUID) async throws {
+        dismissRetentionNoticeCallCount += 1
+        dismissedRetentionNoticeIDs.insert(id)
     }
 
     private func waitIfNeeded() async throws {

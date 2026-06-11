@@ -5,7 +5,7 @@ enum AppError: Error, Sendable {
     case validation(message: String)
     case forbidden
     case notFound
-    case conflict
+    case conflict(message: String)
     case networkUnavailable
     case aiServiceUnavailable
     case server(message: String)
@@ -32,8 +32,8 @@ extension AppError: LocalizedError {
             "没有权限执行该操作"
         case .notFound:
             "内容不存在"
-        case .conflict:
-            "当前状态暂时不能操作"
+        case .conflict(let message):
+            message
         case .networkUnavailable:
             "网络不可用，请稍后重试"
         case .aiServiceUnavailable:

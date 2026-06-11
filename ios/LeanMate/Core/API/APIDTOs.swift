@@ -294,3 +294,14 @@ struct StreakMilestone: Codable, Identifiable, Sendable {
     let achieved: Bool
     let achievedAt: Date?
 }
+
+struct RetentionNotice: Codable, Identifiable, Sendable {
+    let id: UUID
+    let type: String
+    let title: String
+    let message: String?
+    let currentValue: Int
+    let previousValue: Int?
+    let nextValue: Int?
+    let triggeredAt: Date
+}

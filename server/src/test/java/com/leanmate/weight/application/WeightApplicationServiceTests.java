@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import com.leanmate.common.error.ErrorCode;
 import com.leanmate.common.exception.BusinessException;
+import com.leanmate.retention.application.RetentionApplicationService;
 import com.leanmate.stats.application.DailyNutritionSnapshotApplicationService;
 import com.leanmate.stats.dto.DailyNutritionSnapshotResponse;
 import com.leanmate.user.application.CurrentUserApplicationService;
@@ -43,6 +44,7 @@ class WeightApplicationServiceTests {
     private WeightGoalRepository weightGoalRepository;
     private WeightEntryRepository weightEntryRepository;
     private DailyNutritionSnapshotApplicationService dailyNutritionSnapshotApplicationService;
+    private RetentionApplicationService retentionApplicationService;
     private WeightApplicationService weightApplicationService;
 
     @BeforeEach
@@ -52,12 +54,14 @@ class WeightApplicationServiceTests {
         weightGoalRepository = mock(WeightGoalRepository.class);
         weightEntryRepository = mock(WeightEntryRepository.class);
         dailyNutritionSnapshotApplicationService = mock(DailyNutritionSnapshotApplicationService.class);
+        retentionApplicationService = mock(RetentionApplicationService.class);
         weightApplicationService = new WeightApplicationService(
                 currentUserApplicationService,
                 userProfileRepository,
                 weightGoalRepository,
                 weightEntryRepository,
                 dailyNutritionSnapshotApplicationService,
+                retentionApplicationService,
                 Clock.fixed(Instant.parse("2026-06-07T00:00:00Z"), ZoneOffset.UTC));
 
         when(currentUserApplicationService.requireActiveUser(USER_ID)).thenReturn(new UserEntity());
@@ -99,6 +103,7 @@ class WeightApplicationServiceTests {
         assertThat(existingEntry.getNote()).isEqualTo("晨起空腹");
         assertThat(response.today().weightKg()).isEqualByComparingTo("78.35");
         verify(weightEntryRepository).save(existingEntry);
+        verify(retentionApplicationService).getStreak(USER_ID);
     }
 
     @Test
@@ -115,6 +120,7 @@ class WeightApplicationServiceTests {
                 .extracting("errorCode")
                 .isEqualTo(ErrorCode.BAD_REQUEST);
         verifyNoInteractions(dailyNutritionSnapshotApplicationService);
+        verifyNoInteractions(retentionApplicationService);
     }
 
     @Test
