@@ -31,7 +31,8 @@ private extension AppRootView {
                 viewModel: OnboardingViewModel(
                     apiClient: environment.apiClient,
                     tokenStore: environment.tokenStore,
-                    localStore: environment.localStore
+                    localStore: environment.localStore,
+                    appleSignInAuthorizer: environment.appleSignInAuthorizer
                 ),
                 onProfileRequired: router.showProfileSetup,
                 onCompleted: router.showHome,

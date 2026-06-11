@@ -6,12 +6,14 @@ enum PreviewEnvironment {
     static let empty = AppEnvironment(
         apiClient: MockAPIClient(scenario: .empty),
         tokenStore: InMemoryTokenStore(),
-        localStore: InMemoryLocalStore()
+        localStore: InMemoryLocalStore(),
+        appleSignInAuthorizer: MockAppleSignInAuthorizer()
     )
 
     static let error = AppEnvironment(
         apiClient: MockAPIClient(scenario: .error(.networkUnavailable)),
         tokenStore: InMemoryTokenStore(),
-        localStore: InMemoryLocalStore()
+        localStore: InMemoryLocalStore(),
+        appleSignInAuthorizer: MockAppleSignInAuthorizer()
     )
 }

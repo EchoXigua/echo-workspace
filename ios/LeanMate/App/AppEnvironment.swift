@@ -4,31 +4,43 @@ struct AppEnvironment {
     let apiClient: any APIClient
     let tokenStore: any TokenStore
     let localStore: any LocalStore
+    let appleSignInAuthorizer: any AppleSignInAuthorizing
 
     static let mock = AppEnvironment(
         apiClient: MockAPIClient(),
         tokenStore: InMemoryTokenStore(),
-        localStore: InMemoryLocalStore()
+        localStore: InMemoryLocalStore(),
+        appleSignInAuthorizer: MockAppleSignInAuthorizer()
     )
 
-    static func live(baseURL: URL) -> AppEnvironment {
+    static func live(
+        baseURL: URL,
+        appleSignInAuthorizer: any AppleSignInAuthorizing = AppleSignInService()
+    ) -> AppEnvironment {
         let tokenStore = KeychainTokenStore(service: "app.leanmate.ios")
         return AppEnvironment(
             apiClient: LiveAPIClient(baseURL: baseURL, tokenStore: tokenStore),
             tokenStore: tokenStore,
-            localStore: FileLocalStore()
+            localStore: FileLocalStore(),
+            appleSignInAuthorizer: appleSignInAuthorizer
         )
     }
 
     static func configured(processInfo: ProcessInfo = .processInfo) -> AppEnvironment {
+        let appleSignInAuthorizer = configuredAppleSignInAuthorizer(processInfo: processInfo)
+
         if let baseURL = liveBaseURL(processInfo: processInfo) {
-            return live(baseURL: baseURL)
+            return live(
+                baseURL: baseURL,
+                appleSignInAuthorizer: appleSignInAuthorizer
+            )
         }
 
         return AppEnvironment(
             apiClient: MockAPIClient(scenario: .profileIncomplete),
             tokenStore: InMemoryTokenStore(),
-            localStore: FileLocalStore()
+            localStore: FileLocalStore(),
+            appleSignInAuthorizer: appleSignInAuthorizer
         )
     }
 }
@@ -52,6 +64,16 @@ private extension AppEnvironment {
         }
 
         return nil
+    }
+
+    static func configuredAppleSignInAuthorizer(processInfo: ProcessInfo) -> any AppleSignInAuthorizing {
+        let environment = processInfo.environment
+        if environment["LEANMATE_MOCK_APPLE_SIGN_IN"] == "1" ||
+            processInfo.arguments.contains("-LeanMateMockAppleSignIn") {
+            return MockAppleSignInAuthorizer()
+        }
+
+        return AppleSignInService()
     }
 }
 

@@ -3,6 +3,59 @@ import XCTest
 
 @MainActor
 final class FirstBatchViewModelTests: XCTestCase {
+    func testAppleSignInRequiresAgreementBeforeAuthorization() async throws {
+        let authorizer = AppleSignInAuthorizerSpy()
+        let viewModel = OnboardingViewModel(
+            apiClient: MockAPIClient(delayNanoseconds: 0),
+            tokenStore: InMemoryTokenStore(),
+            localStore: InMemoryLocalStore(),
+            appleSignInAuthorizer: authorizer
+        )
+
+        let destination = await viewModel.signInWithApple()
+
+        XCTAssertNil(destination)
+        XCTAssertEqual(authorizer.signInCallCount, 0)
+        XCTAssertEqual(viewModel.agreementMessage, "请先阅读并同意用户协议和隐私政策")
+    }
+
+    func testAppleSignInRoutesToHomeWhenProfileIsCompleted() async throws {
+        let authorizer = AppleSignInAuthorizerSpy()
+        let viewModel = OnboardingViewModel(
+            apiClient: MockAPIClient(delayNanoseconds: 0),
+            tokenStore: InMemoryTokenStore(),
+            localStore: InMemoryLocalStore(),
+            appleSignInAuthorizer: authorizer
+        )
+
+        viewModel.toggleAgreement()
+        let destination = await viewModel.signInWithApple()
+
+        XCTAssertEqual(destination, .home)
+        XCTAssertEqual(authorizer.signInCallCount, 1)
+    }
+
+    func testAppleSignInCancellationKeepsAgreementAndShowsRetryState() async throws {
+        let authorizer = AppleSignInAuthorizerSpy(result: .failure(AppleSignInError.cancelled))
+        let viewModel = OnboardingViewModel(
+            apiClient: MockAPIClient(delayNanoseconds: 0),
+            tokenStore: InMemoryTokenStore(),
+            localStore: InMemoryLocalStore(),
+            appleSignInAuthorizer: authorizer
+        )
+
+        viewModel.toggleAgreement()
+        let destination = await viewModel.signInWithApple()
+
+        XCTAssertNil(destination)
+        XCTAssertTrue(viewModel.hasAcceptedAgreement)
+        if case .loginFailed(let message) = viewModel.state {
+            XCTAssertEqual(message, "Apple 登录未完成，请重试或先随便看看。")
+        } else {
+            XCTFail("Expected loginFailed state")
+        }
+    }
+
     func testStartGuestSessionPersistsLocalGuestState() async throws {
         let tokenStore = InMemoryTokenStore()
         let localStore = InMemoryLocalStore()
@@ -166,6 +219,33 @@ private extension FirstBatchViewModelTests {
         viewModel.currentWeightText = "55.8"
         viewModel.targetWeightText = "52"
         viewModel.activityLevel = .light
+    }
+}
+
+private final class AppleSignInAuthorizerSpy: AppleSignInAuthorizing {
+    private let result: Result<AppleSignInCredential, Error>
+    private(set) var signInCallCount = 0
+
+    init(
+        result: Result<AppleSignInCredential, Error> = .success(
+            AppleSignInCredential(
+                identityToken: "spy-identity-token",
+                authorizationCode: "spy-authorization-code"
+            )
+        )
+    ) {
+        self.result = result
+    }
+
+    @MainActor
+    func signIn() async throws -> AppleSignInCredential {
+        signInCallCount += 1
+        switch result {
+        case .success(let credential):
+            return credential
+        case .failure(let error):
+            throw error
+        }
     }
 }
 

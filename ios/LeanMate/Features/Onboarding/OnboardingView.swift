@@ -27,22 +27,37 @@ struct OnboardingView: View {
 
                 Spacer(minLength: 0)
 
-                VStack(spacing: LMSpacing.regular) {
-                    todayPreviewCard
-
-                    if case .loginFailed(let message) = viewModel.state {
-                        LMStateView(
-                            kind: .error,
-                            title: "登录失败",
-                            message: message
-                        )
-                    }
-                }
+                todayPreviewCard
 
                 Spacer(minLength: 0)
 
-                actionsStack
-                    .padding(.bottom, bottomPadding(for: geometry.size.height))
+                VStack(spacing: 10) {
+                    if let failureMessage {
+                        loginFailureBanner(message: failureMessage)
+                    } else {
+                        syncBenefitRow
+                    }
+
+                    appleSignInButton
+                    visitorButton
+                    agreementRow
+
+                    if let agreementMessage = viewModel.agreementMessage {
+                        Text(agreementMessage)
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(LMColors.danger)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+                .padding(12)
+                .background(LMColors.card)
+                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(LMColors.border, lineWidth: 1)
+                }
+                .shadow(color: Color(hex: 0x143B23, alpha: 0.06), radius: 20, x: 0, y: 5)
+                .padding(.bottom, bottomPadding(for: geometry.size.height))
             }
             .padding(.horizontal, 28)
             .frame(width: geometry.size.width, height: geometry.size.height, alignment: .top)
@@ -53,7 +68,7 @@ struct OnboardingView: View {
 
 private extension OnboardingView {
     var brandStack: some View {
-        VStack(alignment: .leading, spacing: 18) {
+        VStack(alignment: .center, spacing: 18) {
             ZStack {
                 RoundedRectangle(cornerRadius: 24, style: .continuous)
                     .fill(LMColors.primary)
@@ -63,9 +78,8 @@ private extension OnboardingView {
                     .font(.system(size: 30, weight: .semibold))
                     .foregroundStyle(.white)
             }
-            .frame(maxWidth: .infinity, alignment: .center)
 
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .center, spacing: 8) {
                 Text("LeanMate")
                     .font(.system(size: 24, weight: .semibold))
                     .foregroundStyle(LMColors.textPrimary)
@@ -74,41 +88,9 @@ private extension OnboardingView {
                     .font(.system(size: 13))
                     .foregroundStyle(LMColors.textSecondary)
             }
+            .frame(maxWidth: .infinity)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    var actionsStack: some View {
-        VStack(spacing: 12) {
-            LMButton(
-                title: "开始记录",
-                isLoading: viewModel.isLoggingIn
-            ) {
-                Task {
-                    await handleLogin()
-                }
-            }
-
-            Button {
-                Task {
-                    await handleVisitorPreview()
-                }
-            } label: {
-                Text("随便看看")
-                    .font(LMTypography.bodyStrong)
-                    .foregroundStyle(LMColors.primaryDeep)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 48)
-                    .background(LMColors.card)
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(LMColors.primaryBorder, lineWidth: 1)
-                    }
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("随便看看")
-        }
+        .frame(maxWidth: .infinity)
     }
 
     var todayPreviewCard: some View {
@@ -128,16 +110,181 @@ private extension OnboardingView {
         }
     }
 
+    var syncBenefitRow: some View {
+        HStack(spacing: 10) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(LMColors.primarySoft)
+                    .frame(width: 34, height: 34)
+
+                Image(systemName: "sparkles")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(LMColors.primary)
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("登录后自动保留记录")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(LMColors.textPrimary)
+
+                Text("饮食、体重和日报会同步到账号")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(LMColors.textSecondary)
+            }
+
+            Spacer(minLength: 0)
+        }
+        .frame(height: 42)
+    }
+
+    var appleSignInButton: some View {
+        Button {
+            Task {
+                await handleAppleSignIn()
+            }
+        } label: {
+            HStack(spacing: 8) {
+                if viewModel.isLoggingIn {
+                    ProgressView()
+                        .tint(LMColors.textBody)
+                } else {
+                    Image(systemName: "apple.logo")
+                        .font(.system(size: 18, weight: .semibold))
+                }
+
+                Text(appleButtonTitle)
+                    .font(.system(size: 15, weight: .bold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
+            }
+            .foregroundStyle(LMColors.textBody)
+            .frame(maxWidth: .infinity)
+            .frame(height: 54)
+            .background(LMColors.card)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(LMColors.textBody, lineWidth: 1.2)
+            }
+        }
+        .buttonStyle(.plain)
+        .disabled(viewModel.isLoggingIn)
+        .accessibilityLabel(appleButtonTitle)
+    }
+
+    var visitorButton: some View {
+        Button {
+            Task {
+                await handleVisitorPreview()
+            }
+        } label: {
+            Text("随便看看")
+                .font(.system(size: 13, weight: .bold))
+                .foregroundStyle(LMColors.primaryDeep)
+                .frame(maxWidth: .infinity)
+                .frame(height: 34)
+        }
+        .buttonStyle(.plain)
+        .disabled(viewModel.isLoggingIn)
+        .accessibilityLabel("随便看看")
+    }
+
+    var agreementRow: some View {
+        HStack(alignment: .center, spacing: 8) {
+            agreementCheckboxButton
+
+            HStack(spacing: 0) {
+                Text("我已阅读并同意")
+                    .foregroundStyle(LMColors.textSecondary)
+
+                NavigationLink {
+                    OnboardingLegalDocumentView(document: .userAgreement)
+                } label: {
+                    Text("《用户协议》")
+                        .foregroundStyle(LMColors.primaryDeep)
+                }
+
+                Text("和")
+                    .foregroundStyle(LMColors.textSecondary)
+
+                NavigationLink {
+                    OnboardingLegalDocumentView(document: .privacyPolicy)
+                } label: {
+                    Text("《隐私政策》")
+                        .foregroundStyle(LMColors.primaryDeep)
+                }
+            }
+            .font(.system(size: 10.5, weight: .semibold))
+            .lineLimit(2)
+            .minimumScaleFactor(0.9)
+            .buttonStyle(.plain)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(minHeight: 34)
+    }
+
+    var agreementCheckboxButton: some View {
+        Button {
+            viewModel.toggleAgreement()
+        } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                    .fill(viewModel.hasAcceptedAgreement ? LMColors.primary : LMColors.card)
+                    .frame(width: 18, height: 18)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 6, style: .continuous)
+                            .stroke(
+                                viewModel.hasAcceptedAgreement ? LMColors.primary : LMColors.primaryBorder,
+                                lineWidth: 1.2
+                            )
+                    }
+
+                if viewModel.hasAcceptedAgreement {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(.white)
+                }
+            }
+            .frame(width: 28, height: 34, alignment: .leading)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("同意用户协议和隐私政策")
+        .accessibilityValue(viewModel.hasAcceptedAgreement ? "已同意" : "未同意")
+    }
+
+    func loginFailureBanner(message: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: "exclamationmark.circle.fill")
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(LMColors.danger)
+
+            Text(message)
+                .font(.system(size: 12, weight: .bold))
+                .foregroundStyle(Color(hex: 0x9A3A2E))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(12)
+        .frame(minHeight: 56)
+        .background(LMColors.dangerSoft)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(Color(hex: 0xF0B5A8), lineWidth: 1)
+        }
+    }
+
     func previewMetric(label: String, value: String, unit: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(label)
                 .font(.system(size: 11, weight: .medium))
-                .foregroundStyle(LMColors.textSecondary)
+                .foregroundStyle(Color(hex: 0x7A746A))
 
             HStack(alignment: .firstTextBaseline, spacing: 3) {
                 Text(value)
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(LMColors.textBody)
+                    .foregroundStyle(Color(hex: 0x202820))
 
                 Text(unit)
                     .font(LMTypography.badge)
@@ -152,16 +299,28 @@ private extension OnboardingView {
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
+    var failureMessage: String? {
+        if case .loginFailed(let message) = viewModel.state {
+            return message
+        }
+
+        return nil
+    }
+
+    var appleButtonTitle: String {
+        failureMessage == nil ? "通过 Apple 继续" : "重新通过 Apple 继续"
+    }
+
     func topPadding(for height: CGFloat) -> CGFloat {
         min(max(height * 0.08, 54), 78)
     }
 
     func bottomPadding(for height: CGFloat) -> CGFloat {
-        min(max(height * 0.04, 30), 42)
+        min(max(height * 0.036, 28), 34)
     }
 
-    func handleLogin() async {
-        guard let destination = await viewModel.mockLoginAndSyncGuestData() else {
+    func handleAppleSignIn() async {
+        guard let destination = await viewModel.signInWithApple() else {
             return
         }
 
@@ -194,7 +353,8 @@ struct OnboardingView_Previews: PreviewProvider {
             viewModel: OnboardingViewModel(
                 apiClient: MockAPIClient(scenario: .profileIncomplete, delayNanoseconds: 0),
                 tokenStore: InMemoryTokenStore(),
-                localStore: InMemoryLocalStore()
+                localStore: InMemoryLocalStore(),
+                appleSignInAuthorizer: MockAppleSignInAuthorizer()
             ),
             onProfileRequired: {},
             onCompleted: {}

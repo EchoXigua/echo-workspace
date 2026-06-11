@@ -17,6 +17,7 @@
 		000000000000000000001008 /* APIEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002008 /* APIEnvelope.swift */; };
 		000000000000000000001009 /* LiveAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002009 /* LiveAPIClient.swift */; };
 		000000000000000000001010 /* TokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002010 /* TokenStore.swift */; };
+		00000000000000000000104C /* AppleSignInService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000204C /* AppleSignInService.swift */; };
 		000000000000000000001011 /* KeychainTokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002011 /* KeychainTokenStore.swift */; };
 		000000000000000000001012 /* LocalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002012 /* LocalStore.swift */; };
 		000000000000000000001013 /* FileLocalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002013 /* FileLocalStore.swift */; };
@@ -42,6 +43,7 @@
 		000000000000000000001031 /* InfrastructurePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002031 /* InfrastructurePreviewView.swift */; };
 		000000000000000000001032 /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002032 /* OnboardingViewModel.swift */; };
 		000000000000000000001033 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002033 /* OnboardingView.swift */; };
+		00000000000000000000104E /* OnboardingLegalDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000204E /* OnboardingLegalDocumentView.swift */; };
 		000000000000000000001034 /* ProfileSetupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002034 /* ProfileSetupViewModel.swift */; };
 		000000000000000000001035 /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002035 /* ProfileSetupView.swift */; };
 		000000000000000000001037 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000002037 /* HomeViewModel.swift */; };
@@ -91,6 +93,8 @@
 		000000000000000000002008 /* APIEnvelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIEnvelope.swift; sourceTree = "<group>"; };
 		000000000000000000002009 /* LiveAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveAPIClient.swift; sourceTree = "<group>"; };
 		000000000000000000002010 /* TokenStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStore.swift; sourceTree = "<group>"; };
+		00000000000000000000204C /* AppleSignInService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInService.swift; sourceTree = "<group>"; };
+		00000000000000000000204D /* LeanMate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LeanMate.entitlements; sourceTree = "<group>"; };
 		000000000000000000002011 /* KeychainTokenStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainTokenStore.swift; sourceTree = "<group>"; };
 		000000000000000000002012 /* LocalStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStore.swift; sourceTree = "<group>"; };
 		000000000000000000002013 /* FileLocalStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileLocalStore.swift; sourceTree = "<group>"; };
@@ -116,6 +120,7 @@
 		000000000000000000002031 /* InfrastructurePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfrastructurePreviewView.swift; sourceTree = "<group>"; };
 		000000000000000000002032 /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
 		000000000000000000002033 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		00000000000000000000204E /* OnboardingLegalDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingLegalDocumentView.swift; sourceTree = "<group>"; };
 		000000000000000000002034 /* ProfileSetupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSetupViewModel.swift; sourceTree = "<group>"; };
 		000000000000000000002035 /* ProfileSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSetupView.swift; sourceTree = "<group>"; };
 		000000000000000000002037 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
@@ -185,6 +190,7 @@
 		000000000000000000003003 /* LeanMate */ = {
 			isa = PBXGroup;
 			children = (
+				00000000000000000000204D /* LeanMate.entitlements */,
 				000000000000000000003004 /* App */,
 				000000000000000000003005 /* Core */,
 				000000000000000000003013 /* Components */,
@@ -236,6 +242,7 @@
 			isa = PBXGroup;
 			children = (
 				000000000000000000002010 /* TokenStore.swift */,
+				00000000000000000000204C /* AppleSignInService.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -321,6 +328,7 @@
 			children = (
 				000000000000000000002032 /* OnboardingViewModel.swift */,
 				000000000000000000002033 /* OnboardingView.swift */,
+				00000000000000000000204E /* OnboardingLegalDocumentView.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -459,6 +467,11 @@
 				TargetAttributes = {
 					000000000000000000005001 = {
 						CreatedOnToolsVersion = 26.5;
+						SystemCapabilities = {
+							com.apple.SignInWithApple = {
+								enabled = 1;
+							};
+						};
 					};
 					00000000000000000000F001 = {
 						CreatedOnToolsVersion = 26.5;
@@ -517,6 +530,7 @@
 				000000000000000000001008 /* APIEnvelope.swift in Sources */,
 				000000000000000000001009 /* LiveAPIClient.swift in Sources */,
 				000000000000000000001010 /* TokenStore.swift in Sources */,
+				00000000000000000000104C /* AppleSignInService.swift in Sources */,
 				000000000000000000001011 /* KeychainTokenStore.swift in Sources */,
 				000000000000000000001012 /* LocalStore.swift in Sources */,
 				000000000000000000001013 /* FileLocalStore.swift in Sources */,
@@ -542,6 +556,7 @@
 				000000000000000000001031 /* InfrastructurePreviewView.swift in Sources */,
 				000000000000000000001032 /* OnboardingViewModel.swift in Sources */,
 				000000000000000000001033 /* OnboardingView.swift in Sources */,
+				00000000000000000000104E /* OnboardingLegalDocumentView.swift in Sources */,
 				000000000000000000001034 /* ProfileSetupViewModel.swift in Sources */,
 				000000000000000000001035 /* ProfileSetupView.swift in Sources */,
 				000000000000000000001037 /* HomeViewModel.swift in Sources */,
@@ -704,6 +719,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_ENTITLEMENTS = LeanMate/LeanMate.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = "";
@@ -732,6 +748,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_ENTITLEMENTS = LeanMate/LeanMate.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = "";
