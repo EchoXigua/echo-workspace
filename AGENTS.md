@@ -2,6 +2,13 @@
 
 本文件是项目内 AI 协作规范的主入口。Claude、Codex、Cursor 等工具都应以 `AGENTS.md` 为单一事实源。
 
+## AI 上下文启动规则
+
+- 会话工作目录可能是项目外层目录；开始任何 LeanMate 代码、文档、测试或 Git 操作前，先用 `git rev-parse --show-toplevel` 定位真实 Git 根目录。
+- 定位 Git 根目录后，必须先读取根目录 `AGENTS.md`，再读取当前任务涉及子目录的 `AGENTS.md`，例如 iOS 任务读取 `ios/AGENTS.md`。
+- 项目内 `.codex/skills/` 不会天然进入上下文；当本文件要求读取项目内 skill 时，必须显式读取对应 `SKILL.md` 后再执行任务。
+- 当用户要求提交代码、整理提交、检查 commit message 或提到提交规范时，必须在提交前读取 `.codex/skills/leanmate-git-commit/SKILL.md`，并按该 skill 完成 staged diff 检查、测试说明和中文 Conventional Commits 提交。
+
 ## 项目概览
 
 LeanMate（瘦搭）是一款专注减脂场景的 AI 陪伴式 App。V1.1 从一开始接入后端，先做 iOS，后续做 Android，产品做大后再考虑 Web 端。
