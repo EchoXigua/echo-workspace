@@ -66,12 +66,17 @@
 
 | 变量 | 必需 | 示例 | 说明 |
 |------|------|------|------|
-| `AI_PROVIDER` | 是 | `openai` | 模型供应商 |
-| `AI_API_KEY` | 是 | `sk-...` | AI API Key |
-| `AI_BASE_URL` | 否 | `https://api.openai.com/v1` | 自定义 base URL |
+| `AI_PROVIDER` | 否 | `placeholder` | 兼容旧配置的默认 Provider，不作为长期全局模型选择 |
+| `AI_API_KEY` | 否 | `sk-...` | 兼容旧配置的默认 AI API Key |
+| `AI_BASE_URL` | 否 | `https://api.example.com` | 兼容旧配置的默认 base URL |
+| `AI_DIET_PHOTO_PROVIDER` | 是 | `placeholder` | 饮食图片识别 Provider，DeepSeek 当前不用于图片识别 |
+| `AI_DIET_TEXT_PROVIDER` | 是 | `deepseek` | 饮食文本解析 Provider |
+| `AI_DAILY_REPORT_PROVIDER` | 是 | `deepseek` | AI 日报 Provider |
+| `DEEPSEEK_API_KEY` | 文本/日报启用时必填 | `sk-...` | DeepSeek API Key |
+| `DEEPSEEK_BASE_URL` | 否 | `https://api.deepseek.com` | DeepSeek API base URL |
 | `AI_DIET_PHOTO_MODEL` | 是 | `change-me` | 饮食图片识别模型，待确认 |
-| `AI_DIET_TEXT_MODEL` | 是 | `change-me` | 饮食文本解析模型，待确认 |
-| `AI_DAILY_REPORT_MODEL` | 是 | `change-me` | AI 日报模型，待确认 |
+| `AI_DIET_TEXT_MODEL` | 是 | `deepseek-v4-flash` | 饮食文本解析模型 |
+| `AI_DAILY_REPORT_MODEL` | 是 | `deepseek-v4-flash` | AI 日报模型 |
 | `AI_REQUEST_TIMEOUT_SECONDS` | 是 | `30` | AI 请求超时 |
 | `AI_DAILY_REPORT_RETRY_LIMIT` | 是 | `1` | 日报生成重试次数 |
 

@@ -62,7 +62,7 @@ public class PlaceholderDailyReportClient implements DailyReportClient {
             String suggestion
     ) {
         return Map.of(
-                "provider", properties.provider(),
+                "provider", properties.dailyReportProvider(),
                 "model", properties.dailyReportModel(),
                 "mode", "placeholder",
                 "reportDate", input.reportDate().toString(),

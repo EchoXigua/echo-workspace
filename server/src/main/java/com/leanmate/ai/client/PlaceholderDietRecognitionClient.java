@@ -37,7 +37,7 @@ public class PlaceholderDietRecognitionClient implements DietRecognitionClient {
                 properties.dietPhotoModel(),
                 List.of(item),
                 PLACEHOLDER_NOTE,
-                rawOutput("photo", properties.dietPhotoModel(), input.objectKey()));
+                rawOutput("photo", properties.dietPhotoProvider(), properties.dietPhotoModel(), input.objectKey()));
     }
 
     @Override
@@ -55,12 +55,12 @@ public class PlaceholderDietRecognitionClient implements DietRecognitionClient {
                 properties.dietTextModel(),
                 List.of(item),
                 PLACEHOLDER_NOTE,
-                rawOutput("text", properties.dietTextModel(), "text"));
+                rawOutput("text", properties.dietTextProvider(), properties.dietTextModel(), "text"));
     }
 
-    private Map<String, Object> rawOutput(String sourceType, String modelName, String inputRef) {
+    private Map<String, Object> rawOutput(String sourceType, String provider, String modelName, String inputRef) {
         return Map.of(
-                "provider", properties.provider(),
+                "provider", provider,
                 "model", modelName,
                 "sourceType", sourceType,
                 "inputRef", inputRef,

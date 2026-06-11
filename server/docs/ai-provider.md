@@ -4,6 +4,12 @@
 
 AI Provider 是后端对模型服务的统一适配层。客户端不直接调用模型，不持有 AI API Key。
 
+模型选择按能力配置，不使用单一全局 Provider。比如：
+
+- 拍照饮食识别可以接入多模态模型。
+- 文本饮食解析可以接入 DeepSeek。
+- AI 日报可以接入 DeepSeek。
+
 V1.1 需要支持：
 
 - 拍照饮食识别。
@@ -35,7 +41,7 @@ com.leanmate.ai
 - 不做 AI 聊天。
 - 不做长期记忆。
 - 不做向量数据库。
-- 不做多模型自动路由。
+- 不做多模型自动路由；只支持按能力显式配置 Provider。
 - 不把 AI 输出直接当作业务事实。
 
 ## 数据原则
@@ -198,6 +204,11 @@ V1.1 先做基础控制：
 AI_PROVIDER=
 AI_API_KEY=
 AI_BASE_URL=
+AI_DIET_PHOTO_PROVIDER=
+AI_DIET_TEXT_PROVIDER=
+AI_DAILY_REPORT_PROVIDER=
+DEEPSEEK_API_KEY=
+DEEPSEEK_BASE_URL=
 AI_DIET_PHOTO_MODEL=
 AI_DIET_TEXT_MODEL=
 AI_DAILY_REPORT_MODEL=
@@ -205,7 +216,7 @@ AI_REQUEST_TIMEOUT_SECONDS=
 AI_DAILY_REPORT_RETRY_LIMIT=
 ```
 
-具体模型名称等到 provider 确认后再写入环境配置。
+当前文本饮食解析和 AI 日报可配置为 DeepSeek，示例模型为 `deepseek-v4-flash`；拍照识别不使用 DeepSeek 主文本模型。
 
 ## 测试要点
 
