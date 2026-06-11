@@ -4686,7 +4686,13 @@
           "type": "ref",
           "ref": "Nt6Zm",
           "name": "Status Bar",
-          "width": "fill_container"
+          "width": "fill_container",
+          "x": 0,
+          "y": 0.3119829422564268,
+          "rotation": 0.04446593946700668,
+          "flipX": false,
+          "flipY": false,
+          "height": 62
         },
         {
           "type": "frame",
