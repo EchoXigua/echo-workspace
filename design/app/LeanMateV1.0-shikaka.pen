@@ -2272,10 +2272,10 @@
                         {
                           "type": "icon",
                           "id": "glqgI",
-                          "name": "Icon / 关键问题 Icon",
+                          "name": "Icon / 关键问题",
                           "width": 19,
                           "height": 19,
-                          "icon": "alert-triangle",
+                          "icon": "triangle-alert",
                           "library": "lucide",
                           "fill": "#D48A19"
                         }
@@ -2339,10 +2339,10 @@
                         {
                           "type": "icon",
                           "id": "mY2oa",
-                          "name": "Icon / 改进建议 Icon",
+                          "name": "Icon / 改进建议",
                           "width": 19,
                           "height": 19,
-                          "icon": "check-circle",
+                          "icon": "lightbulb",
                           "library": "lucide",
                           "fill": "#48B878"
                         }
@@ -2401,7 +2401,9 @@
               "strokeWidth": 0
             },
             "QnGsZ": {
-              "fill": "#9AA79D"
+              "fill": "#9AA79D",
+              "icon": "house",
+              "name": "Icon / 首页"
             },
             "TuP5q": {
               "fill": "#9AA79D"
@@ -2412,7 +2414,9 @@
               "strokeWidth": 0
             },
             "w4RUd": {
-              "fill": "#9AA79D"
+              "fill": "#9AA79D",
+              "icon": "plus",
+              "name": "Icon / 记录"
             },
             "h4zuVF": {
               "fill": "#9AA79D"
@@ -2423,7 +2427,9 @@
               "strokeWidth": 1
             },
             "rbbWS": {
-              "fill": "#48B878"
+              "fill": "#48B878",
+              "icon": "sparkles",
+              "name": "Icon / 日报"
             },
             "fBoRM": {
               "fill": "#48B878"
@@ -2434,7 +2440,9 @@
               "strokeWidth": 0
             },
             "d9Fv3": {
-              "fill": "#9AA79D"
+              "fill": "#9AA79D",
+              "icon": "user",
+              "name": "Icon / 我的"
             },
             "E8p9u": {
               "fill": "#9AA79D"
@@ -5050,7 +5058,9 @@
               "strokeWidth": 0
             },
             "QnGsZ": {
-              "fill": "#9AA79D"
+              "fill": "#9AA79D",
+              "icon": "house",
+              "name": "Icon / 首页"
             },
             "TuP5q": {
               "fill": "#9AA79D"
@@ -5061,7 +5071,9 @@
               "strokeWidth": 0
             },
             "w4RUd": {
-              "fill": "#9AA79D"
+              "fill": "#9AA79D",
+              "icon": "plus",
+              "name": "Icon / 记录"
             },
             "h4zuVF": {
               "fill": "#9AA79D"
@@ -5072,7 +5084,9 @@
               "strokeWidth": 1
             },
             "rbbWS": {
-              "fill": "#48B878"
+              "fill": "#48B878",
+              "icon": "sparkles",
+              "name": "Icon / 日报"
             },
             "fBoRM": {
               "fill": "#48B878"
@@ -5083,7 +5097,9 @@
               "strokeWidth": 0
             },
             "d9Fv3": {
-              "fill": "#9AA79D"
+              "fill": "#9AA79D",
+              "icon": "user",
+              "name": "Icon / 我的"
             },
             "E8p9u": {
               "fill": "#9AA79D"
@@ -29539,10 +29555,10 @@
                         {
                           "type": "icon",
                           "id": "nSMh7",
-                          "name": "Icon / 营养结构 Icon",
+                          "name": "Icon / 营养结构",
                           "width": 19,
                           "height": 19,
-                          "icon": "pie-chart",
+                          "icon": "chart-pie",
                           "library": "lucide",
                           "fill": "#48B878"
                         }
@@ -29668,7 +29684,9 @@
               "strokeWidth": 0
             },
             "QnGsZ": {
-              "fill": "#9AA79D"
+              "fill": "#9AA79D",
+              "icon": "house",
+              "name": "Icon / 首页"
             },
             "TuP5q": {
               "fill": "#9AA79D"
@@ -29679,7 +29697,9 @@
               "strokeWidth": 0
             },
             "w4RUd": {
-              "fill": "#9AA79D"
+              "fill": "#9AA79D",
+              "icon": "plus",
+              "name": "Icon / 记录"
             },
             "h4zuVF": {
               "fill": "#9AA79D"
@@ -29690,7 +29710,9 @@
               "strokeWidth": 1
             },
             "rbbWS": {
-              "fill": "#48B878"
+              "fill": "#48B878",
+              "icon": "sparkles",
+              "name": "Icon / 日报"
             },
             "fBoRM": {
               "fill": "#48B878"
@@ -29701,7 +29723,9 @@
               "strokeWidth": 0
             },
             "d9Fv3": {
-              "fill": "#9AA79D"
+              "fill": "#9AA79D",
+              "icon": "user",
+              "name": "Icon / 我的"
             },
             "E8p9u": {
               "fill": "#9AA79D"
