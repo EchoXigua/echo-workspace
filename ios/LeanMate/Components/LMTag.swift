@@ -3,6 +3,7 @@ import SwiftUI
 enum LMTagStyle {
     case primary
     case neutral
+    case warning
     case danger
 }
 
@@ -41,6 +42,8 @@ private extension LMTag {
             LMColors.primaryDeep
         case .neutral:
             LMColors.textSecondary
+        case .warning:
+            Color(hex: 0xD48A19)
         case .danger:
             LMColors.danger
         }
@@ -52,6 +55,8 @@ private extension LMTag {
             LMColors.primarySoft
         case .neutral:
             LMColors.warmMuted
+        case .warning:
+            Color(hex: 0xFFF7E8)
         case .danger:
             LMColors.dangerSoft
         }
@@ -71,6 +76,7 @@ struct LMTag_Previews: PreviewProvider {
         HStack {
             LMTag(title: "今天还能吃 863 千卡")
             LMTag(title: "手动记录", style: .neutral)
+            LMTag(title: "记录不足", style: .warning)
             LMTag(title: "识别失败", style: .danger)
         }
         .padding()

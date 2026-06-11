@@ -80,7 +80,7 @@ struct ProfileDataPlanDetailView: View {
                 }
 
                 VStack(spacing: 0) {
-                    ProfileIconInfoRow(title: "当前体重", value: payload.currentWeight, systemImage: "scalemass")
+                    ProfileIconInfoRow(title: "当前体重", value: payload.currentWeight, systemImage: LMWeightScaleIcon.symbolName)
                     ProfileIconInfoRow(title: "目标体重", value: payload.targetWeight, systemImage: "target")
                     ProfileIconInfoRow(title: "身高", value: payload.height, systemImage: "ruler")
                     ProfileIconInfoRow(title: "年龄与性别", value: ageGenderText, systemImage: "person")
@@ -192,7 +192,7 @@ struct ProfileDataSyncView: View {
 
                 VStack(spacing: 0) {
                     ProfileIconInfoRow(title: "饮食记录", value: syncValue, systemImage: "fork.knife")
-                    ProfileIconInfoRow(title: "体重记录", value: syncValue, systemImage: "scalemass")
+                    ProfileIconInfoRow(title: "体重记录", value: syncValue, systemImage: LMWeightScaleIcon.symbolName)
                     ProfileIconInfoRow(title: "身体档案", value: syncValue, systemImage: "person.text.rectangle")
                 }
             }
@@ -272,7 +272,7 @@ struct ProfileSettingsView: View {
                 rows: [
                     ProfileSettingsRowData(title: "身体档案", subtitle: "年龄、身高、活动水平", systemImage: "person", destination: .profileEdit),
                     ProfileSettingsRowData(title: "目标计划", subtitle: "目标体重、每日热量", systemImage: "target", destination: .dataPlan),
-                    ProfileSettingsRowData(title: "体重记录", subtitle: "记录入口与趋势偏好", systemImage: "scalemass", destination: .weightTrend)
+                    ProfileSettingsRowData(title: "体重记录", subtitle: "记录入口与趋势偏好", systemImage: LMWeightScaleIcon.symbolName, destination: .weightTrend)
                 ]
             )
 
@@ -526,12 +526,7 @@ private struct ProfileSettingsRow: View {
 
     private func rowContent(showsChevron: Bool) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: row.systemImage)
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(LMColors.primary)
-                .frame(width: 34, height: 34)
-                .background(LMColors.primarySoft)
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            icon(systemImage: row.systemImage)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(row.title)
@@ -556,6 +551,23 @@ private struct ProfileSettingsRow: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .frame(height: 54)
         .contentShape(Rectangle())
+    }
+
+    @ViewBuilder
+    private func icon(systemImage: String) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(LMColors.primarySoft)
+                .frame(width: 34, height: 34)
+
+            if systemImage == LMWeightScaleIcon.symbolName {
+                LMWeightScaleIcon(size: 15, color: LMColors.primary)
+            } else {
+                Image(systemName: systemImage)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(LMColors.primary)
+            }
+        }
     }
 }
 
@@ -758,12 +770,7 @@ private struct ProfileIconInfoRow: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            Image(systemName: systemImage)
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(LMColors.primary)
-                .frame(width: 28, height: 28)
-                .background(LMColors.primarySoft)
-                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            icon
 
             Text(title)
                 .font(.system(size: 13, weight: .semibold))
@@ -778,6 +785,22 @@ private struct ProfileIconInfoRow: View {
                 .minimumScaleFactor(0.72)
         }
         .frame(height: 42)
+    }
+
+    private var icon: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(LMColors.primarySoft)
+                .frame(width: 28, height: 28)
+
+            if systemImage == LMWeightScaleIcon.symbolName {
+                LMWeightScaleIcon(size: 13, color: LMColors.primary)
+            } else {
+                Image(systemName: systemImage)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(LMColors.primary)
+            }
+        }
     }
 }
 
