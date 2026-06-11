@@ -3,6 +3,8 @@ package com.leanmate.user.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.leanmate.common.error.ErrorCode;
 import com.leanmate.common.exception.BusinessException;
@@ -22,6 +24,22 @@ class OAuthIdentityVerifierTests {
         assertThat(identity.provider()).isEqualTo(AuthProvider.APPLE);
         assertThat(identity.providerUserId()).isEqualTo("apple-user-1");
         assertThat(identity.email()).isEqualTo("user@example.com");
+    }
+
+    @Test
+    void delegateMockTokenToAppleVerifierOutsideMockEnvironment() {
+        String identityToken = "mock:apple-user-1:user@example.com";
+        VerifiedOAuthIdentity delegatedIdentity = new VerifiedOAuthIdentity(
+                AuthProvider.APPLE,
+                "delegated-apple-user",
+                "delegated@example.com");
+        when(appleIdentityTokenVerifier.verify(identityToken)).thenReturn(delegatedIdentity);
+        OAuthIdentityVerifier verifier = new OAuthIdentityVerifier(appleIdentityTokenVerifier, "prod");
+
+        VerifiedOAuthIdentity identity = verifier.verify(AuthProvider.APPLE, identityToken, null);
+
+        assertThat(identity).isEqualTo(delegatedIdentity);
+        verify(appleIdentityTokenVerifier).verify(identityToken);
     }
 
     @Test

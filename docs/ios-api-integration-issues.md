@@ -497,3 +497,167 @@ Docker daemon 未启动时 `docker compose ps` 返回 `docker.sock` 不存在，
 
 - `server/docker-compose.yml`
 - `server/.env.local.example`
+
+## 2026-06-11
+
+### 接口
+
+`POST /v1/diet/recognitions/text`、`POST /v1/diet/entries`
+
+### 复现步骤
+
+1. 使用 Debug 本地登录进入真实后端登录态。
+2. 进入记录页，选择文本识别。
+3. 通过常用表达追加“一碗米饭、一个鸡蛋、一杯豆浆”。
+4. 进入确认页后不手动修改营养字段，直接保存。
+
+### 实际表现
+
+确认页看起来有重量、热量、蛋白、脂肪、碳水数字，但这些数字实际是输入框 placeholder。直接保存后，数据库 `food_items.calories_kcal/protein_g/fat_g/carbs_g` 为 null，`food_entries.total_calories_kcal=0`，首页午餐统计为 0 kcal。
+
+### 期望表现
+
+AI 识别结果如果没有真实营养估算，不应用 placeholder 伪装成可保存数据。保存前应要求用户补齐热量，或后端 placeholder AI 返回真实估算值；确认页应明确提示估算值。
+
+### 初步判断
+
+iOS 体验问题 + 后端 placeholder AI 能力限制。
+
+### 处理状态
+
+待处理。自测报告见 `docs/qa/ios-v1.1-self-test-2026-06-11.md`。
+
+### 关联代码或提交
+
+- `ios/LeanMate/Features/Diet/DietEntryView.swift`
+- `ios/LeanMate/Features/Diet/DietEntryViewModel.swift`
+- `server/src/main/java/com/leanmate/diet/application/DietRecognitionApplicationService.java`
+
+## 2026-06-11
+
+### 接口
+
+`GET /v1/me`、`GET /v1/profile`、`GET /v1/retention/streak`、`POST /v1/auth/refresh`
+
+### 复现步骤
+
+1. 登录后持续自测超过 access token 1 小时有效期。
+2. 进入“我的”页。
+
+### 实际表现
+
+首次进入“我的”页显示“我的页加载失败 / 发生未知错误”。点击“重试”后加载成功。后端相关接口逐个直连均返回 200。
+
+### 期望表现
+
+access token 过期后，App 应稳定刷新 token 并恢复页面加载；如果刷新失败，应明确提示登录状态失效，而不是未知错误。
+
+### 初步判断
+
+iOS 问题。`ProfileSummaryViewModel` 并发调用多个鉴权接口，token 过期时可能同时触发 refresh，`KeychainTokenStore` 和 refresh token 写入/清理存在竞争。
+
+### 处理状态
+
+待处理。
+
+### 关联代码或提交
+
+- `ios/LeanMate/Core/API/LiveAPIClient.swift`
+- `ios/LeanMate/Core/Security/KeychainTokenStore.swift`
+- `ios/LeanMate/Features/Profile/ProfileSummaryViewModel.swift`
+
+## 2026-06-11
+
+### 接口
+
+`POST /v1/weights`
+
+### 复现步骤
+
+1. 完成档案，档案当前体重为 60 kg。
+2. 首次打开记录页的体重 Sheet。
+
+### 实际表现
+
+体重输入默认值为 55.8 kg，不是用户档案里的当前体重，也不是后端最近体重。
+
+### 期望表现
+
+首次记录默认值应使用 profile 的当前体重；已有体重记录时应使用最近一次体重。
+
+### 初步判断
+
+iOS 问题。
+
+### 处理状态
+
+待处理。
+
+### 关联代码或提交
+
+- `ios/LeanMate/Features/Weight/WeightViewModel.swift`
+- `ios/LeanMate/Features/Diet/DietEntryView.swift`
+
+## 2026-06-11
+
+### 接口
+
+`POST /v1/diet/entries`、`DELETE /v1/diet/entries/{id}`、`GET /v1/home/today`
+
+### 复现步骤
+
+1. 保存文本识别或手动饮食记录。
+2. 查看保存结果页。
+3. 离开结果页后从首页尝试进入饮食详情、编辑或删除。
+
+### 实际表现
+
+保存结果页同时出现“暂无内容”和“记录已保存 / 已更新到首页”。离开结果页后，首页饮食摘要没有明显详情、编辑或删除入口；本次删除回算只能通过真实后端 DELETE 接口验证。
+
+### 期望表现
+
+保存成功页不应出现空态文案。若 V1.1 包含历史编辑/删除，需要提供饮食历史或详情入口；若不包含，需要明确产品范围。
+
+### 初步判断
+
+iOS 问题 / 待确认产品范围。
+
+### 处理状态
+
+待处理。DELETE 接口与首页统计回算已通过真实后端验证。
+
+### 关联代码或提交
+
+- `ios/LeanMate/Features/Diet/DietEntryView.swift`
+- `ios/LeanMate/Features/Home/HomeView.swift`
+- `server/src/main/java/com/leanmate/diet/controller/DietEntryController.java`
+
+## 2026-06-11
+
+### 接口
+
+`GET /actuator/health`
+
+### 复现步骤
+
+1. 本地后端启动后请求 `GET /actuator/health`。
+
+### 实际表现
+
+返回 `40101 未登录或登录已过期`。
+
+### 期望表现
+
+本地联调和部署探活通常需要匿名可访问的 health endpoint，至少 local 环境应可用于快速判断后端是否启动。
+
+### 初步判断
+
+后端配置问题 / 运维联调问题。
+
+### 处理状态
+
+待处理。
+
+### 关联代码或提交
+
+- `server/src/main/java/com/leanmate/common/security/SecurityConfig.java`

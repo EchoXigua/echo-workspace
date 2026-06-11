@@ -36,7 +36,8 @@ private extension AppRootView {
                 ),
                 onProfileRequired: router.showProfileSetup,
                 onCompleted: router.showHome,
-                onVisitorPreview: router.showVisitorHome
+                onVisitorPreview: router.showVisitorHome,
+                isLocalDebugLoginEnabled: environment.isLocalDebugLoginEnabled
             )
         case .profileSetup:
             ProfileSetupView(

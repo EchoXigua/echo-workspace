@@ -6,17 +6,20 @@ struct OnboardingView: View {
     let onProfileRequired: () -> Void
     let onCompleted: () -> Void
     let onVisitorPreview: () -> Void
+    let isLocalDebugLoginEnabled: Bool
 
     init(
         viewModel: OnboardingViewModel,
         onProfileRequired: @escaping () -> Void,
         onCompleted: @escaping () -> Void,
-        onVisitorPreview: @escaping () -> Void = {}
+        onVisitorPreview: @escaping () -> Void = {},
+        isLocalDebugLoginEnabled: Bool = false
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.onProfileRequired = onProfileRequired
         self.onCompleted = onCompleted
         self.onVisitorPreview = onVisitorPreview
+        self.isLocalDebugLoginEnabled = isLocalDebugLoginEnabled
     }
 
     var body: some View {
@@ -39,6 +42,9 @@ struct OnboardingView: View {
                     }
 
                     appleSignInButton
+                    if isLocalDebugLoginEnabled {
+                        localDebugLoginButton
+                    }
                     visitorButton
                     agreementRow
 
@@ -170,6 +176,41 @@ private extension OnboardingView {
         .buttonStyle(.plain)
         .disabled(viewModel.isLoggingIn)
         .accessibilityLabel(appleButtonTitle)
+    }
+
+    var localDebugLoginButton: some View {
+        Button {
+            Task {
+                await handleLocalDebugLogin()
+            }
+        } label: {
+            HStack(spacing: 8) {
+                if viewModel.isLoggingIn {
+                    ProgressView()
+                        .tint(LMColors.primaryDeep)
+                } else {
+                    Image(systemName: "hammer")
+                        .font(.system(size: 15, weight: .semibold))
+                }
+
+                Text("本地调试登录")
+                    .font(.system(size: 13, weight: .bold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
+            }
+            .foregroundStyle(LMColors.primaryDeep)
+            .frame(maxWidth: .infinity)
+            .frame(height: 42)
+            .background(LMColors.primarySoft)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(LMColors.primaryBorder, lineWidth: 1)
+            }
+        }
+        .buttonStyle(.plain)
+        .disabled(viewModel.isLoggingIn)
+        .accessibilityLabel("本地调试登录")
     }
 
     var visitorButton: some View {
@@ -321,6 +362,14 @@ private extension OnboardingView {
 
     func handleAppleSignIn() async {
         guard let destination = await viewModel.signInWithApple() else {
+            return
+        }
+
+        route(to: destination)
+    }
+
+    func handleLocalDebugLogin() async {
+        guard let destination = await viewModel.mockLoginAndSyncGuestData() else {
             return
         }
 

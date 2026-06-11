@@ -5,24 +5,28 @@ struct AppEnvironment {
     let tokenStore: any TokenStore
     let localStore: any LocalStore
     let appleSignInAuthorizer: any AppleSignInAuthorizing
+    let isLocalDebugLoginEnabled: Bool
 
     static let mock = AppEnvironment(
         apiClient: MockAPIClient(),
         tokenStore: InMemoryTokenStore(),
         localStore: InMemoryLocalStore(),
-        appleSignInAuthorizer: MockAppleSignInAuthorizer()
+        appleSignInAuthorizer: MockAppleSignInAuthorizer(),
+        isLocalDebugLoginEnabled: false
     )
 
     static func live(
         baseURL: URL,
-        appleSignInAuthorizer: any AppleSignInAuthorizing = AppleSignInService()
+        appleSignInAuthorizer: any AppleSignInAuthorizing = AppleSignInService(),
+        isLocalDebugLoginEnabled: Bool = false
     ) -> AppEnvironment {
         let tokenStore = KeychainTokenStore(service: "app.leanmate.ios")
         return AppEnvironment(
             apiClient: LiveAPIClient(baseURL: baseURL, tokenStore: tokenStore),
             tokenStore: tokenStore,
             localStore: FileLocalStore(),
-            appleSignInAuthorizer: appleSignInAuthorizer
+            appleSignInAuthorizer: appleSignInAuthorizer,
+            isLocalDebugLoginEnabled: isLocalDebugLoginEnabled
         )
     }
 
@@ -32,7 +36,8 @@ struct AppEnvironment {
         if let baseURL = liveBaseURL(processInfo: processInfo) {
             return live(
                 baseURL: baseURL,
-                appleSignInAuthorizer: appleSignInAuthorizer
+                appleSignInAuthorizer: appleSignInAuthorizer,
+                isLocalDebugLoginEnabled: localDebugLoginEnabled(for: baseURL)
             )
         }
 
@@ -40,12 +45,24 @@ struct AppEnvironment {
             apiClient: MockAPIClient(scenario: .profileIncomplete),
             tokenStore: InMemoryTokenStore(),
             localStore: FileLocalStore(),
-            appleSignInAuthorizer: appleSignInAuthorizer
+            appleSignInAuthorizer: appleSignInAuthorizer,
+            isLocalDebugLoginEnabled: false
         )
     }
 }
 
 private extension AppEnvironment {
+    static func localDebugLoginEnabled(for baseURL: URL) -> Bool {
+        #if DEBUG
+        guard let host = baseURL.host?.lowercased() else {
+            return false
+        }
+        return host == "127.0.0.1" || host == "localhost" || host == "::1"
+        #else
+        false
+        #endif
+    }
+
     static func liveBaseURL(processInfo: ProcessInfo) -> URL? {
         let environment = processInfo.environment
         if let value = environment["LEANMATE_API_BASE_URL"], let url = URL(string: value) {

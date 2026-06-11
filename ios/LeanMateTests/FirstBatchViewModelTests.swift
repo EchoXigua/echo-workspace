@@ -102,6 +102,28 @@ final class FirstBatchViewModelTests: XCTestCase {
         XCTAssertEqual(destination, .profileSetup)
     }
 
+    func testMockLoginUsesFixedLocalAppleIdentityToken() async throws {
+        let apiClient = LoginAPIClientSpy(profileCompleted: true)
+        let tokenStore = InMemoryTokenStore()
+        let viewModel = OnboardingViewModel(
+            apiClient: apiClient,
+            tokenStore: tokenStore,
+            localStore: InMemoryLocalStore()
+        )
+
+        let destination = await viewModel.mockLoginAndSyncGuestData()
+        let requests = await apiClient.oauthLoginRequests
+        let tokens = try await tokenStore.loadTokens()
+
+        XCTAssertEqual(destination, .home)
+        XCTAssertEqual(requests.count, 1)
+        XCTAssertEqual(requests.first?.provider, .apple)
+        XCTAssertEqual(requests.first?.identityToken, MockAppleSignInAuthorizer.defaultIdentityToken)
+        XCTAssertNil(requests.first?.authorizationCode)
+        XCTAssertEqual(tokens?.accessToken, "debug-access-token")
+        XCTAssertEqual(tokens?.refreshToken, "debug-refresh-token")
+    }
+
     func testProfileValidationFailureDoesNotCallSaveAPI() async throws {
         let apiClient = ProfileAPIClientStub()
         let viewModel = ProfileSetupViewModel(apiClient: apiClient, timezoneIdentifier: "Asia/Shanghai")
@@ -219,6 +241,113 @@ private extension FirstBatchViewModelTests {
         viewModel.currentWeightText = "55.8"
         viewModel.targetWeightText = "52"
         viewModel.activityLevel = .light
+    }
+}
+
+private actor LoginAPIClientSpy: APIClient {
+    private let profileCompleted: Bool
+    private(set) var oauthLoginRequests: [OAuthLoginRequest] = []
+
+    init(profileCompleted: Bool) {
+        self.profileCompleted = profileCompleted
+    }
+
+    func oauthLogin(_ request: OAuthLoginRequest) async throws -> AuthToken {
+        oauthLoginRequests.append(request)
+        return AuthToken(
+            accessToken: "debug-access-token",
+            refreshToken: "debug-refresh-token",
+            tokenType: "Bearer",
+            expiresIn: 3600,
+            user: CurrentUser(
+                id: MockData.userId,
+                nickname: nil,
+                avatarUrl: nil,
+                status: .active,
+                profileCompleted: profileCompleted,
+                createdAt: MockData.today
+            ),
+            profileCompleted: profileCompleted
+        )
+    }
+
+    func refreshToken(_ request: RefreshTokenRequest) async throws -> AuthToken {
+        throw AppError.unknown
+    }
+
+    func logout(_ request: LogoutRequest?) async throws {}
+
+    func currentUser() async throws -> CurrentUser {
+        throw AppError.unknown
+    }
+
+    func profile() async throws -> ProfilePayload {
+        throw AppError.unknown
+    }
+
+    func saveProfile(_ request: SaveUserProfileRequest) async throws -> ProfilePayload {
+        throw AppError.unknown
+    }
+
+    func todayHome(date: Date?) async throws -> TodayHome {
+        throw AppError.unknown
+    }
+
+    func createPhotoRecognition(
+        imageData: Data,
+        fileName: String,
+        mimeType: String,
+        mealType: MealType,
+        mealDate: Date?,
+        note: String?
+    ) async throws -> RecognitionTask {
+        throw AppError.unknown
+    }
+
+    func createTextRecognition(_ request: TextRecognitionRequest) async throws -> RecognitionTask {
+        throw AppError.unknown
+    }
+
+    func recognitionTask(id: UUID) async throws -> RecognitionTask {
+        throw AppError.unknown
+    }
+
+    func dietEntries(date: Date) async throws -> [FoodEntry] {
+        throw AppError.unknown
+    }
+
+    func saveDietEntry(_ request: SaveFoodEntryRequest) async throws -> FoodEntrySaveResult {
+        throw AppError.unknown
+    }
+
+    func updateDietEntry(id: UUID, _ request: SaveFoodEntryRequest) async throws -> FoodEntrySaveResult {
+        throw AppError.unknown
+    }
+
+    func deleteDietEntry(id: UUID) async throws {}
+
+    func weightEntries(startDate: Date, endDate: Date) async throws -> [WeightEntry] {
+        throw AppError.unknown
+    }
+
+    func saveWeight(_ request: SaveWeightEntryRequest) async throws -> WeightEntrySaveResult {
+        throw AppError.unknown
+    }
+
+    func dailyReport(date: Date) async throws -> DailyReport? {
+        throw AppError.unknown
+    }
+
+    func generateDailyReport(_ request: GenerateDailyReportRequest?) async throws -> DailyReport? {
+        throw AppError.unknown
+    }
+
+    func markDailyReportViewed(reportId: UUID) async throws -> DailyReport? {
+        throw AppError.unknown
+    }
+
+    func streak() async throws -> Streak {
+        throw AppError.unknown
     }
 }
 
