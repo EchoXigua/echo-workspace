@@ -8,10 +8,10 @@ import java.time.Duration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
@@ -66,9 +66,11 @@ public class DeepSeekChatClient {
                     .body(requestBody)
                     .retrieve()
                     .onStatus(status -> status.isError(), (request, httpResponse) -> {
+                        int httpStatus = httpResponse.getStatusCode().value();
                         throw new AiProviderException(
                                 "provider_http_error",
-                                "DeepSeek 服务返回错误：" + httpResponse.getStatusCode().value());
+                                "DeepSeek 服务返回错误：" + httpStatus,
+                                httpStatus);
                     })
                     .body(JsonNode.class);
         } catch (AiProviderException exception) {

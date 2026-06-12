@@ -2,7 +2,10 @@ openapi: 3.0.3
 info:
   title: LeanMate API
   version: 0.1.0
-  description: LeanMate V1.1 MVP 接口契约，覆盖认证、用户档案、首页统计、饮食记录、体重记录、AI 日报和连续打卡。
+  description: |
+    LeanMate V1.1 MVP 接口契约，覆盖认证、用户档案、首页统计、饮食记录、体重记录、AI 日报和连续打卡。
+
+    服务端会在每个响应 Header 中返回 `X-Request-Id`，用于客户端反馈问题和服务端日志排查。客户端可以传入合法 `X-Request-Id`，服务端会复用；未传或格式不合法时由服务端生成。
 servers:
   - url: https://api.leanmate.app
     description: Production

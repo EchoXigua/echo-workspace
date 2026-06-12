@@ -150,7 +150,7 @@ class DailyReportApplicationServiceTests {
                 WeightGoalStatus.ACTIVE.value()))
                 .thenReturn(Optional.of(weightGoal()));
         when(streakRepository.findByUserId(USER_ID)).thenReturn(Optional.of(streak()));
-        when(dailyReportClient.generateDailyReport(any(DailyReportInput.class))).thenAnswer(invocation -> {
+        when(dailyReportClient.generateDailyReport(any(DailyReportInput.class), any(UUID.class))).thenAnswer(invocation -> {
             DailyReportInput input = invocation.getArgument(0);
             capturedInput.set(input);
             return new DailyReportResult(
@@ -225,7 +225,7 @@ class DailyReportApplicationServiceTests {
                 WeightGoalStatus.ACTIVE.value()))
                 .thenReturn(Optional.empty());
         when(streakRepository.findByUserId(USER_ID)).thenReturn(Optional.empty());
-        when(dailyReportClient.generateDailyReport(any(DailyReportInput.class)))
+        when(dailyReportClient.generateDailyReport(any(DailyReportInput.class), any(UUID.class)))
                 .thenThrow(new AiProviderException("provider_timeout", "AI 服务超时"));
         when(dailyAiReportRepository.save(any(DailyAiReportEntity.class))).thenAnswer(invocation -> {
             DailyAiReportEntity report = invocation.getArgument(0);

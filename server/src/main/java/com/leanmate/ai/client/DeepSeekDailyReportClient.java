@@ -3,12 +3,18 @@ package com.leanmate.ai.client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leanmate.ai.AiProviderProperties;
+import com.leanmate.ai.application.AiModelCallLogService;
+import com.leanmate.ai.application.AiModelCallLogService.AiModelCallLogCommand;
 import com.leanmate.ai.dto.DailyReportInput;
 import com.leanmate.ai.dto.DailyReportResult;
 import com.leanmate.ai.dto.DailyReportSnapshotInput;
+import com.leanmate.common.web.RequestContext;
+import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -20,33 +26,64 @@ public class DeepSeekDailyReportClient {
     private final AiProviderProperties properties;
     private final DeepSeekChatClient chatClient;
     private final ObjectMapper objectMapper;
+    private final AiModelCallLogService aiModelCallLogService;
 
+    @Autowired
     public DeepSeekDailyReportClient(
             AiProviderProperties properties,
             DeepSeekChatClient chatClient,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper,
+            AiModelCallLogService aiModelCallLogService
     ) {
         this.properties = properties;
         this.chatClient = chatClient;
         this.objectMapper = objectMapper;
+        this.aiModelCallLogService = aiModelCallLogService;
+    }
+
+    DeepSeekDailyReportClient(
+            AiProviderProperties properties,
+            DeepSeekChatClient chatClient,
+            ObjectMapper objectMapper
+    ) {
+        this(properties, chatClient, objectMapper, null);
     }
 
     public DailyReportResult generateDailyReport(DailyReportInput input) {
-        DeepSeekChatClient.JsonCompletion completion = chatClient.completeJson(
-                properties.dailyReportModel(),
-                List.of(
-                        new DeepSeekChatClient.ChatMessage("system", systemPrompt()),
-                        new DeepSeekChatClient.ChatMessage("user", userPrompt(input))),
-                0.7,
-                MAX_OUTPUT_TOKENS);
-        Map<String, Object> parsedOutput = chatClient.parseJsonObject(completion.content());
-        return new DailyReportResult(
-                completion.responseModel(),
-                score(parsedOutput.get("score")),
-                requiredText(parsedOutput.get("summary"), "summary"),
-                requiredText(parsedOutput.get("problem"), "problem"),
-                requiredText(parsedOutput.get("suggestion"), "suggestion"),
-                rawOutput(completion, parsedOutput));
+        return generateDailyReport(input, null);
+    }
+
+    public DailyReportResult generateDailyReport(DailyReportInput input, UUID reportId) {
+        AiCallContext context = new AiCallContext(
+                input.userId(),
+                "daily_report",
+                reportId,
+                "daily-report:v1",
+                1);
+        long startedAt = System.nanoTime();
+        DeepSeekChatClient.JsonCompletion completion = null;
+        try {
+            completion = chatClient.completeJson(
+                    properties.dailyReportModel(),
+                    List.of(
+                            new DeepSeekChatClient.ChatMessage("system", systemPrompt()),
+                            new DeepSeekChatClient.ChatMessage("user", userPrompt(input))),
+                    0.7,
+                    MAX_OUTPUT_TOKENS);
+            Map<String, Object> parsedOutput = chatClient.parseJsonObject(completion.content());
+            DailyReportResult result = new DailyReportResult(
+                    completion.responseModel(),
+                    score(parsedOutput.get("score")),
+                    requiredText(parsedOutput.get("summary"), "summary"),
+                    requiredText(parsedOutput.get("problem"), "problem"),
+                    requiredText(parsedOutput.get("suggestion"), "suggestion"),
+                    rawOutput(completion, parsedOutput));
+            recordSuccess(context, completion, startedAt);
+            return result;
+        } catch (AiProviderException exception) {
+            recordFailure(context, completion, exception, startedAt);
+            throw exception;
+        }
     }
 
     private String systemPrompt() {
@@ -161,5 +198,105 @@ public class DeepSeekDailyReportClient {
         rawOutput.put("usage", completion.usage());
         rawOutput.put("output", parsedOutput);
         return rawOutput;
+    }
+
+    private void recordSuccess(
+            AiCallContext context,
+            DeepSeekChatClient.JsonCompletion completion,
+            long startedAt
+    ) {
+        if (aiModelCallLogService == null) {
+            return;
+        }
+        aiModelCallLogService.record(new AiModelCallLogCommand(
+                RequestContext.getOrCreateRequestId(),
+                context.userId(),
+                context.businessType(),
+                context.businessId(),
+                "deepseek",
+                completion.requestedModel(),
+                completion.responseModel(),
+                context.promptVersion(),
+                "succeeded",
+                200,
+                null,
+                null,
+                token(completion.usage(), "prompt_tokens"),
+                token(completion.usage(), "completion_tokens"),
+                token(completion.usage(), "total_tokens"),
+                null,
+                durationMs(startedAt),
+                context.attempt(),
+                Instant.now()));
+    }
+
+    private void recordFailure(
+            AiCallContext context,
+            DeepSeekChatClient.JsonCompletion completion,
+            AiProviderException exception,
+            long startedAt
+    ) {
+        if (aiModelCallLogService == null) {
+            return;
+        }
+        aiModelCallLogService.record(new AiModelCallLogCommand(
+                RequestContext.getOrCreateRequestId(),
+                context.userId(),
+                context.businessType(),
+                context.businessId(),
+                "deepseek",
+                completion == null ? properties.dailyReportModel() : completion.requestedModel(),
+                completion == null ? null : completion.responseModel(),
+                context.promptVersion(),
+                status(exception.providerErrorCode()),
+                exception.providerHttpStatus() == null && completion != null ? 200 : exception.providerHttpStatus(),
+                exception.providerErrorCode(),
+                safeErrorMessage(exception.getMessage()),
+                completion == null ? null : token(completion.usage(), "prompt_tokens"),
+                completion == null ? null : token(completion.usage(), "completion_tokens"),
+                completion == null ? null : token(completion.usage(), "total_tokens"),
+                null,
+                durationMs(startedAt),
+                context.attempt(),
+                Instant.now()));
+    }
+
+    private Integer token(Map<String, Object> usage, String key) {
+        Object value = usage.get(key);
+        if (value instanceof Number number) {
+            return number.intValue();
+        }
+        if (value instanceof String stringValue && StringUtils.hasText(stringValue)) {
+            try {
+                return Integer.parseInt(stringValue.trim());
+            } catch (NumberFormatException exception) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private String status(String providerErrorCode) {
+        if (providerErrorCode != null && (providerErrorCode.contains("invalid")
+                || providerErrorCode.contains("empty")
+                || providerErrorCode.contains("schema"))) {
+            return "invalid_response";
+        }
+        return "failed";
+    }
+
+    private long durationMs(long startedAt) {
+        return (System.nanoTime() - startedAt) / 1_000_000L;
+    }
+
+    private String safeErrorMessage(String message) {
+        if (!StringUtils.hasText(message)) {
+            return null;
+        }
+        String trimmed = message.trim();
+        if (trimmed.length() > 500) {
+            return trimmed.substring(0, 500);
+        }
+        return trimmed;
     }
 }

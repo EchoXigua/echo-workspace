@@ -2,6 +2,7 @@ package com.leanmate.common.security;
 
 import com.leanmate.common.error.ErrorCode;
 import com.leanmate.common.exception.BusinessException;
+import com.leanmate.common.web.RequestContext;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import org.slf4j.MDC;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -68,6 +70,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         UUID userId = jwtTokenService.parseUserId(token);
         CurrentUser currentUser = new CurrentUser(userId);
         CurrentUserContext.set(currentUser);
+        request.setAttribute(RequestContext.USER_ID_ATTRIBUTE, userId.toString());
+        MDC.put("userId", userId.toString());
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(currentUser, token, List.of());
         SecurityContextHolder.getContext().setAuthentication(authentication);

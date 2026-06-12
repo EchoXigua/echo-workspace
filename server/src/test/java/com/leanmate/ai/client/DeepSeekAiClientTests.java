@@ -18,6 +18,8 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leanmate.ai.AiProviderProperties;
+import com.leanmate.ai.application.AiModelCallLogService;
+import com.leanmate.ai.application.AiModelCallLogService.AiModelCallLogCommand;
 import com.leanmate.ai.dto.DailyReportFoodEntryInput;
 import com.leanmate.ai.dto.DailyReportFoodItemInput;
 import com.leanmate.ai.dto.DailyReportGoalInput;
@@ -30,6 +32,7 @@ import com.leanmate.ai.dto.DailyReportWeightEntryInput;
 import com.leanmate.ai.dto.DietPhotoRecognitionInput;
 import com.leanmate.ai.dto.DietRecognitionResult;
 import com.leanmate.ai.dto.DietTextRecognitionInput;
+import com.leanmate.common.web.RequestContext;
 import com.leanmate.diet.domain.MealType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -82,6 +85,44 @@ class DeepSeekAiClientTests {
         assertThat(completion.usage()).containsEntry("total_tokens", 20);
         assertThat(client.parseJsonObject(completion.content())).containsEntry("score", 88);
         server.verify();
+    }
+
+    @Test
+    void dailyReportClientRecordsSuccessfulAiCall() {
+        DeepSeekChatClient chatClient = mock(DeepSeekChatClient.class);
+        AiModelCallLogService callLogService = mock(AiModelCallLogService.class);
+        UUID reportId = UUID.randomUUID();
+        DeepSeekChatClient.JsonCompletion completion = new DeepSeekChatClient.JsonCompletion(
+                "deepseek-v4-flash",
+                "deepseek-v4-flash",
+                "{}",
+                Map.of("prompt_tokens", 10, "completion_tokens", 5, "total_tokens", 15));
+        when(chatClient.completeJson(anyString(), anyList(), anyDouble(), anyInt())).thenReturn(completion);
+        when(chatClient.parseJsonObject("{}")).thenReturn(Map.of(
+                "score", 91,
+                "summary", "今天整体控制不错。",
+                "problem", "晚餐热量略高。",
+                "suggestion", "明天晚餐减少油脂。"));
+        RequestContext.setRequestId("test-request-123");
+
+        try {
+            new DeepSeekDailyReportClient(properties(), chatClient, objectMapper, callLogService)
+                    .generateDailyReport(dailyReportInput(), reportId);
+        } finally {
+            RequestContext.clear();
+        }
+
+        ArgumentCaptor<AiModelCallLogCommand> commandCaptor = ArgumentCaptor.forClass(AiModelCallLogCommand.class);
+        verify(callLogService).record(commandCaptor.capture());
+        AiModelCallLogCommand command = commandCaptor.getValue();
+        assertThat(command.requestId()).isEqualTo("test-request-123");
+        assertThat(command.userId()).isNotNull();
+        assertThat(command.businessType()).isEqualTo("daily_report");
+        assertThat(command.businessId()).isEqualTo(reportId);
+        assertThat(command.status()).isEqualTo("succeeded");
+        assertThat(command.promptTokens()).isEqualTo(10);
+        assertThat(command.completionTokens()).isEqualTo(5);
+        assertThat(command.totalTokens()).isEqualTo(15);
     }
 
     @Test

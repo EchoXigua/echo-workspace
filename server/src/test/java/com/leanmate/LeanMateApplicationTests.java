@@ -1,5 +1,6 @@
 package com.leanmate;
 
+import com.leanmate.ai.repository.AiModelCallLogRepository;
 import com.leanmate.diet.repository.AiRecognitionTaskRepository;
 import com.leanmate.diet.repository.FoodEntryRepository;
 import com.leanmate.diet.repository.FoodItemRepository;
@@ -24,6 +25,7 @@ import com.leanmate.weight.repository.WeightEntryRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @SpringBootTest(properties = {
         "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,"
@@ -87,6 +89,12 @@ class LeanMateApplicationTests {
 
     @MockitoBean
     AiRecognitionTaskRepository aiRecognitionTaskRepository;
+
+    @MockitoBean
+    AiModelCallLogRepository aiModelCallLogRepository;
+
+    @MockitoBean
+    PlatformTransactionManager platformTransactionManager;
 
     @MockitoBean
     FoodCatalogRepository foodCatalogRepository;

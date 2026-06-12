@@ -2,10 +2,12 @@ package com.leanmate.common.web;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.leanmate.LeanMateApplication;
+import com.leanmate.ai.repository.AiModelCallLogRepository;
 import com.leanmate.common.error.ErrorCode;
 import com.leanmate.common.exception.BusinessException;
 import com.leanmate.common.response.ApiResponse;
@@ -45,6 +47,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -127,6 +130,12 @@ class SecurityInfrastructureTests {
     AiRecognitionTaskRepository aiRecognitionTaskRepository;
 
     @MockitoBean
+    AiModelCallLogRepository aiModelCallLogRepository;
+
+    @MockitoBean
+    PlatformTransactionManager platformTransactionManager;
+
+    @MockitoBean
     FoodCatalogRepository foodCatalogRepository;
 
     @MockitoBean
@@ -145,6 +154,7 @@ class SecurityInfrastructureTests {
     void rejectUnauthenticatedRequest() throws Exception {
         mockMvc.perform(get("/test/secure"))
                 .andExpect(status().isUnauthorized())
+                .andExpect(header().exists(RequestContext.REQUEST_ID_HEADER))
                 .andExpect(jsonPath("$.code").value(40101))
                 .andExpect(jsonPath("$.message").value("未登录或登录已过期"));
     }
@@ -168,6 +178,18 @@ class SecurityInfrastructureTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(0))
                 .andExpect(jsonPath("$.data").value(userId.toString()));
+    }
+
+    @Test
+    void reuseValidRequestIdHeader() throws Exception {
+        UUID userId = UUID.fromString("77777777-7777-7777-7777-777777777777");
+        String token = jwtTokenService.generateAccessToken(userId);
+
+        mockMvc.perform(get("/test/secure")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .header(RequestContext.REQUEST_ID_HEADER, "client-request-123"))
+                .andExpect(status().isOk())
+                .andExpect(header().string(RequestContext.REQUEST_ID_HEADER, "client-request-123"));
     }
 
     @Test

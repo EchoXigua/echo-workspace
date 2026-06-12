@@ -73,6 +73,12 @@ leanmate:
     max-upload-image-size-mb: ${MAX_UPLOAD_IMAGE_SIZE_MB:8}
     daily-ai-recognition-limit: ${DAILY_AI_RECOGNITION_LIMIT:30}
     daily-report-generate-limit: ${DAILY_REPORT_GENERATE_LIMIT:3}
+  observability:
+    access-log-enabled: ${ACCESS_LOG_ENABLED:true}
+    access-log-include-query-keys: ${ACCESS_LOG_INCLUDE_QUERY_KEYS:true}
+    access-log-slow-threshold-ms: ${ACCESS_LOG_SLOW_THRESHOLD_MS:1000}
+    ai-call-log-enabled: ${AI_CALL_LOG_ENABLED:true}
+    ai-call-log-save-debug-payload: ${AI_CALL_LOG_SAVE_DEBUG_PAYLOAD:false}
   food-catalog:
     seed:
       enabled: ${FOOD_CATALOG_SEED_ENABLED:true}

@@ -94,6 +94,11 @@
 |------|------|------|------|
 | `LOG_LEVEL` | 是 | `INFO` | 日志级别 |
 | `LOG_SQL` | 否 | `false` | 是否输出 SQL |
+| `ACCESS_LOG_ENABLED` | 是 | `true` | 是否输出接口访问日志 |
+| `ACCESS_LOG_INCLUDE_QUERY_KEYS` | 是 | `true` | 接口访问日志是否记录 query 参数名，不记录参数值 |
+| `ACCESS_LOG_SLOW_THRESHOLD_MS` | 是 | `1000` | 慢请求阈值，访问日志输出 `slow=true` |
+| `AI_CALL_LOG_ENABLED` | 是 | `true` | 是否写入 AI 模型调用审计表 |
+| `AI_CALL_LOG_SAVE_DEBUG_PAYLOAD` | 是 | `false` | 是否保存脱敏 debug payload；当前实现不保存正文，生产禁止默认开启 |
 
 ## 安全要求
 

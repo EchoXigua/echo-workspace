@@ -59,7 +59,7 @@ public class SecurityConfig {
         configuration.setAllowedOriginPatterns(corsProperties.allowedOriginPatterns());
         configuration.setAllowedMethods(corsProperties.allowedMethods());
         configuration.setAllowedHeaders(corsProperties.allowedHeaders());
-        configuration.setExposedHeaders(List.of(HttpHeaders.AUTHORIZATION));
+        configuration.setExposedHeaders(List.of(HttpHeaders.AUTHORIZATION, "X-Request-Id"));
         configuration.setAllowCredentials(corsProperties.allowCredentials());
         configuration.setMaxAge(corsProperties.maxAgeSeconds());
 

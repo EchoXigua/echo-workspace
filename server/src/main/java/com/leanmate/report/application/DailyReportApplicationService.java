@@ -159,13 +159,16 @@ public class DailyReportApplicationService {
         DailyAiReportEntity report = dailyAiReportRepository.findByUserIdAndReportDate(userId, reportDate)
                 .orElseGet(DailyAiReportEntity::new);
         report.setUserId(userId);
+        if (report.getId() == null) {
+            report.setId(UUID.randomUUID());
+        }
         report.setReportDate(reportDate);
         report.setSnapshotId(snapshotEntity.getId());
         report.setStatus(DailyReportStatus.PENDING.value());
 
         DailyReportInput input = buildInput(userId, reportDate, profile, snapshot, foodEntries, weightEntry);
         try {
-            applySuccess(report, dailyReportClient.generateDailyReport(input));
+            applySuccess(report, dailyReportClient.generateDailyReport(input, report.getId()));
         } catch (AiProviderException exception) {
             applyFailure(report, exception.providerErrorCode(), safeErrorMessage(exception.getMessage()));
         } catch (RuntimeException exception) {
