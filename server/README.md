@@ -43,4 +43,6 @@ mvn package
 docker compose --env-file .env.local.example up -d postgres
 ```
 
+本地 Postgres 默认使用独立的 `leanmate` Compose 项目、`leanmate-postgres` 容器、`leanmate_postgres_data` 数据卷，并映射到宿主机 `5433` 端口，避免和其他项目的 `5432` 数据库冲突。
+
 应用启动时会通过 Flyway 执行 `src/main/resources/db/migration/` 下的数据库迁移脚本。

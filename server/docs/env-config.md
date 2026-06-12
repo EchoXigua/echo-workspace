@@ -28,7 +28,11 @@
 
 | 变量 | 必需 | 示例 | 说明 |
 |------|------|------|------|
-| `DB_URL` | 是 | `jdbc:postgresql://localhost:5432/leanmate` | PostgreSQL JDBC URL |
+| `POSTGRES_DB` | 本地 Docker 需要 | `leanmate` | 本地 Postgres 数据库名 |
+| `POSTGRES_USER` | 本地 Docker 需要 | `leanmate` | 本地 Postgres 初始化用户 |
+| `POSTGRES_PASSWORD` | 本地 Docker 需要 | `leanmate_local_password` | 本地 Postgres 初始化密码 |
+| `POSTGRES_PORT` | 本地 Docker 需要 | `5433` | 本地 Postgres 映射到宿主机的端口，默认避开其他项目常用的 `5432` |
+| `DB_URL` | 是 | `jdbc:postgresql://localhost:5433/leanmate` | PostgreSQL JDBC URL |
 | `DB_USERNAME` | 是 | `leanmate` | 数据库用户名 |
 | `DB_PASSWORD` | 是 | `leanmate_dev_password` | 数据库密码 |
 | `FLYWAY_ENABLED` | 是 | `true` | 是否启用迁移 |
