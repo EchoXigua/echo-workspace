@@ -27,6 +27,8 @@ import com.leanmate.diet.repository.AiRecognitionTaskEntity;
 import com.leanmate.diet.repository.AiRecognitionTaskRepository;
 import com.leanmate.food.repository.FoodCatalogEntity;
 import com.leanmate.food.repository.FoodCatalogRepository;
+import com.leanmate.food.repository.FoodPortionEntity;
+import com.leanmate.food.repository.FoodPortionRepository;
 import com.leanmate.user.application.CurrentUserApplicationService;
 import com.leanmate.user.repository.UserEntity;
 import com.leanmate.user.repository.UserProfileEntity;
@@ -55,6 +57,7 @@ class DietRecognitionApplicationServiceTests {
     private UserProfileRepository userProfileRepository;
     private AiRecognitionTaskRepository aiRecognitionTaskRepository;
     private FoodCatalogRepository foodCatalogRepository;
+    private FoodPortionRepository foodPortionRepository;
     private DietRecognitionClient dietRecognitionClient;
     private DietRecognitionApplicationService dietRecognitionApplicationService;
 
@@ -64,12 +67,14 @@ class DietRecognitionApplicationServiceTests {
         userProfileRepository = mock(UserProfileRepository.class);
         aiRecognitionTaskRepository = mock(AiRecognitionTaskRepository.class);
         foodCatalogRepository = mock(FoodCatalogRepository.class);
+        foodPortionRepository = mock(FoodPortionRepository.class);
         dietRecognitionClient = mock(DietRecognitionClient.class);
         dietRecognitionApplicationService = new DietRecognitionApplicationService(
                 currentUserApplicationService,
                 userProfileRepository,
                 aiRecognitionTaskRepository,
                 foodCatalogRepository,
+                foodPortionRepository,
                 dietRecognitionClient,
                 new ObjectMapper().findAndRegisterModules(),
                 new LimitProperties(8, 30, 3),
@@ -80,6 +85,7 @@ class DietRecognitionApplicationServiceTests {
         when(aiRecognitionTaskRepository.save(any(AiRecognitionTaskEntity.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
         when(foodCatalogRepository.searchVerified(any(), any(Pageable.class))).thenReturn(List.of());
+        when(foodCatalogRepository.findAll()).thenReturn(List.of());
     }
 
     @Test
@@ -116,6 +122,126 @@ class DietRecognitionApplicationServiceTests {
         assertThat(response.draftEntry().items().get(0).confidence()).isEqualByComparingTo("0.8267");
         assertThat(response.errorCode()).isNull();
         assertThat(response.finishedAt()).isNotNull();
+    }
+
+    @Test
+    void createTextTaskSplitsMergedTextResultAndFillsNutritionFromFoodCatalog() {
+        when(dietRecognitionClient.recognizeText(any(DietTextRecognitionInput.class)))
+                .thenReturn(new DietRecognitionResult(
+                        "deepseek-v4-flash",
+                        List.of(new DietRecognitionItem(
+                                "一碗米饭（约180g），一个鸡蛋（约55g），一杯豆浆（约250ml）",
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                new BigDecimal("0.30"))),
+                        "按常见食物估算。",
+                        Map.of("provider", "deepseek")));
+        when(foodCatalogRepository.findAll()).thenReturn(List.of(riceFood(), eggFood(), soyMilkFood()));
+        when(foodCatalogRepository.searchVerified(eq("米饭"), any(Pageable.class))).thenReturn(List.of(riceFood()));
+        when(foodCatalogRepository.searchVerified(eq("鸡蛋"), any(Pageable.class))).thenReturn(List.of(eggFood()));
+        when(foodCatalogRepository.searchVerified(eq("豆浆"), any(Pageable.class))).thenReturn(List.of(soyMilkFood()));
+
+        RecognitionTaskResponse response = dietRecognitionApplicationService.createTextTask(
+                USER_ID,
+                new TextRecognitionRequest(
+                        "一碗米饭（约180g），一个鸡蛋（约55g），一杯豆浆（约250ml）",
+                        MealType.DINNER,
+                        LocalDate.parse("2026-06-07")));
+
+        assertThat(response.status()).isEqualTo(RecognitionTaskStatus.SUCCEEDED);
+        assertThat(response.draftEntry()).isNotNull();
+        assertThat(response.draftEntry().items()).hasSize(3);
+        assertThat(response.draftEntry().items()).extracting("name")
+                .containsExactly("米饭", "鸡蛋", "豆浆");
+        assertThat(response.draftEntry().items()).extracting("quantityText")
+                .containsExactly("一碗", "一个", "一杯");
+        assertThat(response.draftEntry().items()).extracting("weightG")
+                .containsExactly(new BigDecimal("180.00"), new BigDecimal("55.00"), new BigDecimal("250.00"));
+        assertThat(response.draftEntry().items()).extracting("caloriesKcal")
+                .containsExactly(209, 79, 78);
+        assertThat(response.draftEntry().items().get(0).proteinG()).isEqualByComparingTo("4.68");
+        assertThat(response.draftEntry().items().get(1).proteinG()).isEqualByComparingTo("6.93");
+        assertThat(response.draftEntry().items().get(2).proteinG()).isEqualByComparingTo("7.50");
+    }
+
+    @Test
+    void createTextTaskUsesDefaultDrinkPortionLabelWhenQuantityIsMissing() {
+        when(dietRecognitionClient.recognizeText(any(DietTextRecognitionInput.class)))
+                .thenReturn(new DietRecognitionResult(
+                        "deepseek-v4-flash",
+                        List.of(new DietRecognitionItem(
+                                "豆浆",
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                new BigDecimal("0.70"))),
+                        "按默认份量估算。",
+                        Map.of("provider", "deepseek")));
+        when(foodCatalogRepository.findAll()).thenReturn(List.of(soyMilkFood()));
+        when(foodPortionRepository.findByFoodIdAndDefaultPortionTrue(soyMilkFood().getId()))
+                .thenReturn(Optional.of(defaultPortion(
+                        soyMilkFood().getId(),
+                        "一杯（约250ml）",
+                        new BigDecimal("250.00"))));
+
+        RecognitionTaskResponse response = dietRecognitionApplicationService.createTextTask(
+                USER_ID,
+                new TextRecognitionRequest("豆浆", MealType.BREAKFAST, LocalDate.parse("2026-06-07")));
+
+        assertThat(response.status()).isEqualTo(RecognitionTaskStatus.SUCCEEDED);
+        assertThat(response.draftEntry().items()).hasSize(1);
+        assertThat(response.draftEntry().items().get(0).name()).isEqualTo("豆浆");
+        assertThat(response.draftEntry().items().get(0).quantityText()).isEqualTo("一杯");
+        assertThat(response.draftEntry().items().get(0).weightG()).isEqualByComparingTo("250.00");
+        assertThat(response.draftEntry().items().get(0).caloriesKcal()).isEqualTo(78);
+    }
+
+    @Test
+    void createTextTaskStripsWeightFromProviderQuantityText() {
+        when(dietRecognitionClient.recognizeText(any(DietTextRecognitionInput.class)))
+                .thenReturn(new DietRecognitionResult(
+                        "deepseek-v4-flash",
+                        List.of(
+                                new DietRecognitionItem(
+                                        "鸡蛋",
+                                        "一个（约55g）",
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        new BigDecimal("0.82")),
+                                new DietRecognitionItem(
+                                        "豆浆",
+                                        "一杯豆浆（约250ml）",
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        new BigDecimal("0.80"))),
+                        "按默认份量估算。",
+                        Map.of("provider", "deepseek")));
+        when(foodCatalogRepository.findAll()).thenReturn(List.of(eggFood(), soyMilkFood()));
+
+        RecognitionTaskResponse response = dietRecognitionApplicationService.createTextTask(
+                USER_ID,
+                new TextRecognitionRequest("早餐一个鸡蛋一杯豆浆", MealType.BREAKFAST, LocalDate.parse("2026-06-07")));
+
+        assertThat(response.status()).isEqualTo(RecognitionTaskStatus.SUCCEEDED);
+        assertThat(response.draftEntry().items()).extracting("name")
+                .containsExactly("鸡蛋", "豆浆");
+        assertThat(response.draftEntry().items()).extracting("quantityText")
+                .containsExactly("一个", "一杯");
+        assertThat(response.draftEntry().items()).extracting("weightG")
+                .containsExactly(new BigDecimal("55.00"), new BigDecimal("250.00"));
     }
 
     @Test
@@ -189,5 +315,50 @@ class DietRecognitionApplicationServiceTests {
         food.setVerified(true);
         food.setLocale("zh-CN");
         return food;
+    }
+
+    private FoodCatalogEntity riceFood() {
+        FoodCatalogEntity food = new FoodCatalogEntity();
+        food.setId(UUID.fromString("ae5064cd-b812-4df7-bc0d-22634e99356e"));
+        food.setName("米饭");
+        food.setNormalizedName("米饭");
+        food.setCategory("staple");
+        food.setCaloriesPer100g(116);
+        food.setProteinPer100g(new BigDecimal("2.60"));
+        food.setFatPer100g(new BigDecimal("0.30"));
+        food.setCarbsPer100g(new BigDecimal("25.90"));
+        food.setSource("curated");
+        food.setConfidence(new BigDecimal("1.0000"));
+        food.setVerified(true);
+        food.setLocale("zh-CN");
+        return food;
+    }
+
+    private FoodCatalogEntity soyMilkFood() {
+        FoodCatalogEntity food = new FoodCatalogEntity();
+        food.setId(UUID.fromString("917501f8-4a66-40c0-8813-27b91bf42176"));
+        food.setName("豆浆");
+        food.setNormalizedName("豆浆");
+        food.setCategory("drink");
+        food.setCaloriesPer100g(31);
+        food.setProteinPer100g(new BigDecimal("3.00"));
+        food.setFatPer100g(new BigDecimal("1.60"));
+        food.setCarbsPer100g(new BigDecimal("1.20"));
+        food.setSource("curated");
+        food.setConfidence(new BigDecimal("1.0000"));
+        food.setVerified(true);
+        food.setLocale("zh-CN");
+        return food;
+    }
+
+    private FoodPortionEntity defaultPortion(UUID foodId, String label, BigDecimal gramWeight) {
+        FoodPortionEntity portion = new FoodPortionEntity();
+        portion.setId(UUID.randomUUID());
+        portion.setFoodId(foodId);
+        portion.setLabel(label);
+        portion.setGramWeight(gramWeight);
+        portion.setDefaultPortion(true);
+        portion.setSortOrder(0);
+        return portion;
     }
 }

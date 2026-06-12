@@ -24,9 +24,13 @@ import com.leanmate.diet.repository.AiRecognitionTaskEntity;
 import com.leanmate.diet.repository.AiRecognitionTaskRepository;
 import com.leanmate.food.repository.FoodCatalogEntity;
 import com.leanmate.food.repository.FoodCatalogRepository;
+import com.leanmate.food.repository.FoodPortionEntity;
+import com.leanmate.food.repository.FoodPortionRepository;
 import com.leanmate.user.application.CurrentUserApplicationService;
 import com.leanmate.user.repository.UserProfileEntity;
 import com.leanmate.user.repository.UserProfileRepository;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Clock;
@@ -36,9 +40,12 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,11 +64,23 @@ public class DietRecognitionApplicationService {
             "image/webp",
             "image/heic",
             "image/heif");
+    private static final BigDecimal HUNDRED = new BigDecimal("100");
+    private static final BigDecimal TEXT_FALLBACK_CONFIDENCE = new BigDecimal("0.6500");
+    private static final Pattern TEXT_ITEM_SPLIT_PATTERN = Pattern.compile("[,，、;；\\n]+|和(?=一|半|两|俩|[0-9])");
+    private static final Pattern WEIGHT_PATTERN = Pattern.compile(
+            "(?:约|大约|大概|差不多)?\\s*(\\d+(?:\\.\\d+)?)\\s*(?:g|G|克|毫升|ml|mL|ML)");
+    private static final Pattern QUANTITY_HINT_PATTERN = Pattern.compile(
+            "[一二三四五六七八九十两俩半0-9]+\\s*(碗|杯|个|份|根|块|小把|掌心|勺)");
+    private static final Pattern MEASURE_PAREN_PATTERN = Pattern.compile(
+            "[（(]\\s*(?:约|大约|大概|差不多)?\\s*\\d+(?:\\.\\d+)?\\s*(?:g|G|克|毫升|ml|mL|ML)\\s*[）)]");
+    private static final Pattern STANDALONE_MEASURE_PATTERN = Pattern.compile(
+            "(?:约|大约|大概|差不多)?\\s*\\d+(?:\\.\\d+)?\\s*(?:g|G|克|毫升|ml|mL|ML)");
 
     private final CurrentUserApplicationService currentUserApplicationService;
     private final UserProfileRepository userProfileRepository;
     private final AiRecognitionTaskRepository aiRecognitionTaskRepository;
     private final FoodCatalogRepository foodCatalogRepository;
+    private final FoodPortionRepository foodPortionRepository;
     private final DietRecognitionClient dietRecognitionClient;
     private final ObjectMapper objectMapper;
     private final LimitProperties limitProperties;
@@ -73,6 +92,7 @@ public class DietRecognitionApplicationService {
             UserProfileRepository userProfileRepository,
             AiRecognitionTaskRepository aiRecognitionTaskRepository,
             FoodCatalogRepository foodCatalogRepository,
+            FoodPortionRepository foodPortionRepository,
             DietRecognitionClient dietRecognitionClient,
             ObjectMapper objectMapper,
             LimitProperties limitProperties
@@ -82,6 +102,7 @@ public class DietRecognitionApplicationService {
                 userProfileRepository,
                 aiRecognitionTaskRepository,
                 foodCatalogRepository,
+                foodPortionRepository,
                 dietRecognitionClient,
                 objectMapper,
                 limitProperties,
@@ -93,6 +114,7 @@ public class DietRecognitionApplicationService {
             UserProfileRepository userProfileRepository,
             AiRecognitionTaskRepository aiRecognitionTaskRepository,
             FoodCatalogRepository foodCatalogRepository,
+            FoodPortionRepository foodPortionRepository,
             DietRecognitionClient dietRecognitionClient,
             ObjectMapper objectMapper,
             LimitProperties limitProperties,
@@ -102,6 +124,7 @@ public class DietRecognitionApplicationService {
         this.userProfileRepository = userProfileRepository;
         this.aiRecognitionTaskRepository = aiRecognitionTaskRepository;
         this.foodCatalogRepository = foodCatalogRepository;
+        this.foodPortionRepository = foodPortionRepository;
         this.dietRecognitionClient = dietRecognitionClient;
         this.objectMapper = objectMapper;
         this.limitProperties = limitProperties;
@@ -221,11 +244,12 @@ public class DietRecognitionApplicationService {
         task.setErrorMessage(null);
         task.setRawOutput(result.rawOutput());
 
+        List<DietRecognitionItem> normalizedItems = normalizeRecognitionItems(task, result.items());
         StoredFoodEntryDraft draft = new StoredFoodEntryDraft(
                 task.getMealDate(),
                 MealType.fromValue(task.getMealType()),
                 FoodEntrySourceType.fromValue(task.getSourceType()),
-                result.items().stream()
+                normalizedItems.stream()
                         .map(this::toCandidateResponse)
                         .toList(),
                 trimToNull(result.notes()));
@@ -259,6 +283,229 @@ public class DietRecognitionApplicationService {
                 false,
                 matchedFoodId(item),
                 NutritionSource.AI_ESTIMATED);
+    }
+
+    private List<DietRecognitionItem> normalizeRecognitionItems(
+            AiRecognitionTaskEntity task,
+            List<DietRecognitionItem> items
+    ) {
+        List<DietRecognitionItem> safeItems = items == null ? List.of() : items;
+        if (FoodEntrySourceType.TEXT.value().equals(task.getSourceType())) {
+            safeItems = splitMergedTextItems(task.getInputText(), safeItems);
+        }
+        return safeItems.stream()
+                .map(this::enrichTextNutrition)
+                .toList();
+    }
+
+    private List<DietRecognitionItem> splitMergedTextItems(String inputText, List<DietRecognitionItem> items) {
+        if (items.size() != 1 || !StringUtils.hasText(inputText)) {
+            return items;
+        }
+
+        DietRecognitionItem onlyItem = items.get(0);
+        if (!hasMultipleTextSegments(inputText)
+                || (!looksLikeMergedTextItem(inputText, onlyItem) && hasAnyNutrition(onlyItem))) {
+            return items;
+        }
+
+        List<DietRecognitionItem> fallbackItems = splitTextSegments(inputText).stream()
+                .map(this::fallbackItemFromTextSegment)
+                .filter(Objects::nonNull)
+                .toList();
+        return fallbackItems.size() > 1 ? fallbackItems : items;
+    }
+
+    private boolean hasMultipleTextSegments(String inputText) {
+        return splitTextSegments(inputText).size() > 1;
+    }
+
+    private boolean looksLikeMergedTextItem(String inputText, DietRecognitionItem item) {
+        String itemName = item.name();
+        if (!StringUtils.hasText(itemName)) {
+            return false;
+        }
+        String normalizedName = normalize(itemName);
+        String normalizedInput = normalize(inputText);
+        return normalizedName.equals(normalizedInput)
+                || normalizedName.contains(normalizedInput)
+                || containsTextSeparator(itemName);
+    }
+
+    private boolean containsTextSeparator(String value) {
+        return StringUtils.hasText(value)
+                && Pattern.compile("[,，、;；\\n]").matcher(value).find();
+    }
+
+    private boolean hasAnyNutrition(DietRecognitionItem item) {
+        return item.weightG() != null
+                || item.caloriesKcal() != null
+                || item.proteinG() != null
+                || item.fatG() != null
+                || item.carbsG() != null;
+    }
+
+    private List<String> splitTextSegments(String inputText) {
+        if (!StringUtils.hasText(inputText)) {
+            return List.of();
+        }
+        List<String> segments = new ArrayList<>();
+        for (String segment : TEXT_ITEM_SPLIT_PATTERN.split(inputText)) {
+            String normalizedSegment = trimToNull(segment);
+            if (normalizedSegment != null) {
+                segments.add(normalizedSegment);
+            }
+        }
+        return segments;
+    }
+
+    private DietRecognitionItem fallbackItemFromTextSegment(String segment) {
+        FoodCatalogEntity food = matchFood(segment);
+        if (food == null) {
+            return null;
+        }
+        BigDecimal weightG = resolveWeight(segment, food);
+        return new DietRecognitionItem(
+                food.getName(),
+                quantityTextFromSegment(segment, food),
+                weightG,
+                null,
+                null,
+                null,
+                null,
+                TEXT_FALLBACK_CONFIDENCE);
+    }
+
+    private DietRecognitionItem enrichTextNutrition(DietRecognitionItem item) {
+        FoodCatalogEntity food = matchFood(item.name());
+        if (food == null && StringUtils.hasText(item.quantityText())) {
+            food = matchFood(item.quantityText());
+        }
+        if (food == null) {
+            return item;
+        }
+
+        BigDecimal weightG = item.weightG();
+        if (weightG == null) {
+            weightG = parseWeight(item.quantityText());
+        }
+        if (weightG == null) {
+            weightG = parseWeight(item.name());
+        }
+        DefaultPortion defaultPortion = null;
+        if (weightG == null) {
+            defaultPortion = defaultPortion(food);
+            weightG = defaultPortion == null ? null : defaultPortion.weightG();
+        }
+
+        NutritionEstimate nutrition = weightG == null ? null : estimateNutrition(food, weightG);
+        String originalName = trimToNull(item.name());
+        String quantityText = trimToNull(item.quantityText());
+        if (quantityText == null && defaultPortion != null) {
+            quantityText = defaultPortion.label();
+        }
+        if (quantityText == null && originalName != null && !normalize(originalName).equals(normalize(food.getName()))) {
+            quantityText = originalName;
+        }
+        quantityText = normalizedQuantityText(quantityText, food);
+
+        return new DietRecognitionItem(
+                food.getName(),
+                quantityText,
+                weightG == null ? null : scale(weightG, 2),
+                item.caloriesKcal() == null && nutrition != null ? nutrition.caloriesKcal() : item.caloriesKcal(),
+                item.proteinG() == null && nutrition != null ? nutrition.proteinG() : item.proteinG(),
+                item.fatG() == null && nutrition != null ? nutrition.fatG() : item.fatG(),
+                item.carbsG() == null && nutrition != null ? nutrition.carbsG() : item.carbsG(),
+                item.confidence() == null ? TEXT_FALLBACK_CONFIDENCE : item.confidence());
+    }
+
+    private FoodCatalogEntity matchFood(String text) {
+        String normalizedText = normalize(text);
+        if (!StringUtils.hasText(normalizedText)) {
+            return null;
+        }
+
+        FoodCatalogEntity containedMatch = foodCatalogRepository.findAll().stream()
+                .filter(food -> Boolean.TRUE.equals(food.getVerified()))
+                .filter(food -> StringUtils.hasText(food.getNormalizedName()))
+                .filter(food -> normalizedText.contains(food.getNormalizedName()))
+                .max(Comparator.comparingInt(food -> food.getNormalizedName().length()))
+                .orElse(null);
+        if (containedMatch != null) {
+            return containedMatch;
+        }
+
+        return foodCatalogRepository.searchVerified(normalizedText, PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse(null);
+    }
+
+    private BigDecimal resolveWeight(String text, FoodCatalogEntity food) {
+        BigDecimal parsedWeight = parseWeight(text);
+        if (parsedWeight != null) {
+            return parsedWeight;
+        }
+        DefaultPortion defaultPortion = defaultPortion(food);
+        return defaultPortion == null ? null : defaultPortion.weightG();
+    }
+
+    private BigDecimal parseWeight(String text) {
+        if (!StringUtils.hasText(text)) {
+            return null;
+        }
+        Matcher matcher = WEIGHT_PATTERN.matcher(text);
+        if (!matcher.find()) {
+            return null;
+        }
+        return new BigDecimal(matcher.group(1)).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private String quantityTextFromSegment(String segment, FoodCatalogEntity food) {
+        String trimmedSegment = trimToNull(segment);
+        if (trimmedSegment == null || normalize(trimmedSegment).equals(normalize(food.getName()))) {
+            return null;
+        }
+        if (parseWeight(trimmedSegment) != null || QUANTITY_HINT_PATTERN.matcher(trimmedSegment).find()) {
+            return normalizedQuantityText(trimmedSegment, food);
+        }
+        return null;
+    }
+
+    private String normalizedQuantityText(String value, FoodCatalogEntity food) {
+        String normalizedValue = trimToNull(value);
+        if (normalizedValue == null) {
+            return null;
+        }
+
+        normalizedValue = MEASURE_PAREN_PATTERN.matcher(normalizedValue).replaceAll("");
+        normalizedValue = STANDALONE_MEASURE_PATTERN.matcher(normalizedValue).replaceAll("");
+        if (StringUtils.hasText(food.getName())) {
+            normalizedValue = normalizedValue.replace(food.getName(), "");
+        }
+        normalizedValue = normalizedValue
+                .replaceAll("[,，、;；。\\s]+", "")
+                .trim();
+        if (!StringUtils.hasText(normalizedValue) || normalize(normalizedValue).equals(normalize(food.getName()))) {
+            return null;
+        }
+        return normalizedValue;
+    }
+
+    private DefaultPortion defaultPortion(FoodCatalogEntity food) {
+        return foodPortionRepository.findByFoodIdAndDefaultPortionTrue(food.getId())
+                .map(portion -> new DefaultPortion(portion.getLabel(), portion.getGramWeight()))
+                .orElse(null);
+    }
+
+    private NutritionEstimate estimateNutrition(FoodCatalogEntity food, BigDecimal weightG) {
+        BigDecimal factor = weightG.divide(HUNDRED, 6, RoundingMode.HALF_UP);
+        return new NutritionEstimate(
+                new BigDecimal(food.getCaloriesPer100g()).multiply(factor).setScale(0, RoundingMode.HALF_UP).intValue(),
+                scale(food.getProteinPer100g().multiply(factor), 2),
+                scale(food.getFatPer100g().multiply(factor), 2),
+                scale(food.getCarbsPer100g().multiply(factor), 2));
     }
 
     private UUID matchedFoodId(DietRecognitionItem item) {
@@ -386,6 +633,20 @@ public class DietRecognitionApplicationService {
             FoodEntrySourceType sourceType,
             List<FoodItemResponse> items,
             String notes
+    ) {
+    }
+
+    private record NutritionEstimate(
+            Integer caloriesKcal,
+            BigDecimal proteinG,
+            BigDecimal fatG,
+            BigDecimal carbsG
+    ) {
+    }
+
+    private record DefaultPortion(
+            String label,
+            BigDecimal weightG
     ) {
     }
 }

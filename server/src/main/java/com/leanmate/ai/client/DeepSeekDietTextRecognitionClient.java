@@ -66,7 +66,7 @@ public class DeepSeekDietTextRecognitionClient {
                     List.of(
                             new DeepSeekChatClient.ChatMessage("system", systemPrompt()),
                             new DeepSeekChatClient.ChatMessage("user", userPrompt(input))),
-                    0.7,
+                    0.2,
                     MAX_OUTPUT_TOKENS);
             Map<String, Object> parsedOutput = chatClient.parseJsonObject(completion.content());
             JsonNode root = objectMapper.valueToTree(parsedOutput);
@@ -107,8 +107,13 @@ public class DeepSeekDietTextRecognitionClient {
 
                 规则：
                 - name 必填，使用简体中文食物名。
-                - quantityText 尽量保留用户原始份量表达。
-                - weightG、caloriesKcal、proteinG、fatG、carbsG 不确定时可以为 null。
+                - name 只写食物本身，例如“米饭”“鸡蛋”“豆浆”，不要把整句话、餐次、份量、括号说明放进 name。
+                - 用户输入里出现多个食物时，必须拆成多个 items；逗号、顿号、分号、换行、“和”通常表示多个食物。
+                - 示例：“一碗米饭（约180g），一个鸡蛋（约55g），一杯豆浆（约250ml）”必须输出 3 个 items：米饭、鸡蛋、豆浆。
+                - quantityText 只保留数量/份量表达，例如“2个”“一杯”“一碗”，不要包含“约55g”“约250ml”等重量或容量说明。
+                - 常见食物且用户给出份量时，必须估算 weightG、caloriesKcal、proteinG、fatG、carbsG，不要留空。
+                - ml 可按近似克重估算，尤其是豆浆、牛奶、咖啡等饮品。
+                - 只有完全无法判断食物或份量时，weightG、caloriesKcal、proteinG、fatG、carbsG 才可以为 null。
                 - confidence 是 0 到 1 的数字。
                 - 不要把用户没提到的食物补进去。
                 - 估算只是候选值，用户后续会确认和修改。

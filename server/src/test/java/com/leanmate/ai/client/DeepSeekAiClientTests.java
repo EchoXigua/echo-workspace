@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -210,6 +211,13 @@ class DeepSeekAiClientTests {
         assertThat(result.items().get(0).name()).isEqualTo("鸡蛋");
         assertThat(result.items().get(0).caloriesKcal()).isEqualTo(140);
         assertThat(result.notes()).isEqualTo("按常见鸡蛋估算。");
+
+        ArgumentCaptor<List<DeepSeekChatClient.ChatMessage>> messagesCaptor = ArgumentCaptor.forClass(List.class);
+        verify(chatClient).completeJson(anyString(), messagesCaptor.capture(), eq(0.2), anyInt());
+        assertThat(messagesCaptor.getValue().get(0).content())
+                .contains("不要把整句话、餐次、份量、括号说明放进 name")
+                .contains("必须拆成多个 items")
+                .contains("常见食物且用户给出份量时，必须估算");
     }
 
     @Test
