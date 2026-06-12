@@ -221,8 +221,8 @@ final class FirstBatchViewModelTests: XCTestCase {
         XCTAssertEqual(saveCallCount, 1)
         XCTAssertEqual(viewModel.state, .saveSucceeded)
         XCTAssertEqual(viewModel.savedProfile?.bmi, 19.8)
-        XCTAssertEqual(viewModel.savedProfile?.bmrKcal, 1320)
-        XCTAssertEqual(viewModel.savedProfile?.dailyCalorieTargetKcal, 1800)
+        XCTAssertEqual(viewModel.savedProfile?.bmrKcal, 1380)
+        XCTAssertEqual(viewModel.savedProfile?.dailyCalorieTargetKcal, 1600)
     }
 
     func testVisitorProfileSavePersistsLocallyWithoutCallingAPI() async throws {
@@ -244,7 +244,27 @@ final class FirstBatchViewModelTests: XCTestCase {
         XCTAssertTrue(succeeded)
         XCTAssertEqual(saveCallCount, 0)
         XCTAssertEqual(profile?.currentWeightKg, 55.8)
+        XCTAssertEqual(profile?.bmrKcal, 1380)
+        XCTAssertEqual(profile?.dailyCalorieTargetKcal, 1600)
         XCTAssertNotNil(session)
+    }
+
+    func testLocalProfileGoalCalculatorMatchesBackendSedentaryDeficit() {
+        let request = SaveUserProfileRequest(
+            gender: .male,
+            age: 25,
+            heightCm: 181,
+            currentWeightKg: 75,
+            targetWeightKg: 66,
+            activityLevel: .sedentary,
+            timezone: "Asia/Shanghai",
+            targetDate: nil
+        )
+
+        let profile = ProfileGoalCalculator.profile(from: request, today: MockData.today)
+
+        XCTAssertEqual(profile.bmrKcal, 1761)
+        XCTAssertEqual(profile.dailyCalorieTargetKcal, 1800)
     }
 
     func testProfileSaveFailureKeepsUserInput() async throws {

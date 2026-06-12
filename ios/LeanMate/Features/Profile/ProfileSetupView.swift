@@ -849,6 +849,7 @@ private struct ProfileInputField: View {
     @Binding var text: String
     let error: String?
     let keyboardType: UIKeyboardType
+    @FocusState private var isFocused: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: LMSpacing.small) {
@@ -860,20 +861,37 @@ private struct ProfileInputField: View {
                 HStack(spacing: LMSpacing.small) {
                     TextField(title, text: $text)
                         .keyboardType(keyboardType)
+                        .focused($isFocused)
+                        .submitLabel(.done)
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundStyle(LMColors.textBody)
                         .lineLimit(1)
                         .frame(height: 25)
+                        .toolbar {
+                            if isFocused {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()
+                                    Button("完成") {
+                                        isFocused = false
+                                    }
+                                }
+                            }
+                        }
 
                     Text(unit)
                         .font(LMTypography.bodyStrong)
                         .foregroundStyle(LMColors.textSecondary)
+                        .allowsHitTesting(false)
                 }
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
             .frame(maxWidth: .infinity, alignment: .leading)
             .frame(height: 71)
+            .contentShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
+            .onTapGesture {
+                isFocused = true
+            }
             .background(LMColors.warmSurface)
             .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
             .overlay {

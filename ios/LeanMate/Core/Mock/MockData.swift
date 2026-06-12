@@ -35,8 +35,8 @@ enum MockData {
         timezone: "Asia/Shanghai",
         targetDate: nil,
         bmi: 19.8,
-        bmrKcal: 1320,
-        dailyCalorieTargetKcal: 1800
+        bmrKcal: 1380,
+        dailyCalorieTargetKcal: 1600
     )
 
     static let foodItems = [

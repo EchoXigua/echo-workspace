@@ -144,17 +144,23 @@ private extension DietEntryView {
             VStack(alignment: .leading, spacing: LMSpacing.regular) {
                 stateMessage
                 if !showsResultOnly {
-                    confirmationSection(showsHeader: false)
+                    confirmationSection(showsHeader: false, showsActions: false)
                 }
             }
             .padding(.horizontal, LMSpacing.large)
             .padding(.top, LMSpacing.regular)
-            .padding(.bottom, LMSpacing.large)
+            .padding(.bottom, showsResultOnly ? LMSpacing.large : 10)
         }
         .scrollIndicators(.hidden)
+        .scrollDismissesKeyboard(.interactively)
         .background(LMColors.background.ignoresSafeArea())
         .safeAreaInset(edge: .top, spacing: 0) {
             confirmationTopBar
+        }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            if !showsResultOnly {
+                confirmationBottomBar
+            }
         }
     }
 
@@ -219,52 +225,36 @@ private extension DietEntryView {
         VStack(spacing: 0) {
             photoPreviewHero
 
-            VStack(alignment: .leading, spacing: 16) {
-                LMSheetHandle()
-                    .frame(maxWidth: .infinity, alignment: .center)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    LMSheetHandle()
+                        .frame(maxWidth: .infinity, alignment: .center)
 
-                Text("确认记录")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(LMColors.textPrimary)
+                    Text("确认记录")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(LMColors.textPrimary)
 
-                stateMessage
+                    stateMessage
 
+                    if !showsResultOnly {
+                        mealControls
+
+                        ForEach($viewModel.confirmationItems) { item in
+                            CompactFoodItemCard(item: item)
+                        }
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 18)
+                .padding(.bottom, showsResultOnly ? 32 : 10)
+            }
+            .scrollIndicators(.hidden)
+            .scrollDismissesKeyboard(.interactively)
+            .safeAreaInset(edge: .bottom, spacing: 0) {
                 if !showsResultOnly {
-                    mealControls
-
-                    ForEach($viewModel.confirmationItems) { item in
-                        CompactFoodItemCard(item: item)
-                    }
-
-                    HStack {
-                        Text("总计")
-                            .font(LMTypography.bodyStrong)
-                            .foregroundStyle(LMColors.textBody)
-                        Spacer()
-                        Text(viewModel.totalCaloriesText)
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundStyle(LMColors.primary)
-                    }
-                    .padding(.horizontal, 14)
-                    .frame(height: 50)
-                    .background(LMColors.primarySoft)
-                    .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 15, style: .continuous)
-                            .stroke(LMColors.primaryBorder, lineWidth: 1)
-                    }
-
-                    LMButton(
-                        title: "保存并更新首页",
-                        systemImage: "checkmark",
-                        isLoading: viewModel.isSaving,
-                        action: saveRecognition
-                    )
+                    confirmationBottomBar
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 18)
-            .padding(.bottom, 32)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background(LMColors.background)
             .clipShape(UnevenRoundedRectangle(topLeadingRadius: 24, topTrailingRadius: 24))
@@ -575,31 +565,19 @@ private extension DietEntryView {
         case .saveFailed(let message):
             LMStateView(kind: .error, title: "保存失败", message: message)
         case .saveSucceeded:
-            LMStateView(
-                kind: .empty,
-                title: "记录已保存",
-                message: "已更新到首页。",
-                actionTitle: "回到首页",
-                action: goHomeAfterResult
-            )
-            if viewModel.canDeleteSavedEntry {
-                LMButton(
-                    title: "删除这条记录",
-                    systemImage: "trash",
-                    role: .destructive,
-                    height: 48,
-                    isLoading: viewModel.isDeleting,
-                    action: { showsDeleteConfirmation = true }
+            if let savedEntry = viewModel.savedEntry {
+                savedEntryResultCard(savedEntry)
+            } else {
+                LMStateView(
+                    kind: .empty,
+                    title: "记录已保存",
+                    message: "已更新到首页。",
+                    actionTitle: "回到首页",
+                    action: goHomeAfterResult
                 )
             }
         case .deleteSucceeded:
-            LMStateView(
-                kind: .empty,
-                title: "记录已删除",
-                message: "服务端会刷新对应业务日期的热量和营养统计。",
-                actionTitle: "回到首页",
-                action: goHomeAfterResult
-            )
+            deletedEntryResultCard
         case .deleteFailed(let message):
             LMStateView(kind: .error, title: "删除失败", message: message)
             if viewModel.canDeleteSavedEntry {
@@ -625,6 +603,170 @@ private extension DietEntryView {
         case .idle, .confirmation, .saving:
             EmptyView()
         }
+    }
+
+    var deletedEntryResultCard: some View {
+        LMCard(cornerRadius: 20, padding: 18) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: "trash")
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundStyle(LMColors.danger)
+                    .frame(width: 42, height: 42)
+                    .background(LMColors.dangerSoft)
+                    .clipShape(Circle())
+
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("记录已删除")
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundStyle(LMColors.textPrimary)
+
+                    Text("今日热量和营养统计会自动重新计算。")
+                        .font(LMTypography.caption)
+                        .foregroundStyle(LMColors.textSecondary)
+                }
+            }
+
+            LMButton(
+                title: "回到首页",
+                systemImage: "house",
+                height: 52,
+                action: goHomeAfterResult
+            )
+        }
+    }
+
+    func savedEntryResultCard(_ entry: FoodEntry) -> some View {
+        LMCard(cornerRadius: 20, padding: 18) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: "checkmark")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(width: 42, height: 42)
+                    .background(LMColors.primary)
+                    .clipShape(Circle())
+
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("记录已保存")
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundStyle(LMColors.textPrimary)
+
+                    Text("已同步到首页，今日摄入会自动更新。")
+                        .font(LMTypography.caption)
+                        .foregroundStyle(LMColors.textSecondary)
+                }
+            }
+
+            HStack(spacing: 8) {
+                savedResultMetric(title: "热量", value: "\(entry.totalCaloriesKcal)", unit: "kcal")
+                savedResultMetric(title: "食物", value: "\(entry.items.count)", unit: "项")
+                savedResultMetric(title: "餐次", value: entry.mealType.title, unit: nil)
+            }
+
+            if !entry.items.isEmpty {
+                Text(entry.items.map(\.name).joined(separator: "、"))
+                    .font(LMTypography.caption)
+                    .foregroundStyle(LMColors.textSecondary)
+                    .lineLimit(2)
+                    .padding(.horizontal, 12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(minHeight: 38)
+                    .background(LMColors.warmSurface)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            }
+
+            LMButton(
+                title: "回到首页",
+                systemImage: "house",
+                height: 52,
+                action: goHomeAfterResult
+            )
+
+            HStack(spacing: 10) {
+                resultSecondaryButton(
+                    title: "继续记录",
+                    systemImage: "plus",
+                    foreground: LMColors.textBody,
+                    background: LMColors.warmMuted,
+                    border: LMColors.inputBorder,
+                    action: startFreshRecord
+                )
+
+                if viewModel.canDeleteSavedEntry {
+                    resultSecondaryButton(
+                        title: "删除记录",
+                        systemImage: "trash",
+                        foreground: LMColors.danger,
+                        background: LMColors.dangerSoft,
+                        border: Color(hex: 0xF4C3BA),
+                        action: { showsDeleteConfirmation = true }
+                    )
+                }
+            }
+        }
+    }
+
+    func savedResultMetric(title: String, value: String, unit: String?) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(LMTypography.caption)
+                .foregroundStyle(LMColors.textSecondary)
+                .lineLimit(1)
+
+            HStack(alignment: .lastTextBaseline, spacing: 3) {
+                Text(value)
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(LMColors.textBody)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.78)
+
+                if let unit {
+                    Text(unit)
+                        .font(LMTypography.caption)
+                        .foregroundStyle(LMColors.textSecondary)
+                        .lineLimit(1)
+                }
+            }
+        }
+        .padding(.horizontal, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(height: 58)
+        .background(LMColors.primarySoft)
+        .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 13, style: .continuous)
+                .stroke(LMColors.primaryBorder, lineWidth: 1)
+        }
+    }
+
+    func resultSecondaryButton(
+        title: String,
+        systemImage: String,
+        foreground: Color,
+        background: Color,
+        border: Color,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            HStack(spacing: 7) {
+                Image(systemName: systemImage)
+                    .font(.system(size: 14, weight: .semibold))
+                Text(title)
+                    .font(LMTypography.bodyStrong)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
+            }
+            .foregroundStyle(foreground)
+            .frame(maxWidth: .infinity)
+            .frame(height: 44)
+            .background(background)
+            .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 13, style: .continuous)
+                    .stroke(border, lineWidth: 1)
+            }
+        }
+        .buttonStyle(.plain)
+        .disabled(viewModel.isBusy)
     }
 
     var commonUnitsSection: some View {
@@ -1044,7 +1186,55 @@ private extension DietEntryView {
         }
     }
 
-    func confirmationSection(showsHeader: Bool = true) -> some View {
+    var confirmationBottomBar: some View {
+        VStack(spacing: 10) {
+            confirmationSummaryCard
+            confirmationSaveButton
+        }
+        .padding(.horizontal, LMSpacing.large)
+        .padding(.top, 10)
+        .padding(.bottom, 12)
+        .background {
+            LMColors.background
+                .ignoresSafeArea(edges: .bottom)
+        }
+        .overlay(alignment: .top) {
+            Rectangle()
+                .fill(LMColors.primaryBorder.opacity(0.55))
+                .frame(height: 1)
+        }
+    }
+
+    var confirmationSummaryCard: some View {
+        HStack {
+            Text("总计")
+                .font(LMTypography.bodyStrong)
+                .foregroundStyle(LMColors.textBody)
+            Spacer()
+            Text(viewModel.totalCaloriesText)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(LMColors.primary)
+        }
+        .padding(.horizontal, 14)
+        .frame(height: 50)
+        .background(LMColors.primarySoft)
+        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 15, style: .continuous)
+                .stroke(LMColors.primaryBorder, lineWidth: 1)
+        }
+    }
+
+    var confirmationSaveButton: some View {
+        LMButton(
+            title: "保存并更新首页",
+            systemImage: "checkmark",
+            isLoading: viewModel.isSaving,
+            action: saveRecognition
+        )
+    }
+
+    func confirmationSection(showsHeader: Bool = true, showsActions: Bool = true) -> some View {
         VStack(spacing: LMSpacing.regular) {
             if showsHeader {
                 LMCard(cornerRadius: 16, padding: 14) {
@@ -1064,30 +1254,10 @@ private extension DietEntryView {
                 EditableFoodItemCard(title: "食物", item: item)
             }
 
-            HStack {
-                Text("总计")
-                    .font(LMTypography.bodyStrong)
-                    .foregroundStyle(LMColors.textBody)
-                Spacer()
-                Text(viewModel.totalCaloriesText)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(LMColors.primary)
+            if showsActions {
+                confirmationSummaryCard
+                confirmationSaveButton
             }
-            .padding(.horizontal, 14)
-            .frame(height: 50)
-            .background(LMColors.primarySoft)
-            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: 15, style: .continuous)
-                    .stroke(LMColors.primaryBorder, lineWidth: 1)
-            }
-
-            LMButton(
-                title: "保存并更新首页",
-                systemImage: "checkmark",
-                isLoading: viewModel.isSaving,
-                action: saveRecognition
-            )
         }
     }
 
@@ -1114,10 +1284,16 @@ private extension DietEntryView {
     }
 
     func goHomeAfterResult() {
-        viewModel.selectSelectionMode()
+        startFreshRecord()
         pendingLaunchMode = nil
         pendingLaunchMealType = nil
         selectedTab = .home
+    }
+
+    func startFreshRecord() {
+        selectedPhotoData = nil
+        photoPickerItem = nil
+        viewModel.discardDraftAndSelectSelectionMode()
     }
 
     func updateTabChromeVisibility() {

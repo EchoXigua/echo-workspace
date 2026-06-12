@@ -80,7 +80,7 @@ final class HomeViewModelTests: XCTestCase {
 
         if case .loaded(let home) = viewModel.state {
             XCTAssertTrue(home.profileCompleted)
-            XCTAssertEqual(home.calorieTargetKcal, 1800)
+            XCTAssertEqual(home.calorieTargetKcal, 1600)
             XCTAssertEqual(home.currentWeightKg, 55.8)
         } else {
             XCTFail("Expected loaded state")

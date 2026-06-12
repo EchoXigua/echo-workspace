@@ -19,7 +19,7 @@ final class FileLocalStoreTests: XCTestCase {
 
         XCTAssertNotNil(loadedSession)
         XCTAssertEqual(loadedProfile?.currentWeightKg, 55.8)
-        XCTAssertEqual(loadedProfile?.dailyCalorieTargetKcal, 1800)
+        XCTAssertEqual(loadedProfile?.dailyCalorieTargetKcal, 1600)
     }
 
     func testDietDraftPersistsAcrossStoreInstances() async throws {

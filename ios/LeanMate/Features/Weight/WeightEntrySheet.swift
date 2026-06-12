@@ -20,8 +20,7 @@ struct WeightEntrySheet: View {
             stateMessage
 
             LMButton(
-                title: viewModel.state == .saved ? "已保存" : "保存并更新趋势",
-                systemImage: viewModel.state == .saved ? "checkmark" : nil,
+                title: "保存体重",
                 height: 50,
                 isLoading: viewModel.isSaving,
                 action: save
@@ -130,12 +129,10 @@ private extension WeightEntrySheet {
     @ViewBuilder
     var stateMessage: some View {
         switch viewModel.state {
-        case .editing, .saving:
+        case .editing, .saving, .saved:
             EmptyView()
         case .localValidationFailed(let message):
             compactStateMessage(title: "请检查体重", message: message, color: LMColors.danger, isError: true)
-        case .saved:
-            compactStateMessage(title: "体重已保存", message: savedMessage, color: LMColors.primaryDeep, isError: false)
         case .saveFailed(let message):
             compactStateMessage(title: "保存失败", message: message, color: LMColors.danger, isError: true)
         }
@@ -164,16 +161,12 @@ private extension WeightEntrySheet {
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
-    var savedMessage: String {
-        guard let entry = viewModel.savedEntry else {
-            return "趋势由服务端统计，本页不自行计算。"
-        }
-        return "\(display(entry.weightKg)) kg 已记录，趋势由服务端统计。"
-    }
-
     func save() {
-        Task {
-            _ = await viewModel.save()
+        Task { @MainActor in
+            guard await viewModel.save() else {
+                return
+            }
+            dismiss()
         }
     }
 

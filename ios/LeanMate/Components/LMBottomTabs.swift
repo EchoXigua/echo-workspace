@@ -61,6 +61,7 @@ struct LMTabScreen<ID: Hashable, Content: View>: View {
                 .padding(.bottom, LMSpacing.large)
             }
             .scrollIndicators(.hidden)
+            .scrollBounceBehavior(.basedOnSize)
 
             if !hidesBottomTabs {
                 LMBottomTabs(items: items, selection: $selection)

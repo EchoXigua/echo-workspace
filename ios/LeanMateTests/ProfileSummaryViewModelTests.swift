@@ -9,7 +9,7 @@ final class ProfileSummaryViewModelTests: XCTestCase {
         await viewModel.load()
 
         if case .loaded(let snapshot) = viewModel.state {
-            XCTAssertEqual(snapshot.profile.dailyCalorieTargetKcal, 1800)
+            XCTAssertEqual(snapshot.profile.dailyCalorieTargetKcal, 1600)
             XCTAssertEqual(snapshot.streak.currentDays, 12)
             XCTAssertEqual(snapshot.streak.longestDays, 18)
             XCTAssertEqual(viewModel.milestoneToPresent?.days, 7)

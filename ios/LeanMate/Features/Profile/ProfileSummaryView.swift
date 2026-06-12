@@ -94,11 +94,7 @@ private extension ProfileSummaryView {
         switch viewModel.state {
         case .idle, .loading:
             navHeader(settingsPayload: nil)
-            LMStateView(
-                kind: .loading,
-                title: "正在读取我的计划",
-                message: "档案、目标和连续打卡会以后端返回为准。"
-            )
+            loadingProfileContent
         case .visitor:
             navHeader(settingsPayload: nil)
             LMStateView(
@@ -133,7 +129,9 @@ private extension ProfileSummaryView {
         }
 
         #if DEBUG
-        debugLocalDataResetCard
+        if shouldShowDebugLocalDataResetCard {
+            debugLocalDataResetCard
+        }
         #endif
     }
 
@@ -143,6 +141,27 @@ private extension ProfileSummaryView {
         weightGoalCard(snapshot)
         dataPlanCard(snapshot, payload: payload)
         profileActions(payload)
+    }
+
+    @ViewBuilder
+    var loadingProfileContent: some View {
+        profileCardSkeleton
+        weightGoalCardSkeleton
+        dataPlanCardSkeleton
+        profileActionsSkeleton
+    }
+
+    var shouldShowDebugLocalDataResetCard: Bool {
+        guard onDebugClearLocalData != nil else {
+            return false
+        }
+
+        switch viewModel.state {
+        case .idle, .loading:
+            return false
+        case .visitor, .profileIncomplete, .loaded, .error:
+            return true
+        }
     }
 
     func navHeader(settingsPayload: ProfileRoutePayload?) -> some View {
@@ -172,6 +191,136 @@ private extension ProfileSummaryView {
             .accessibilityLabel("打开设置")
         }
         .frame(height: 52)
+    }
+
+    var profileCardSkeleton: some View {
+        LMCard(cornerRadius: 16, padding: 14) {
+            HStack(spacing: 14) {
+                skeletonBlock(width: 58, height: 58, cornerRadius: 17)
+
+                VStack(alignment: .leading, spacing: 8) {
+                    skeletonBlock(width: 150, height: 18)
+                    skeletonBlock(width: 118, height: 12)
+                    skeletonBlock(width: 96, height: 28, cornerRadius: 14)
+                }
+
+                Spacer()
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("正在读取我的计划")
+    }
+
+    var weightGoalCardSkeleton: some View {
+        LMCard(cornerRadius: 16, padding: 14) {
+            HStack {
+                skeletonBlock(width: 78, height: 16)
+                Spacer()
+                skeletonBlock(width: 62, height: 14)
+            }
+
+            HStack(alignment: .bottom) {
+                VStack(alignment: .leading, spacing: 10) {
+                    skeletonBlock(width: 64, height: 12)
+                    skeletonBlock(width: 120, height: 42)
+                }
+
+                Spacer()
+
+                HStack(spacing: 22) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        skeletonBlock(width: 34, height: 12)
+                        skeletonBlock(width: 54, height: 22)
+                    }
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        skeletonBlock(width: 34, height: 12)
+                        skeletonBlock(width: 54, height: 22)
+                    }
+                }
+            }
+
+            skeletonBlock(height: 8, cornerRadius: 4)
+        }
+    }
+
+    var dataPlanCardSkeleton: some View {
+        LMCard(cornerRadius: 16, padding: 14) {
+            HStack {
+                skeletonBlock(width: 82, height: 16)
+                Spacer()
+                skeletonBlock(width: 58, height: 14)
+            }
+
+            HStack {
+                VStack(alignment: .leading, spacing: 10) {
+                    skeletonBlock(width: 58, height: 12)
+                    skeletonBlock(width: 118, height: 30)
+                }
+
+                Spacer()
+
+                VStack(alignment: .trailing, spacing: 8) {
+                    skeletonBlock(width: 120, height: 12)
+                    skeletonBlock(width: 92, height: 12)
+                }
+            }
+            .padding(12)
+            .background(LMColors.primarySoft.opacity(0.52))
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+
+            HStack(spacing: LMSpacing.small) {
+                skeletonMetricBlock
+                skeletonMetricBlock
+                skeletonMetricBlock
+            }
+        }
+    }
+
+    var profileActionsSkeleton: some View {
+        HStack(spacing: LMSpacing.small) {
+            skeletonActionBlock
+            skeletonActionBlock
+            skeletonActionBlock
+        }
+    }
+
+    var skeletonMetricBlock: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            skeletonBlock(width: 46, height: 12)
+            skeletonBlock(width: 62, height: 22)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(10)
+        .background(LMColors.card)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(LMColors.border, lineWidth: 1)
+        }
+    }
+
+    var skeletonActionBlock: some View {
+        VStack(spacing: 8) {
+            skeletonBlock(width: 30, height: 30, cornerRadius: 15)
+            skeletonBlock(width: 34, height: 14)
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 66)
+        .background(LMColors.card)
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(LMColors.border, lineWidth: 1)
+        }
+        .shadow(color: Color(hex: 0x143B23, alpha: 0.04), radius: 8, x: 0, y: 2)
+    }
+
+    func skeletonBlock(width: CGFloat? = nil, height: CGFloat, cornerRadius: CGFloat = 8) -> some View {
+        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+            .fill(Color(hex: 0xEDF5EF))
+            .frame(width: width, height: height)
+            .frame(maxWidth: width == nil ? .infinity : nil, alignment: .leading)
     }
 
     func profileCard(_ snapshot: ProfileSummarySnapshot) -> some View {

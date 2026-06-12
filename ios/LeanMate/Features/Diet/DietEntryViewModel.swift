@@ -151,8 +151,8 @@ final class DietEntryViewModel: ObservableObject {
         validationMessage = nil
     }
 
-    func discardDraftAndSelectSelectionMode() {
-        resetDraft()
+    func discardDraftAndSelectSelectionMode(date: Date = Date()) {
+        resetDraft(date: date)
         selectSelectionMode()
     }
 
@@ -239,11 +239,13 @@ final class DietEntryViewModel: ObservableObject {
 
         validationMessage = nil
         currentDraftSource = .text
+        let recognitionMealType = inferredMealType(from: text) ?? mealType
+        mealType = recognitionMealType
         state = .recognizing
 
         do {
             let task = try await apiClient.createTextRecognition(
-                TextRecognitionRequest(text: text, mealType: mealType, mealDate: mealDate)
+                TextRecognitionRequest(text: text, mealType: recognitionMealType, mealDate: mealDate)
             )
             currentRecognitionTaskId = task.id
             let latestTask = try await apiClient.recognitionTask(id: task.id)
@@ -410,7 +412,7 @@ private extension DietEntryViewModel {
         mealType = MealType.defaultMealType(for: date)
     }
 
-    func resetDraft() {
+    func resetDraft(date: Date = Date()) {
         textInput = ""
         manualItem = EditableFoodItem()
         confirmationItems = []
@@ -419,6 +421,37 @@ private extension DietEntryViewModel {
         savedEntry = nil
         currentRecognitionTaskId = nil
         currentDraftSource = .text
+        mealDate = date
+        mealType = MealType.defaultMealType(for: date)
+    }
+
+    func inferredMealType(from text: String) -> MealType? {
+        let normalized = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !normalized.isEmpty else {
+            return nil
+        }
+
+        let keywords: [(MealType, [String])] = [
+            (.breakfast, ["早餐", "早饭", "早上", "上午"]),
+            (.lunch, ["午餐", "中餐", "午饭", "中午"]),
+            (.dinner, ["晚餐", "晚饭", "晚上"]),
+            (.snack, ["加餐", "零食", "夜宵", "宵夜", "下午茶"])
+        ]
+
+        let matched = keywords
+            .flatMap { mealType, values in
+                values.compactMap { keyword -> (MealType, String.Index)? in
+                    guard let range = normalized.range(of: keyword) else {
+                        return nil
+                    }
+                    return (mealType, range.lowerBound)
+                }
+            }
+            .min { lhs, rhs in
+                lhs.1 < rhs.1
+            }
+
+        return matched?.0
     }
 
     func applyRecognitionTask(_ task: RecognitionTask) {
